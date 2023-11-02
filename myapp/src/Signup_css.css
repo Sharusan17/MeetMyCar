@@ -1,0 +1,28 @@
+.Card{
+    padding:5px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    height: 65vh;
+}
+
+#name_label{
+    display: inline-block;
+}
+   
+.name_row {
+     display: flex;
+}
+
+#firstName{
+    margin-right: 5px;
+    width: 50%;
+}
+
+#lastName{
+    margin-left: 5px;
+    width: 50%;
+}
+
+#name_input {
+    width: 100%;
+  }
