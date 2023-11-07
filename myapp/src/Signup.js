@@ -6,6 +6,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import './Signup_css.css'
 
 
+
 const Signup = () => {
 
     const emailRef = useRef()
@@ -42,18 +43,20 @@ const Signup = () => {
   return (
       <>
             <div className="Card">
-                <h1 className="text-center mb-4">Sign Up</h1>
+                
+                <header>
+                    <h1 className="text-center mb-4" id="sign_text">Sign Up</h1>
+                    <div id="red-corner"></div>
+                </header>
                 <form onSubmit={handleSubmit}>
 
                     <div className='name_row'>
                         <Form.Group id="firstName">
-                            <Form.Label id="name_label">First Name</Form.Label>
-                            <Form.Control id="name_input" type="text" ref={emailRef} required />
+                            <Form.Control id="name_input" type="text" placeholder='First Name' ref={emailRef} required />
                         </Form.Group>
 
                         <Form.Group id="lastName" >
-                            <Form.Label id="name_label">Last Name</Form.Label>
-                            <Form.Control id="name_input" type="text" ref={emailRef} required />
+                            <Form.Control id="name_input" type="text" placeholder='Last Name' ref={emailRef} required />
                         </Form.Group>
 
                     </div>
@@ -61,33 +64,37 @@ const Signup = () => {
                         
 
                     <Form.Group id="email">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" ref={emailRef} required />
+                        <Form.Control type="email" placeholder='Email'ref={emailRef} required />
                     </Form.Group>            
                     
                     <Form.Group id="password">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" ref={passwordRef} required />
+                        <Form.Control type="password" placeholder='Password'ref={passwordRef} required />
                     </Form.Group>
 
                     <Form.Group id="passwordConfirmation">
-                        <Form.Label>Password Confirmation</Form.Label>
-                        <Form.Control type="password" ref={passwordConfirmRef} required />
+                        <Form.Control type="password" placeholder='Password Confirmation'ref={passwordConfirmRef} required />
                     </Form.Group>
 
                     <p>{error}</p>
 
-                    <Button disabled={loading} className="w-100 mt-2" type="submit">Sign Up</Button>
+                    <Button disabled={loading} id="button" className="w-100 mt-2" type="submit">Sign Up</Button>
+                        
 
                     {message}
                 </form>
 
+                <img src="https://i.ibb.co/FsSc9k1/Screenshot-2023-11-07-at-18-34-47-fotor-bg-remover-20231107185715.png" alt="Image Of Porsche Car"/>
+                
+                <div id="loginpage" className="w-100 text-center mt-2">
+                    Already have an account? <Link to="/login">  Login</Link>
+                </div>
+
             </div>
 
+
+
             
-        <div className="w-100 text-center mt-2">
-            Already have an account? <Link to="/login">  Login</Link>
-        </div>
+        
       </>
     
   )

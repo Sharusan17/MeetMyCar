@@ -1,9 +1,38 @@
 .Card{
-    padding:5px;
-    border: 1px solid gray;
     border-radius: 10px;
-    height: 65vh;
+    height: auto;
+    width: auto;
+    background-color: rgb(248, 248, 248);
+    box-shadow: 2px 2px 4px 2px rgb(65, 64, 64);
+
 }
+
+header{
+    display: flex;
+}
+
+#sign_text{
+    float: left;
+    margin-top: 35px;
+    margin-left: 30px;
+    margin-right: 120px;
+}
+
+
+#red-corner{
+    float: right;
+    margin-left: 30px;
+    width: 20%;
+    height: 12vh;
+    background: rgb(243, 60, 62);
+    border-bottom-left-radius: 35px;
+}
+
+form{
+    margin: 20px;
+    margin-top: 40px;
+}
+
 
 #name_label{
     display: inline-block;
@@ -16,13 +45,56 @@
 #firstName{
     margin-right: 5px;
     width: 50%;
+    margin-bottom: 20px;
 }
 
 #lastName{
     margin-left: 5px;
     width: 50%;
+    margin-bottom: 20px;
+    border-radius: 5px;
 }
+
+#email{
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+#password{
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+#passwordConfirmation{
+    border-radius: 5px;
+}
+
+input:hover, button:hover{
+    box-shadow: 2px 2px 5px 1px rgb(122, 122, 122);
+    border-color: rgb(243, 60, 62);
+}
+
 
 #name_input {
     width: 100%;
-  }
+}
+
+#button{
+    background-color: rgb(45,45,45);
+}
+#button:hover {
+    border: 1px solid blue;
+}
+
+
+
+img{
+    width: 180px;
+    height: 180px;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+#loginpage{
+    padding-bottom: 10px;
+}
