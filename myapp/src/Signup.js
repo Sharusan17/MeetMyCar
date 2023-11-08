@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react'
-import {Form, Button} from 'react-bootstrap'
+import {Form} from 'react-bootstrap'
 import { useAuth } from './AuthContext'
 import {Link, useNavigate} from 'react-router-dom'
 
@@ -24,10 +24,10 @@ const Signup = () => {
         e.preventDefault()
 
         if (passwordRef.current.value !== passwordConfirmRef.current.value){
-            return setError("Password do not match")
+            return setError("Password Not The Same")
         }
         if (passwordRef.current.value.length < 6 && passwordConfirmRef.current.value.length < 6 ){
-            return setError("Password Too Short")
+            return setError("Password Really Short")
         }
         try{
             setError('')
@@ -45,9 +45,13 @@ const Signup = () => {
             <div className="Card">
                 
                 <header>
-                    <h1 className="text-center mb-4" id="sign_text">Sign Up</h1>
+                    <h1 id="sign_text">
+                        Sign Up
+                        <h2 id="slogan_text">Join Our Family</h2>
+                    </h1>
                     <div id="red-corner"></div>
                 </header>
+
                 <form onSubmit={handleSubmit}>
 
                     <div className='name_row'>
@@ -75,9 +79,9 @@ const Signup = () => {
                         <Form.Control type="password" placeholder='Password Confirmation'ref={passwordConfirmRef} required />
                     </Form.Group>
 
-                    <p>{error}</p>
+                    <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
 
-                    <Button disabled={loading} id="button" className="w-100 mt-2" type="submit">Sign Up</Button>
+                    <button disabled={loading} id="button" className="w-100 mt-2" type="submit">Sign Up</button>
                         
 
                     {message}
@@ -86,14 +90,10 @@ const Signup = () => {
                 <img src="https://i.ibb.co/FsSc9k1/Screenshot-2023-11-07-at-18-34-47-fotor-bg-remover-20231107185715.png" alt="Image Of Porsche Car"/>
                 
                 <div id="loginpage" className="w-100 text-center mt-2">
-                    Already have an account? <Link to="/login">  Login</Link>
+                    Already have an account? <Link to="/login" id='loginlink'> Login Here</Link>
                 </div>
 
             </div>
-
-
-
-            
         
       </>
     
