@@ -127,9 +127,20 @@ export default function RegisterCar() {
 
             const username = 'MeetMyCar11';
 
-            const apiVRNResponse = await fetch(
-            `https://www.regcheck.org.uk/api/reg.asmx/Check?RegistrationNumber=${vehicleReg.current.value}&username=${username}`
-            );
+            // const apiVRNResponse = await fetch(
+            //     `https://www.regcheck.org.uk/api/reg.asmx/Check?RegistrationNumber=${vehicleReg.current.value}&username=${username}`
+            //     );
+
+            // const apiVRNResponse = await fetch('https://uat.driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'x-api-key':'iQ6sc7eyoR4BD986W8BR5W99uBTCo5KxP7SVym50'
+            //     },
+            //     body: JSON.stringify({
+            //         registrationNumber: 'AA19AAA'
+            //     })
+            // });
 
             if (apiVRNResponse.ok) {
                 const data = await apiVRNResponse.text();
@@ -207,33 +218,42 @@ export default function RegisterCar() {
 
                 <form className='addVehicle_Form' onSubmit={handleaddSelectedCar}>
                     {showOptions && (<div>
-                            <select onChange={handleSelectCar} value={selectedMake}>
-                                <option value="" disabled>--Make--</option>
-                                {makeOptions.map(make => (
-                                    <option key={make} value={make}> {make} </option>
-                                ))}
-                            </select>
 
-                            <select onChange={(e) => setSelectedModel(e.target.value)} value={selectedModel} disabled={!selectedMake}>
-                                <option value="" disabled>--Model--</option>
-                                {modelOptions.map(model => ( 
-                                    <option key={model} value={model}> {model} </option>
-                                ))}
-                            </select>
+                            <div className='select-space-between'>
+                                <select onChange={handleSelectCar} value={selectedMake}>
+                                    <option value="" disabled>Make</option>
+                                    {makeOptions.map(make => (
+                                        <option key={make} value={make}> {make} </option>
+                                    ))}
+                                </select>
+                            </div>
 
-                            <select onChange={(e) => setSelectedFuel(e.target.value)} value={selectedFuel} disabled={!selectedModel.length}>
-                                <option value="" disabled>--Fuel--</option>
-                                {fuelOptions.map(fuel => (
-                                    <option key={fuel} value={fuel}> {fuel} </option>
-                                ))}
-                            </select>
+                            <div className='select-space-between'>
+                                <select onChange={(e) => setSelectedModel(e.target.value)} value={selectedModel} disabled={!selectedMake}>
+                                    <option value="" disabled>Model</option>
+                                    {modelOptions.map(model => ( 
+                                        <option key={model} value={model}> {model} </option>
+                                    ))}
+                                </select>
+                            </div>
 
-                            <select onChange={(e) => setSelectedTransmission(e.target.value)} value={selectedTransmission} disabled={!selectedModel.length}>
-                                <option value="" disabled>--Transmission--</option>
-                                {transmissionOptions.map(transmission => (
-                                    <option key={transmission} value={transmission}> {transmission} </option>
-                                ))}
-                            </select>
+                            <div className='select-space-between'>
+                                <select onChange={(e) => setSelectedFuel(e.target.value)} value={selectedFuel} disabled={!selectedModel.length}>
+                                    <option value="" disabled>Fuel</option>
+                                    {fuelOptions.map(fuel => (
+                                        <option key={fuel} value={fuel}> {fuel} </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className='select-space-between'>
+                                <select onChange={(e) => setSelectedTransmission(e.target.value)} value={selectedTransmission} disabled={!selectedModel.length}>
+                                    <option value="" disabled>Transmission</option>
+                                    {transmissionOptions.map(transmission => (
+                                        <option key={transmission} value={transmission}> {transmission} </option>
+                                    ))}
+                                </select>
+                            </div>
                             
                         </div>
                     )} 

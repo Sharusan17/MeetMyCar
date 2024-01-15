@@ -75,6 +75,30 @@ header{
     line-height: 2.5;
 }
 
+select{
+    width: 100%; 
+    border: 1px solid #ddd; 
+    border-radius: 4px; 
+    background-color: white; 
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    font-size: 16px; 
+    transition: border-color 0.3s;
+}
+
+select:hover{
+    border-color: #555;
+}
+.select-space-between{
+    margin-bottom: 7px;
+}
+
+
+option{
+    padding:8px;
+    background-color: white; /* White background for options */
+    color: #333; /* Dark text color for readability */
+}
+
 #button{
     background-color: rgb(45,45,45);
     color: white;
