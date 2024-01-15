@@ -3,6 +3,7 @@ import {AuthProvider} from "./AuthContext";
 
 import Home from "./Home"
 import Signup from "./Signup"
+import RegisterCar  from "./RegisterCar";
 import Login from "./Login"
 import ForgotPassword from "./ForgotPassword"
 import UpdateProfile from "./UpdateProfile";
@@ -37,6 +38,8 @@ function App() {
                 <Route path="/signup" Component={Signup} />
                 <Route path="/login" Component={Login} />
                 <Route path="/forgot-password" Component={ForgotPassword} />
+                <Route path="/RegisterCar" Component={RegisterCar} />
+
 
 
               </Routes>

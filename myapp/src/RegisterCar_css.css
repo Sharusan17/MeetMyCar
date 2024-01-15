@@ -5,56 +5,61 @@
     background-color: rgb(248, 248, 248);
     box-shadow: 2px 2px 4px 2px rgb(65, 64, 64);
     position: relative;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 header{
     display: flex;
+    justify-content: space-between;
 }
 
-#login_text{
+#addVehicle_text{
     margin-top: 30px;
     margin-left: 30px;
+    font-size: 30px;
 }
 
 #slogan_text{
-    font-size: 10px;
-    margin-top: 15px;
+    font-size: 11px;
+    margin-top: 20px;
     margin-left: 5px;
 }
 
+
 #red-corner{
     position: absolute;
-    top: 0;
     right: 0;
+    top: 0;
     width: 20%;
-    height: 12vh;
+    height: 10vh;
     background: rgb(243, 60, 62);
     border-bottom-left-radius: 35px;
 }
 
-.loginForm{
-    margin-top: 2.5em;
-    margin-left: 1em;
-    margin-right: 1em;
+.addVehicle_Form{
+    margin-top: 3em;
+    margin-left: 1.5em;
+    margin-right: 1.5em;
 }
 
-#email{
-    margin-bottom: 25px;
-    border-radius: 5px;
+#vrn_input{
+    background-color: rgb(255, 200, 70);
+    color: black;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 1px;
 }
 
-#password{
-    margin-bottom: 20px;
-    border-radius: 5px;
-}
-
-input:hover{
+#vrn_input:hover{
     box-shadow: 2px 2px 5px 1px rgb(122, 122, 122);
-    border-color: rgb(243, 60, 62);
+    border-color: rgb(0, 0, 0);
     transition: border-color 0.5s ease-in;
 }
 
-input:focus{
+#vrn_input:focus{
     border: 3px solid #555;
     outline-width: 0;
 }
@@ -64,12 +69,18 @@ input:focus{
     color: red;
 }
 
+#vehicleDetail{
+    font-size: 14px;
+    margin: 15px;
+    line-height: 2.5;
+}
+
 #button{
     background-color: rgb(45,45,45);
     color: white;
     border-radius: 10px;
     font-weight: 500;
-    padding: 3px;
+    padding: 3px 15px;
     font-family: Arial, Helvetica, sans-serif;
 }
 #button:hover {
@@ -80,21 +91,35 @@ input:focus{
 }
 
 
-#signupPage, #forgotPassPage{
-    margin-bottom: 0;
-    padding-bottom: 10px;
-    font-size: 11px;
+img{
+    max-width: 100px;
+    display: block;
+    margin: 0 auto;
 }
 
-#signupLink, #forgotLink{
+
+#findVehicle, #findlink{
     font-size: 12px;
     font-weight: 500;
     color: black;
     text-decoration: none;
 }
 
-#signupLink:hover, #forgotLink:hover{
+#findlink:hover{
     color: red;
     transition: 0.3s ease;
     font-size: larger;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .Card {
+        max-width: 90%;
+    }
+    #addVehicle_text {
+        font-size: 24px;
+    }
+    #slogan_text {
+        font-size: 10px;
+    }
 }

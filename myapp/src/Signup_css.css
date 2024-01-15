@@ -1,7 +1,7 @@
 .Card{
     border-radius: 10px;
-    height: auto;
-    width: auto;
+    min-height: 650px;
+    min-width: 400px;
     background-color: rgb(248, 248, 248);
     box-shadow: 2px 2px 4px 2px rgb(65, 64, 64);
     position: relative;
@@ -33,11 +33,10 @@ header{
     border-bottom-left-radius: 35px;
 }
 
-form{
-    margin: 20px;
-    margin-top: 40px;
+.signUpForm{
+    margin-top: 2.5em;
+    margin: 1em;
 }
-
 
 #name_label{
     display: inline-block;

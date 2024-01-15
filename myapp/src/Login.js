@@ -39,12 +39,12 @@ const Login = () => {
             <header>
                     <h1 id="login_text">
                         Log In
-                        <h2 id="slogan_text">Drive By Your Friends</h2>
+                        <p id="slogan_text">Drive By Your Friends</p>
                     </h1>
                     <div id="red-corner"></div>
                 </header>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className='loginForm'>
                     
                     <Form.Group id="email">
                         <Form.Control type="email" placeholder="Email" ref={emailRef} required />

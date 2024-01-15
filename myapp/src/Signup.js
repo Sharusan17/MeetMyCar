@@ -47,12 +47,12 @@ const Signup = () => {
                 <header>
                     <h1 id="sign_text">
                         Sign Up
-                        <h2 id="slogan_text">Join Our Family</h2>
+                        <p id="slogan_text">Join Our Family</p>
                     </h1>
                     <div id="red-corner"></div>
                 </header>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className='signUpForm'>
 
                     <div className='name_row'>
                         <Form.Group id="firstName">
