@@ -4,14 +4,11 @@ import {Link} from 'react-router-dom'
 
 import './RegisterCar_css.css'
 
+export default function RegisterCar() {
 
-const RegisterCar = () => {
-
-    const carOptions = {
-        Mercedes: ["CLA", "C Class", "E Class"],
-        Toyota: ["Corolla", "Camry", "RAV4"],
-        Honda: ["Civic", "Accord", "CR-V"],
-    };
+    const [carData, setCarData] = useState([])
+    const [makeOptions, setmakeOptions] = useState([])
+    const [modelOptions, setmodelOptions] = useState([])
 
     const fuelOptions = ["Petrol", "Diesel"]
     const transmissionOptions = ["Manual", "Automatic"]
@@ -42,19 +39,36 @@ const RegisterCar = () => {
 
                 const username = 'MeetMyCar11';
 
+                const where = encodeURIComponent(JSON.stringify({
+                    "Make": {
+                      "$exists": true
+                    },
+                    "Model": {
+                      "$exists": true
+                    }
+                }));
+
                 const apiOptionsResponse = await fetch(
-                    'https://parseapi.back4app.com/classes/Car_Model_List?limit=10&order=Make,Model&keys=Make,Model',
+                    `https://parseapi.back4app.com/classes/Carmodels_Car_Model_List?limit=9899&order=Make,Model&keys=Make,Model&where=${where}`,
                     {
                         headers:{
-                            'X-Parse-Application-Id': 'hlhoNKjOvEhqzcVAJ1lxjicJLZNVv36GdbboZj3Z', // This is the fake app's application id
-                            'X-Parse-Master-Key': 'SNMJJF0CZZhTPhLDIqGhTlUNV9r60M2Z5spyWfXW', // This is the fake app's readonly master key
+                            'X-Parse-Application-Id': 'YyUReDK3a2NOQvywkq6IAv2rTi6qmLM0ycX7hLuL',
+                            'X-Parse-REST-API-Key': 'igMaxbtlPDn79NmWd2D3Rj3HTpQXYZPMpzYVfDxI',
                         }
                     }
                 );
 
                 if (apiOptionsResponse.ok) {
                     const data = await apiOptionsResponse.text();
-                    console.log(JSON.stringify(data, null, 2));
+                    const obj = JSON.parse(data)
+
+                    setCarData(obj.results)
+
+                    const makes = [...new Set(obj.results.map((car) => car.Make))]
+                    const models = [...new Set(obj.results.map((car) => car.Model))]
+
+                    setmakeOptions(makes)
+                    setmodelOptions(models)
 
                 } else {
                     setError('Cannot Find Car Make/Model')
@@ -72,7 +86,9 @@ const RegisterCar = () => {
     const handleSelectCar= (event) => {
         const selectMake = event.target.value;
         setSelectedMake(selectMake);
-        setSelectedModel('');
+
+        const filteredModels = carData.filter(car => car.Make === selectMake).map(car => car.Model);
+        setmodelOptions([...new Set(filteredModels)]); 
     };
 
     const handleFindCar= () => {
@@ -193,14 +209,14 @@ const RegisterCar = () => {
                     {showOptions && (<div>
                             <select onChange={handleSelectCar} value={selectedMake}>
                                 <option value="" disabled>--Make--</option>
-                                {Object.keys(carOptions).map(make => (
+                                {makeOptions.map(make => (
                                     <option key={make} value={make}> {make} </option>
                                 ))}
                             </select>
 
                             <select onChange={(e) => setSelectedModel(e.target.value)} value={selectedModel} disabled={!selectedMake}>
                                 <option value="" disabled>--Model--</option>
-                                {selectedMake && carOptions[selectedMake].map(model => (
+                                {modelOptions.map(model => ( 
                                     <option key={model} value={model}> {model} </option>
                                 ))}
                             </select>
@@ -241,6 +257,3 @@ const RegisterCar = () => {
     
   )
 }
-
-export default RegisterCar
-
