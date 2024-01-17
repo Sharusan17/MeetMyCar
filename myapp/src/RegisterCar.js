@@ -33,54 +33,36 @@ export default function RegisterCar() {
 
     useEffect(() => {
         async function CarOp(){
-            try{
-                setError('');
-                setMessage('')
+            setError('');
+            setMessage('')
 
-                const username = 'MeetMyCar11';
-
-                const where = encodeURIComponent(JSON.stringify({
-                    "Make": {
-                      "$exists": true
-                    },
-                    "Model": {
-                      "$exists": true
+            fetch('http://localhost:3001/vehicle/list')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Network response was not ok');
                     }
-                }));
+                })
+                .then(data => {
+                    console.log("API Data: ", data);
 
-                const apiOptionsResponse = await fetch(
-                    `https://parseapi.back4app.com/classes/Carmodels_Car_Model_List?limit=9899&order=Make,Model&keys=Make,Model&where=${where}`,
-                    {
-                        headers:{
-                            'X-Parse-Application-Id': 'YyUReDK3a2NOQvywkq6IAv2rTi6qmLM0ycX7hLuL',
-                            'X-Parse-REST-API-Key': 'igMaxbtlPDn79NmWd2D3Rj3HTpQXYZPMpzYVfDxI',
-                        }
-                    }
-                );
+                    setCarData(data.results);
 
-                if (apiOptionsResponse.ok) {
-                    const data = await apiOptionsResponse.text();
-                    const obj = JSON.parse(data)
+                    const makes = [...new Set(data.results.map(car => car.Make))];
+                    const models = [...new Set(data.results.map(car => car.Model))];
 
-                    setCarData(obj.results)
+                    console.log("Make", makes);
 
-                    const makes = [...new Set(obj.results.map((car) => car.Make))]
-                    const models = [...new Set(obj.results.map((car) => car.Model))]
-
-                    setmakeOptions(makes)
-                    setmodelOptions(models)
-
-                } else {
-                    setError('Cannot Find Car Make/Model')
-                }
-
-            } catch (error) {
-                console.log(error)
-                
-            }
+                    setmakeOptions(makes);
+                    setmodelOptions(models);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
         }
         CarOp();
-    }, []);
+    }, []); 
 
 
     const handleSelectCar= (event) => {
@@ -126,6 +108,19 @@ export default function RegisterCar() {
             setMessage('')
 
             const username = 'MeetMyCar11';
+
+            // const apiVRNResponse = await fetch(
+            //     //use this api
+            //     //https://my.dvlasearch.co.uk/users/sign_in
+            //     'https://dvlasearch.appspot.com/CarSpec?apikey=DvlaSearchDemoAccount&licencePlate=mt09nks',
+            //     {
+            //         method:'GET',
+            //         headers:{
+            //             'accept': 'application/json',
+            //         },
+                    
+            //     }
+            // );
 
             // const apiVRNResponse = await fetch(
             //     `https://www.regcheck.org.uk/api/reg.asmx/Check?RegistrationNumber=${vehicleReg.current.value}&username=${username}`
@@ -262,10 +257,6 @@ export default function RegisterCar() {
                         <button id="button" className="w-100 mt-2" type="submit" >Add Selected Car</button>
                     )}
                 </form>
-
-                
-
-                
 
                 
                 <div id="findVehicle" className="w-100 text-center mt-2">
