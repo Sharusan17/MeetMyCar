@@ -10,8 +10,8 @@ export default function RegisterVehicle() {
     const [makeOptions, setmakeOptions] = useState([])
     const [modelOptions, setmodelOptions] = useState([])
 
-    const fuelOptions = ["Petrol", "Diesel"]
-    const transmissionOptions = ["Manual", "Automatic"]
+    const fuelOptions = ["Petrol", "Diesel", "Hybrid", "Electric"]
+    const transmissionOptions = ["Manual", "Automatic", "Semi-Auto"]
 
     const vehicleReg = useRef()
     const [vehicleMake, setvehicleMake] = useState('')

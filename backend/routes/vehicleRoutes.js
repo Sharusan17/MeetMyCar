@@ -1,14 +1,10 @@
-import express from 'express';
-import cors from 'cors';
-import fetch from 'node-fetch';
+const express = require('express');
+const router = express.Router();
 
-import dotenv from 'dotenv'
-dotenv.config();
+//Vehicle List
+router.get('/list', async (req, res) => {
 
-const app = express();
-app.use(cors());
-
-app.get('/vehicle/list', async (req, res) => {
+    const fetch = (await import('node-fetch')).default;
     try {
         const where = encodeURIComponent(JSON.stringify({
             "Make": {
@@ -49,7 +45,10 @@ app.get('/vehicle/list', async (req, res) => {
 });
 
 
-app.get('/vehicle/search', async (req, res) => {
+//Vehicle Search
+router.get('/search', async (req, res) => {
+
+    const fetch = (await import('node-fetch')).default;
     try {
         const LIVE_APP_ID = process.env.CAR_LIVE_API;
         const TEST_APP_ID = process.env.CAR_TEST_API;
@@ -60,7 +59,7 @@ app.get('/vehicle/search', async (req, res) => {
             return res.status(400).json({message: "Vehicle Registration Number Required."})
         }
 
-        console.log(VehicleReg);
+        // console.log(VehicleReg);
 
         const apiResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/ukvehicledata?apikey=${TEST_APP_ID}&vrm=${VehicleReg}`
             ,{
@@ -84,5 +83,4 @@ app.get('/vehicle/search', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+module.exports = router;
