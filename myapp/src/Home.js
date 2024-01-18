@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { Button } from 'react-bootstrap'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
 export default function Home() {
@@ -27,6 +27,9 @@ export default function Home() {
         <strong>Email: </strong> {currentUser.email}
 
         <Link to="/update-profile" className="btn btn-primary w-100 mt-3"> Update Profile</Link>
+
+        <Link to="/registervehicle" className="btn btn-dark w-100 mt-3"> Register Vehicle</Link>
+
 
         <div className="w-100 text-center mt-2">
             <Button variant="link" onClick={handleLogOut}> Log Out </Button>

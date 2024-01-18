@@ -2,9 +2,9 @@ import React, {useEffect, useRef, useState} from 'react'
 import {Form} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 
-import './RegisterCar_css.css'
+import './RegisterVehicle_css.css'
 
-export default function RegisterCar() {
+export default function RegisterVehicle() {
 
     const [carData, setCarData] = useState([])
     const [makeOptions, setmakeOptions] = useState([])
@@ -45,14 +45,14 @@ export default function RegisterCar() {
                     }
                 })
                 .then(data => {
-                    console.log("API Data: ", data);
+                    // console.log("API Data: ", data);
 
                     setCarData(data.results);
 
                     const makes = [...new Set(data.results.map(car => car.Make))];
                     const models = [...new Set(data.results.map(car => car.Model))];
 
-                    console.log("Make", makes);
+                    // console.log("Make", makes);
 
                     setmakeOptions(makes);
                     setmodelOptions(models);
@@ -63,7 +63,6 @@ export default function RegisterCar() {
         }
         CarOp();
     }, []); 
-
 
     const handleSelectCar= (event) => {
         const selectMake = event.target.value;
@@ -103,52 +102,35 @@ export default function RegisterCar() {
         setShowSelectedButton(false)
         setShowOptions(false)
 
-        try{
-            setError('');
-            setMessage('')
+        setError('');
+        setMessage('')
 
-            const username = 'MeetMyCar11';
+        const vehicleRegValue = vehicleReg.current.value;
+        
+        fetch(`http://localhost:3001/vehicle/search?vrn=${encodeURIComponent(vehicleRegValue)}`)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
 
-            // const apiVRNResponse = await fetch(
-            //     //use this api
-            //     //https://my.dvlasearch.co.uk/users/sign_in
-            //     'https://dvlasearch.appspot.com/CarSpec?apikey=DvlaSearchDemoAccount&licencePlate=mt09nks',
-            //     {
-            //         method:'GET',
-            //         headers:{
-            //             'accept': 'application/json',
-            //         },
-                    
-            //     }
-            // );
+                } else {
+                    setError("Failed To Find Vehicle");
+                    setMessage(false)
+                    setShowOptions(true)
+                    setShowSelectedButton(true)
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => {
+                // console.log("API Data: ", data);
+                // console.log(data.VehicleRegistration.Make)
 
-            // const apiVRNResponse = await fetch(
-            //     `https://www.regcheck.org.uk/api/reg.asmx/Check?RegistrationNumber=${vehicleReg.current.value}&username=${username}`
-            //     );
-
-            // const apiVRNResponse = await fetch('https://uat.driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'x-api-key':'iQ6sc7eyoR4BD986W8BR5W99uBTCo5KxP7SVym50'
-            //     },
-            //     body: JSON.stringify({
-            //         registrationNumber: 'AA19AAA'
-            //     })
-            // });
-
-            if (apiVRNResponse.ok) {
-                const data = await apiVRNResponse.text();
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(data, 'text/xml');
-
-                const VRN_vehicleMake = xmlDoc.querySelector('MakeDescription').textContent;
+                const VRN_vehicleMake = data.VehicleRegistration.Make;
                 setvehicleMake(VRN_vehicleMake)
-                const VRN_vehicleModel = xmlDoc.querySelector('ModelDescription').textContent;
+                const VRN_vehicleModel = data.VehicleRegistration.Model;
                 setvehicleModel(VRN_vehicleModel)
-                const VRN_vehicleFuel = xmlDoc.querySelector('FuelType').textContent;
+                const VRN_vehicleFuel = data.VehicleRegistration.FuelType;
                 setvehicleFuel(VRN_vehicleFuel)
-                const VRN_vehicleTransmission = xmlDoc.querySelector('Transmission').textContent;
+                const VRN_vehicleTransmission = data.VehicleRegistration.TransmissionType;
                 setvehicleTransmission(VRN_vehicleTransmission)
 
                 setMessage(
@@ -158,28 +140,23 @@ export default function RegisterCar() {
                         <span>Fuel Type: {VRN_vehicleFuel || 'No Fuel available.'}</span><br />
                         <span>Transmission: {VRN_vehicleTransmission || 'No Transmission available.'} </span><br />
                     </div>
-                    
                 );
                 setShowOptions(false)
                 setShowButton(true)
                 setShowSelectedButton(false)
 
-            } else {
-                setError("Failed To Find Vehicle");
-                setMessage(false)
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                setError('Failed To Retrieve Vehicle Information');
+                console.log(error)
                 setShowOptions(true)
-                setShowSelectedButton(true)
-            }
-
-        } catch (error) {
-            setError('Failed To Retrieve Vehicle Information');
-            console.log(error)
-            setShowOptions(true)
-            setShowSelectedButton(true);
-        }
+                setShowSelectedButton(true);
+            });
     }
+    
 
-
+    
   return (
       <>
             <div className="Card">
@@ -200,14 +177,14 @@ export default function RegisterCar() {
 
                     <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
 
-                    <button id="button" className="w-100 mt-2" type="submit">Search Car</button>
+                    <button id="button" className="w-100 mt-2" type="submit">Search Vehicle</button>
 
                     <p id='vehicleDetail'>{message}</p>
                 </form>
 
                 {showButton && (
                     <form className='addVehicle_Form' onSubmit={handleaddCar}>
-                        <button id="button" className="w-100 mt-2" type="submit" onSubmit={handleaddCar}>Add Car</button>
+                        <button id="button" className="w-100 mt-2" type="submit" onSubmit={handleaddCar}>Add Vehicle</button>
                     </form>
                 )}
 
@@ -254,7 +231,7 @@ export default function RegisterCar() {
                     )} 
 
                     {showSelectedButton && (
-                        <button id="button" className="w-100 mt-2" type="submit" >Add Selected Car</button>
+                        <button id="button" className="w-100 mt-2" type="submit" >Add Selected Vehicle</button>
                     )}
                 </form>
 

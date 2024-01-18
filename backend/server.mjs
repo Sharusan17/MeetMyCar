@@ -22,8 +22,6 @@ app.get('/vehicle/list', async (req, res) => {
         const APP_ID = process.env.PARSE_APP_ID;
         const REST_API_KEY = process.env.PARSE_REST_API_KEY;
 
-        console.log(APP_ID)
-
         const apiResponse = await fetch(`https://parseapi.back4app.com/classes/Carmodels_Car_Model_List?limit=9899&order=Make,Model&keys=Make,Model&where=${where}`,
             {
                 headers:{
@@ -34,17 +32,51 @@ app.get('/vehicle/list', async (req, res) => {
             }
         );
 
-        console.log('API Response Status:', apiResponse.status);
         const responseBody = await apiResponse.text();
-        console.log('API Response Body:', responseBody);
 
         if (apiResponse.ok) {
             const data = JSON.parse(responseBody);
             res.json(data);
         } else {
-            console.log('API Response Status:', apiResponse.status);
-            console.log('API Response Body:', responseBody);
+            // console.log('API Response Status:', apiResponse.status);
+            // console.log('API Response Body:', responseBody);
             res.status(apiResponse.status).json({ message: "Error fetching data from the external API.", details: responseBody });
+        }
+    } catch (error) {
+        console.error('Error making fetch request:', error);
+        res.status(500).json({ message: "Internal server error.", details: error.message });
+    }
+});
+
+
+app.get('/vehicle/search', async (req, res) => {
+    try {
+        const LIVE_APP_ID = process.env.CAR_LIVE_API;
+        const TEST_APP_ID = process.env.CAR_TEST_API;
+
+        const VehicleReg = req.query.vrn
+
+        if(!VehicleReg){
+            return res.status(400).json({message: "Vehicle Registration Number Required."})
+        }
+
+        console.log(VehicleReg);
+
+        const apiResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/ukvehicledata?apikey=${TEST_APP_ID}&vrm=${VehicleReg}`
+            ,{
+                method:'GET',
+                headers:{
+                    'accept': 'application/json',
+                },
+            }
+        );
+
+        const data = await apiResponse.json();
+
+        if (apiResponse.ok) {
+            res.json(data);
+        } else {
+            res.status(apiResponse.status).json({ message: "Error fetching data from the external API.", details: data });
         }
     } catch (error) {
         console.error('Error making fetch request:', error);
