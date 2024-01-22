@@ -16,7 +16,6 @@ const Login = () => {
     const navigate = useNavigate()
 
 
-
     async function handleSubmit(e){
         e.preventDefault()
 
@@ -25,8 +24,20 @@ const Login = () => {
             setLoading(true)
             await login(emailRef.current.value, passwordRef.current.value)
             navigate("/")
-        }catch{
-            setError("Failed To Log In")
+        }catch(error){
+            console.error("Error Logging In:", error)
+            if(error.code === "auth/too-many-requests"){
+                setError(
+                    <> 
+                        Access to this account has been temporarily disabled <br />
+                        Reset Password or Try Again Later
+                    </>
+                )
+            }else if(error.code === "auth/invalid-login-credentials"){
+                setError("Invalid Email/Password")
+            }else{
+                setError("Failed To Log In")
+            }
         }
         setLoading(false) 
     }

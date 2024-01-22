@@ -64,8 +64,8 @@ export default function RegisterVehicle() {
         CarOp();
     }, []); 
 
-    const handleSelectCar= (event) => {
-        const selectMake = event.target.value;
+    const handleSelectCar= (e) => {
+        const selectMake = e.target.value;
         setSelectedMake(selectMake);
 
         const filteredModels = carData.filter(car => car.Make === selectMake).map(car => car.Model);
@@ -83,17 +83,15 @@ export default function RegisterVehicle() {
     async function handleaddCar(e) {
         e.preventDefault()
         console.log("Add Button Pressed")
-        // eslint-disable-next-line
-        console.log("Added Car: " + "Make: "  + vehicleMake + " Model: "  + vehicleModel + " Fuel: "  
-                        + vehicleFuel + " Transmission: "  + vehicleTransmission )
+        console.log(`Added Car: Make ${vehicleMake} Model: ${vehicleModel} 
+                        Fuel: ${vehicleFuel} Transmission: ${vehicleTransmission}`)
     }
 
     async function handleaddSelectedCar(e) {
         e.preventDefault()
         console.log("Selected Button Pressed")
-        // eslint-disable-next-line
-        console.log("Selected Car: " + "Make: "  + selectedMake + " Model: "  + selectedModel + " Fuel: "  
-                        + selectedFuel + " Transmission: "  + selectedTransmission )
+        console.log(`Selected Car: Make ${selectedMake} Model: ${selectedModel} 
+                        Fuel: ${selectedFuel} Transmission: ${selectedTransmission}`)
     }
 
     async function handleSearchVehicle(e){
@@ -192,7 +190,7 @@ export default function RegisterVehicle() {
                     {showOptions && (<div>
 
                             <div className='select-space-between'>
-                                <select onChange={handleSelectCar} value={selectedMake}>
+                                <select onChange={handleSelectCar} value={selectedMake} required>
                                     <option value="" disabled>Make</option>
                                     {makeOptions.map(make => (
                                         <option key={make} value={make}> {make} </option>
@@ -201,8 +199,8 @@ export default function RegisterVehicle() {
                             </div>
 
                             <div className='select-space-between'>
-                                <select onChange={(e) => setSelectedModel(e.target.value)} value={selectedModel} disabled={!selectedMake}>
-                                    <option value="" disabled>Model</option>
+                                <select onChange={(e) => setSelectedModel(e.target.value)} value={selectedModel} disabled={!selectedMake} required>
+                                    <option value="" disabled >Model</option>
                                     {modelOptions.map(model => ( 
                                         <option key={model} value={model}> {model} </option>
                                     ))}
@@ -210,8 +208,8 @@ export default function RegisterVehicle() {
                             </div>
 
                             <div className='select-space-between'>
-                                <select onChange={(e) => setSelectedFuel(e.target.value)} value={selectedFuel} disabled={!selectedModel.length}>
-                                    <option value="" disabled>Fuel</option>
+                                <select onChange={(e) => setSelectedFuel(e.target.value)} value={selectedFuel} disabled={!selectedModel.length} required>
+                                    <option value="" disabled >Fuel</option>
                                     {fuelOptions.map(fuel => (
                                         <option key={fuel} value={fuel}> {fuel} </option>
                                     ))}
@@ -219,7 +217,7 @@ export default function RegisterVehicle() {
                             </div>
 
                             <div className='select-space-between'>
-                                <select onChange={(e) => setSelectedTransmission(e.target.value)} value={selectedTransmission} disabled={!selectedModel.length}>
+                                <select onChange={(e) => setSelectedTransmission(e.target.value)} value={selectedTransmission} disabled={!selectedModel.length} required>
                                     <option value="" disabled>Transmission</option>
                                     {transmissionOptions.map(transmission => (
                                         <option key={transmission} value={transmission}> {transmission} </option>
