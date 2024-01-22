@@ -59,6 +59,11 @@ header{
     border-radius: 5px;
 }
 
+#userName{
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
 #email{
     margin-bottom: 20px;
     border-radius: 5px;
@@ -85,6 +90,7 @@ input:focus{
 }
 
 #error_Msg{
+    font-weight: 600;
     font-size: 12px;
     color: red;
 }
