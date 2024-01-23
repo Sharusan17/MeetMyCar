@@ -59,6 +59,7 @@ const Signup = () => {
         try{
             setError('')
             const {user} = await signup(emailRef.current.value, passwordRef.current.value)
+            await user.sendEmailVerification();
 
             const firebaseUID = user.uid;
 
@@ -73,7 +74,7 @@ const Signup = () => {
             if (response.ok){
                 const data = await response.json()
                 console.log("Created User Account Successful")
-                navigate("/registervehicle")
+                navigate("/verify")
                 return data
             } else{
                 const errorData = await response.json()

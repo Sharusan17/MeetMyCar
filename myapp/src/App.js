@@ -1,13 +1,13 @@
 import {Container}  from "react-bootstrap"
 import {AuthProvider} from "./AuthContext";
 
-import Home from "./Home"
-import Signup from "./Signup"
+import Home from "./Home";
+import Signup from "./Signup";
 import RegisterVehicle  from "./RegisterVehicle";
-import Login from "./Login"
+import Login from "./Login";
+import VerifyEmail from "./VerifyEmail";
 import ForgotPassword from "./ForgotPassword"
 import UpdateProfile from "./UpdateProfile";
-
 
 import {BrowserRouter, Routes, Route,} from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
@@ -27,6 +27,15 @@ function App() {
                     </PrivateRoute>
                     }
                 />
+                
+                <Route path="/verify" 
+                  element={
+                    <PrivateRoute>
+                      <VerifyEmail />
+                    </PrivateRoute>
+                    }
+                />
+
                 <Route path="/update-profile" 
                   element={
                     <PrivateRoute>
