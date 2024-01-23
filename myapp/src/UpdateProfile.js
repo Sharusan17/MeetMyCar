@@ -10,7 +10,7 @@ const UpdateProfile = () => {
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
     const profilePictureRef = useRef()
-    const vehicleRef = useRef()
+    const vehiclesRef = useRef()
 
     const [firstname, setfirstName] = useState('')
     const [lastname, setlastName] = useState('')
@@ -18,7 +18,7 @@ const UpdateProfile = () => {
     const [profilePicture, setprofilePicture] = useState('')
     const [vehicles, setVehicles] = useState([])
 
-    const {currentUser, updateEmail, updatePassword} = useAuth()
+    const {currentUser, logout, sendEmailVerify, updateEmail, updatePassword} = useAuth()
 
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
@@ -31,7 +31,7 @@ const UpdateProfile = () => {
                 const firebaseUID = currentUser.uid;
                 // console.log(firebaseUID)
 
-                const response = await fetch(`http://localhost:3001/users/register?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -65,15 +65,55 @@ const UpdateProfile = () => {
         fetchUserData();
     }, [currentUser.uid]); 
 
+    const updateUser = async () => {
+
+        const updatedUserData = {
+            email: emailRef.current.value,
+            profilePicture: profilePictureRef.current.value,
+            vehicles: vehiclesRef.current.value.split(',')
+        }
+
+        try{
+            // console.log("Updated Email: ", updatedEmail)
+            setLoading(true)
+            setError('')
+            const firebaseUID = currentUser.uid;
+            // console.log(firebaseUID)
+
+            const response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedUserData),
+            });
+
+            if (response.ok){
+                console.log("Updated User Details")
+            } else{
+                const errorData = await response.json()
+                setError("Failed To Update User Details")
+                console.error("Error Updating User Details:", error)
+                throw new Error(errorData.message)
+            }
+        }catch (error){
+            console.error("Error Updating User Details:", error)
+            setError("Failed To Update User Details")
+        }finally{
+            setLoading(false)
+        }
+    }
 
     async function handleSubmit(e){
         e.preventDefault()
 
-        if (passwordRef.current.value !== passwordConfirmRef.current.value){
-            return setError("Password do not match")
-        }
-        if (passwordRef.current.value.length < 6 && passwordConfirmRef.current.value.length < 6 ){
-            return setError("Password Too Short")
+        if(passwordRef.current.value.length){
+            if (passwordRef.current.value !== passwordConfirmRef.current.value){
+                return setError("Password do not match")
+            }
+            if (passwordRef.current.value.length < 6 && passwordConfirmRef.current.value.length < 6 ){
+                return setError("Password Too Short")
+            }
         }
 
         const toupdate = []
@@ -81,11 +121,22 @@ const UpdateProfile = () => {
         setError('')
 
         if (emailRef.current.value !== currentUser.email){
+            console.log("Email Updating...")
             toupdate.push(updateEmail(emailRef.current.value))
+            toupdate.push(updateUser())
         }
-        if (passwordRef.current.value !== currentUser.password){
+        if (passwordRef.current.value.length >0 && passwordRef.current.value !== currentUser.password){
+            console.log("Password Updating...")
             toupdate.push(updatePassword(passwordRef.current.value))
         }
+        if (profilePictureRef.current.value !==profilePicture){
+            console.log("Profile Picture Updating...")
+            toupdate.push(updateUser())
+        }
+        // if (vehiclesRef.current.value !== vehicles.current){
+        //     console.log("Vehicles Updating...")
+        //     toupdate.push(updateUser())
+        // }
 
         Promise.all(toupdate).then(() => {
             navigate('/')
@@ -93,6 +144,12 @@ const UpdateProfile = () => {
             console.log("Failed to Update Account" , error)
             if (error.code === 'auth/operation-not-allowed'){
                 setError("Verify Current Email Address")
+                sendEmailVerify()
+            }else if (error.code === 'auth/requires-recent-login'){
+                setError("Login Session Timeout")
+                setTimeout(() => {
+                    logout()
+                }, 2000)
             }else{
                 setError("Failed to Update Account")
             }
@@ -135,7 +192,7 @@ const UpdateProfile = () => {
 
                     <Form.Group id="vehicles">
                         <Form.Label>Look At Your Vehicles</Form.Label>
-                        <Form.Control type="array" ref={vehicleRef} defaultValue={vehicles} placeholder=''  />
+                        <Form.Control type="array" ref={vehiclesRef} defaultValue={vehicles} placeholder=''  />
                     </Form.Group>
 
                     <p>{error}</p>

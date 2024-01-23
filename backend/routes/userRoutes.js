@@ -8,7 +8,8 @@ router.get("/", (req, res) => {
     res.send("Users")
 })
 
-router.get('/register', async (req, res) => {
+//GET User Data
+router.get('/details', async (req, res) => {
     try{       
         const userId = req.query.userfb;
         // console.log(userId);
@@ -31,6 +32,7 @@ router.get('/register', async (req, res) => {
     }
 });
 
+//POST User Data
 router.post('/register', async (req, res) => {
     console.log(req.body);
     try{       
@@ -50,6 +52,43 @@ router.post('/register', async (req, res) => {
     } catch (error){
         console.error('Error creating user:', error);
         res.status(400).json({message:" Error Creating User", detail: error.message});
+    }
+});
+
+//UPDATE User Data
+router.put('/update', async (req, res) => {
+    try{       
+        console.log(req.body)
+        //check if username is unique
+        const userId = req.query.userfb;
+        // console.log(userId);
+
+        if(!userId){
+            return res.status(400).json({message: "User Not Found."})
+        }
+        const userUpdate = await User.findOne({user_fbId: userId});
+
+        if(!userUpdate){
+            return res.status(400).json({message: "User to Update Not Found."});
+        }
+
+        if(req.body.email){
+            userUpdate.email = req.body.email;
+        }
+        if(req.body.profilePicture){
+            userUpdate.profilePicture = req.body.profilePicture;
+        }
+        if(req.body.vehicle){
+            userUpdate.vehicle = req.body.vehicle;
+        }
+
+        await userUpdate.save();
+
+        res.status(201).json({message: "User Updated", user: userUpdate});
+        console.log("User Updated");
+    } catch (error){
+        console.error('Error updating user:', error);
+        res.status(400).json({message:" Error updaing User", detail: error.message});
     }
 });
 
