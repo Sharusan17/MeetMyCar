@@ -40,7 +40,7 @@ router.post('/add', async (req, res) => {
 });
 
 //UPDATE Post Data
-router.put('/edit/:postId', async (req, res) => {
+router.put('/edit', async (req, res) => {
     try{       
         const {heading, image, description, vehicle} = req.body;
         const postId = req.params.postId;
@@ -68,7 +68,7 @@ router.put('/edit/:postId', async (req, res) => {
 });
 
 //DELETE Post Data
-router.delete('/delete/:postId', async (req, res) => {
+router.delete('/delete', async (req, res) => {
     try{       
         const postId = req.params.postId;
 

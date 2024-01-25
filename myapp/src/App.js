@@ -10,6 +10,8 @@ import ForgotPassword from "./ForgotPassword"
 import UpdateProfile from "./UpdateProfile";
 import Reauthenticate from "./Reauthenticate";
 
+import SeePost from "./SeePost";
+
 import {BrowserRouter, Routes, Route,} from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 
@@ -57,6 +59,14 @@ function App() {
                   element={
                     <PrivateRoute>
                       <RegisterVehicle/>
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route path="/seepost"
+                  element={
+                    <PrivateRoute>
+                      <SeePost/>
                     </PrivateRoute>
                   }
                 />
