@@ -18,7 +18,7 @@ const UpdateProfile = () => {
     const [profilePicture, setprofilePicture] = useState('')
     const [vehicles, setVehicles] = useState([])
 
-    const {currentUser, sendEmailVerify, updateEmail, updatePassword} = useAuth()
+    const {currentUser, logout, sendEmailVerify, updateEmail, updatePassword} = useAuth()
 
     const [emailChanging, setemailChanging] = useState(false)
 
@@ -163,7 +163,7 @@ const UpdateProfile = () => {
             }else if (error.code === 'auth/requires-recent-login'){
                 setError("Login Session Timeout")
                 setTimeout(() => {
-                    navigate.apply('/reauthenticate')
+                    logout()
                 }, 2000)
             }else{
                 setError("Failed to Update Account")
