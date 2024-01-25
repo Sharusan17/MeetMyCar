@@ -2,6 +2,9 @@ const express = require('express');
 const User = require('../model/users');
 const router = express.Router();
 
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'})
+
 router.use(express.json());
 
 router.get("/", (req, res) => {
@@ -33,7 +36,7 @@ router.get('/details', async (req, res) => {
 });
 
 //POST User Data
-router.post('/register', async (req, res) => {
+router.post('/register', upload.single('profilePicture'), async (req, res) => {
     console.log(req.body);
     try{       
         //check if username is unique
@@ -45,6 +48,11 @@ router.post('/register', async (req, res) => {
         }
 
         const newUser = new User(req.body);
+
+        if (req.file){
+            newUser.profilePicture = req.file.path;
+        }
+
         await newUser.save();
 
         res.status(201).json({message: "User Created", user: newUser});
@@ -56,7 +64,7 @@ router.post('/register', async (req, res) => {
 });
 
 //UPDATE User Data
-router.put('/update', async (req, res) => {
+router.put('/update', upload.single('profilePicture'), async (req, res) => {
     try{       
         console.log(req.body)
         //check if username is unique
@@ -75,8 +83,8 @@ router.put('/update', async (req, res) => {
         if(req.body.email){
             userUpdate.email = req.body.email;
         }
-        if(req.body.profilePicture){
-            userUpdate.profilePicture = req.body.profilePicture;
+        if(req.file){
+            userUpdate.profilePicture = req.file.path;
         }
         if(req.body.vehicle){
             userUpdate.vehicle = req.body.vehicle;

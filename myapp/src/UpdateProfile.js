@@ -71,11 +71,14 @@ const UpdateProfile = () => {
 
     const updateUser = async () => {
 
-        const updatedUserData = {
-            email: emailRef.current.value,
-            profilePicture: profilePictureRef.current.value,
-            vehicles: vehiclesRef.current.value.split(',')
+        const formData = new FormData();
+
+        if (profilePictureRef.current && profilePictureRef.current.files[0]){
+            formData.append('profilePicture', profilePictureRef.current.files[0])
         }
+
+        formData.append('email', emailRef.current.value)
+        formData.append('vehicles', vehiclesRef.current.value.split(','))
 
         try{
             // console.log("Updated Email: ", updatedEmail)
@@ -86,10 +89,7 @@ const UpdateProfile = () => {
 
             const response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updatedUserData),
+                body: formData,
             });
 
             if (response.ok){
@@ -207,8 +207,17 @@ const UpdateProfile = () => {
 
                     <Form.Group id="profilePicture">
                         <Form.Label>Profile Picture</Form.Label>
-                        <Form.Control type="" ref={profilePictureRef} defaultValue={profilePicture} placeholder=''  />
+                        <Form.Control type="file" ref={profilePictureRef} defaultValue={profilePicture} accept="image/*"/>
                     </Form.Group>
+
+
+                    {profilePicture && (
+                        <img 
+                            src={`http://localhost:3001/${profilePicture}`} 
+                            alt="Profile"
+                            style={{ width: '100px', height: '100px' }} // Adjust styling as needed
+                        />
+                    )}
 
                     <Form.Group id="vehicles">
                         <Form.Label>Look At Your Vehicles</Form.Label>

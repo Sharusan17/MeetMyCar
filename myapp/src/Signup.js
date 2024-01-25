@@ -13,6 +13,7 @@ const Signup = () => {
     const emailRef = useRef()
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
+    const profilePictureRef = useRef()
 
     const {signup} = useAuth()
 
@@ -49,12 +50,12 @@ const Signup = () => {
             return setError("Password Really Short")
         }
 
-        const userData = {
-            firstname: firstNameRef.current.value,
-            lastname: lastNameRef.current.value,
-            username: userNameRef.current.value,
-            email: emailRef.current.value,
-        }
+        const formData = new FormData();
+        formData.append('firstname', firstNameRef.current.value)
+        formData.append('lastname', lastNameRef.current.value)
+        formData.append('username', userNameRef.current.value)
+        formData.append('email', emailRef.current.value)
+        formData.append('profilePicture', profilePictureRef.current.files[0])
 
         try{
             setError('')
@@ -62,13 +63,11 @@ const Signup = () => {
             await user.sendEmailVerification();
 
             const firebaseUID = user.uid;
+            formData.append('user_fbId', firebaseUID)
 
             const response = await fetch('http://localhost:3001/users/register', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ ...userData, user_fbId: firebaseUID }),
+                body: formData,
             });
 
             if (response.ok){
@@ -136,6 +135,10 @@ const Signup = () => {
 
                 <Form.Group id="passwordConfirmation">
                     <Form.Control type="password" placeholder='Password Confirmation'ref={passwordConfirmRef} required />
+                </Form.Group>
+
+                <Form.Group id="profilePicture">
+                    <Form.Control type="file"placeholder='Profile Picture' ref={profilePictureRef} accept="image/*" />
                 </Form.Group>
 
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
