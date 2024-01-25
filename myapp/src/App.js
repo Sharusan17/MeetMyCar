@@ -8,6 +8,7 @@ import Login from "./Login";
 import VerifyEmail from "./VerifyEmail";
 import ForgotPassword from "./ForgotPassword"
 import UpdateProfile from "./UpdateProfile";
+import Reauthenticate from "./Reauthenticate";
 
 import {BrowserRouter, Routes, Route,} from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
@@ -42,6 +43,14 @@ function App() {
                       <UpdateProfile />
                     </PrivateRoute>
                     }
+                />
+
+                <Route path="/reauthenticate"
+                  element={
+                    <PrivateRoute>
+                      <Reauthenticate/>
+                    </PrivateRoute>
+                  }
                 />
 
                 <Route path="/registervehicle"

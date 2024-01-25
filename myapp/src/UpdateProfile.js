@@ -20,12 +20,15 @@ const UpdateProfile = () => {
 
     const {currentUser, logout, sendEmailVerify, updateEmail, updatePassword} = useAuth()
 
+    const [emailChanging, setemailChanging] = useState(false)
+
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
         async function fetchUserData(){
+            await updateUser()
             try{
                 setError('')
                 const firebaseUID = currentUser.uid;
@@ -63,6 +66,7 @@ const UpdateProfile = () => {
             }
         }
         fetchUserData();
+        // eslint-disable-next-line
     }, [currentUser.uid]); 
 
     const updateUser = async () => {
@@ -121,9 +125,20 @@ const UpdateProfile = () => {
         setError('')
 
         if (emailRef.current.value !== currentUser.email){
-            console.log("Email Updating...")
-            toupdate.push(updateEmail(emailRef.current.value))
-            toupdate.push(updateUser())
+            try{
+                await toupdate.push(updateEmail(emailRef.current.value))
+                console.log("Email Updating...")
+                toupdate.push(updateUser())
+                navigate(`/verify?newEmail=${encodeURIComponent(emailRef.current.value)}`);
+                return;
+            }catch(error){
+                setError(error)
+                console.log(error)
+            }
+            //try update if not catch errors
+            //if can be updated it should go to verify page
+            //when verified it should logout the user out
+            //also if email is being changed all other changes should not work
         }
         if (passwordRef.current.value.length >0 && passwordRef.current.value !== currentUser.password){
             console.log("Password Updating...")
@@ -158,6 +173,11 @@ const UpdateProfile = () => {
         })
     }
 
+    const handleEmailChange= () =>{
+        setemailChanging(true)
+    }
+    
+
   return (
       <>
             <body>
@@ -172,17 +192,17 @@ const UpdateProfile = () => {
                     
                     <Form.Group id="email">
                         <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" ref={emailRef}  defaultValue={currentUser.email} required/>
+                        <Form.Control type="email" ref={emailRef}  defaultValue={currentUser.email} onChange={handleEmailChange} required/>
                     </Form.Group>            
                     
                     <Form.Group id="password">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" ref={passwordRef} placeholder='Leave Blank to keep the same' />
+                        <Form.Control type="password" ref={passwordRef} placeholder={emailChanging ? 'Cannot Be Updated While Email Updating' : 'Leave Blank to keep the same'} disabled={emailChanging}/>
                     </Form.Group>
 
                     <Form.Group id="passwordConfirmation">
                         <Form.Label>Password Confirmation</Form.Label>
-                        <Form.Control type="password" ref={passwordConfirmRef} placeholder='Leave Blank to keep the same'  />
+                        <Form.Control type="password" ref={passwordConfirmRef} placeholder={emailChanging ? 'Cannot Be Updated While Email Updating' : 'Leave Blank to keep the same'} disabled={emailChanging} />
                     </Form.Group>
 
                     <Form.Group id="profilePicture">
