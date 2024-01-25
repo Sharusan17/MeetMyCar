@@ -28,11 +28,11 @@ export function AuthProvider ({children}) {
     }
 
     function updateEmail(email){
-      return auth.currentUser.verifyBeforeUpdateEmail(email)
+      return currentUser.verifyBeforeUpdateEmail(email)
     }
 
     function updatePassword(password){
-      return auth.currentUser.updatePassword(password)
+      return currentUser.updatePassword(password)
     }
 
     useEffect(() => {

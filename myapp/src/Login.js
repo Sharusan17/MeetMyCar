@@ -33,7 +33,7 @@ const Login = () => {
                         Reset Password or Try Again Later
                     </>
                 )
-            }else if(error.code === "auth/invalid-login-credentials"){
+            }else if(error.code === "auth/invalid-credential"){
                 setError("Invalid Email/Password")
             }else{
                 setError("Failed To Log In")
