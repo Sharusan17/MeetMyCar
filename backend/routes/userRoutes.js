@@ -15,6 +15,7 @@ router.get("/", (req, res) => {
 router.get('/details', async (req, res) => {
     try{       
         const userId = req.query.userfb;
+        
         // console.log(userId);
 
         if(!userId){
@@ -23,15 +24,15 @@ router.get('/details', async (req, res) => {
         const userData = await User.findOne({user_fbId: userId});
 
         if(!userData){
-            return res.status(400).json({message: "User Details Not Found."});
+            return res.status(404).json({message: "User Details Not Found."});
         }
         // console.log(userData);
 
-        res.status(201).json({message: "User Details", userData});
+        res.status(200).json({message: "User Details", userData});
         console.log("User Details Found");
     } catch (error){
         console.error('User Details Not Found:', error);
-        res.status(400).json({message:" Error Finding User Details", detail: error.message});
+        res.status(500).json({message:" Error Finding User Details", detail: error.message});
     }
 });
 
@@ -59,7 +60,7 @@ router.post('/register', upload.single('profilePicture'), async (req, res) => {
         console.log("User Created");
     } catch (error){
         console.error('Error creating user:', error);
-        res.status(400).json({message:" Error Creating User", detail: error.message});
+        res.status(500).json({message:" Error Creating User", detail: error.message});
     }
 });
 
@@ -77,7 +78,7 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
         const userUpdate = await User.findOne({user_fbId: userId});
 
         if(!userUpdate){
-            return res.status(400).json({message: "User to Update Not Found."});
+            return res.status(404).json({message: "User to Update Not Found."});
         }
 
         if(req.body.email){
@@ -92,11 +93,33 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
 
         await userUpdate.save();
 
-        res.status(201).json({message: "User Updated", user: userUpdate});
+        res.status(200).json({message: "User Updated", user: userUpdate});
         console.log("User Updated");
     } catch (error){
         console.error('Error updating user:', error);
-        res.status(400).json({message:" Error updaing User", detail: error.message});
+        res.status(500).json({message:" Error updaing User", detail: error.message});
+    }
+});
+
+//DELETE User Data
+router.delete('/delete', async (req, res) => {
+    try{       
+        const userId = req.query.userfb;
+
+        if(!userId){
+            return res.status(400).json({message: "User Not Found."})
+        }
+        const userDelete = await User.findByIdAndDelete (userId);
+
+        if(!userDelete){
+            return res.status(404).json({message: "User to Delete Not Found."});
+        }
+
+        res.status(200).json({message: "User Deleted", user: userDelete});
+        console.log("User Deleted");
+    } catch (error){
+        console.error('Error deleting user:', error);
+        res.status(500).json({message:" Error deleting User", detail: error.message});
     }
 });
 

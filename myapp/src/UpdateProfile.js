@@ -12,15 +12,18 @@ const UpdateProfile = () => {
     const profilePictureRef = useRef()
     const vehiclesRef = useRef()
 
+    const [userId, setUserId] = useState('')
     const [firstname, setfirstName] = useState('')
     const [lastname, setlastName] = useState('')
     const [username, setuserName] = useState('')
     const [profilePicture, setprofilePicture] = useState('')
     const [vehicles, setVehicles] = useState([])
 
-    const {currentUser, logout, sendEmailVerify, updateEmail, updatePassword} = useAuth()
+    const {currentUser, logout, sendEmailVerify, updateEmail, updatePassword, deleteUser} = useAuth()
 
     const [emailChanging, setemailChanging] = useState(false)
+    const [confirmDeleteUser, setconfirmDeleteUser] = useState(false)
+
 
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
@@ -44,6 +47,7 @@ const UpdateProfile = () => {
                 if (response.ok){
                     const data = await response.json()
 
+                    setUserId(data.userData._id)
                     setfirstName(data.userData.firstname)
                     setlastName(data.userData.lastname)
                     setuserName(data.userData.username)
@@ -135,10 +139,6 @@ const UpdateProfile = () => {
                 setError(error)
                 console.log(error)
             }
-            //try update if not catch errors
-            //if can be updated it should go to verify page
-            //when verified it should logout the user out
-            //also if email is being changed all other changes should not work
         }
         if (passwordRef.current.value.length >0 && passwordRef.current.value !== currentUser.password){
             console.log("Password Updating...")
@@ -148,10 +148,6 @@ const UpdateProfile = () => {
             console.log("Profile Picture Updating...")
             toupdate.push(updateUser())
         }
-        // if (vehiclesRef.current.value !== vehicles.current){
-        //     console.log("Vehicles Updating...")
-        //     toupdate.push(updateUser())
-        // }
 
         Promise.all(toupdate).then(() => {
             navigate('/')
@@ -171,6 +167,39 @@ const UpdateProfile = () => {
         }).finally( () => {
             setLoading(false)
         })
+    }
+
+    async function handleDelete(e){
+        e.preventDefault()
+
+        if (!confirmDeleteUser){
+            setconfirmDeleteUser(true)
+            return
+        }
+
+        setLoading(true)
+        setError('')
+
+        try{
+            const response = await fetch(`http://localhost:3001/users/delete?userfb=${encodeURIComponent(userId)}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok){
+                console.log("Deleted User")
+                deleteUser()
+            } else{
+                const errorData = await response.json()
+                setError("Failed To Delete User")
+                console.error("Error Deleting User:", error)
+                throw new Error(errorData.message)
+            }
+        }catch (error){
+            console.error("Error Deleting User:", error)
+            setError("Failed To Delete User")
+        }finally{
+            setLoading(false)
+        }
     }
 
     const handleEmailChange= () =>{
@@ -227,6 +256,18 @@ const UpdateProfile = () => {
                     <p>{error}</p>
 
                     <Button disabled={loading} className="w-100 mt-2" type="submit">Update</Button>
+
+                    {confirmDeleteUser ? (
+                        <>
+                            <p>Are you sure you want to delete <strong>{usernameRef.current.value}</strong> account?</p>
+                            <Button disabled={loading} className="w-100 mt-2" variant="danger" onClick={handleDelete}>Confirm Delete</Button>
+                        </>
+                    ) :(
+                        <>
+                            <Button disabled={loading} className="w-100 mt-2" type="submit"  onClick={handleDelete}>Delete Account</Button>
+                        </>
+                    )}
+
                 </form>
 
             </body>

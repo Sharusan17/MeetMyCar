@@ -11,6 +11,20 @@ router.get("/", (req, res) => {
     res.send("Posts")
 })
 
+//Get Post Data
+router.get('/view', async (req, res) => {
+    console.log(req.body);
+    try{       
+        const posts = await Post.find();
+
+        res.status(201).json({message: "Post Found", posts});
+        console.log("Post Found");
+    } catch (error){
+        console.error('Error Fetching Posts:', error);
+        res.status(400).json({message:" Error Fetching Post", detail: error.message});
+    }
+});
+
 //POST Post Data
 router.post('/add', async (req, res) => {
     try{       
@@ -22,20 +36,6 @@ router.post('/add', async (req, res) => {
     } catch (error){
         console.error('Error Creating Post:', error);
         res.status(400).json({message:" Error Creating Post", detail: error.message});
-    }
-});
-
-//Get Post Data
-router.get('/view', async (req, res) => {
-    console.log(req.body);
-    try{       
-        const posts = await Post.find();
-
-        res.status(201).json({message: "Post Found", userData});
-        console.log("Post Found");
-    } catch (error){
-        console.error('Error Fetching Posts:', error);
-        res.status(400).json({message:" Error Fetching Post", detail: error.message});
     }
 });
 
@@ -59,11 +59,34 @@ router.put('/edit/:postId', async (req, res) => {
             return res.status(400).json({message: "Post Not Able To Update."});
         }
 
-        res.status(201).json({message: "Post Updated", user: userUpdate});
+        res.status(201).json({message: "Post Updated", user: postUpdate});
         console.log("User Updated");
     } catch (error){
         console.error('Error Updating Post:', error);
-        res.status(400).json({message:" Error Updaing Post", detail: error.message});
+        res.status(400).json({message:" Error Updating Post", detail: error.message});
+    }
+});
+
+//DELETE Post Data
+router.delete('/delete/:postId', async (req, res) => {
+    try{       
+        const postId = req.params.postId;
+
+        if(!postId){
+            return res.status(400).json({message: "Post Not Found."})
+        }
+
+        const postDeleted = await Post.findByIdAndDelete( postId);
+  
+        if(!postDeleted){
+            return res.status(400).json({message: "Post Not Able To Delete."});
+        }
+
+        res.status(201).json({message: "Post ${postId} Deleted", user: userUpdate});
+        console.log("Post Deleted");
+    } catch (error){
+        console.error('Error Deleting Post:', error);
+        res.status(400).json({message:" Error Deleting Post", detail: error.message});
     }
 });
 
