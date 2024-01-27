@@ -1,0 +1,12 @@
+.layout {
+    display: flex;
+    height: 100vh;
+    background-color: rgb(247, 247, 247);
+}
+.content {
+    flex-grow: 1;
+    flex-direction: column;
+    margin: 80px 60px 0 160px;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}

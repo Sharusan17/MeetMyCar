@@ -1,0 +1,131 @@
+.toolbar {
+    position: fixed;
+    transition: width 100ms ease;
+    background-color: white;
+}
+
+.logo{
+    font-weight: bold;
+    margin-bottom: 16px;
+    text-align: center;
+    color: red;
+}
+
+.logo svg{
+    transform:scale(1,1);
+    transition: transform 200ms ease;
+}
+
+.toolbar:hover .logo svg{
+    transform:scale(-1,1);
+}
+
+.toolbar-ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.toolbar-item{
+    margin-top: 30px;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+}
+
+.toolbar-item:nth-last-child(2){
+    margin-top: auto;
+    margin-bottom: 15px;
+}
+
+
+.toolbar-item:last-child{
+    margin-top: auto;
+    margin-bottom: 30px;
+}
+
+.item-link{
+    display: flex;
+    align-items: center;
+    height: 80px;
+    color: black;
+    text-decoration: none;
+    filter: grayscale(100%) opacity(0.7);
+    transition: filter 200ms ease;
+}
+
+.user-item-link{
+    display: flex;
+    align-items: center;
+    height: 80px;
+    color: black;
+    text-decoration: none;
+}
+
+.item-link:hover{
+    filter: grayscale(0%) opacity(1);
+    color: red;
+}
+
+
+.link-text{
+    display: none;
+}
+
+.user-link-text{
+    display: none;
+}
+
+.item-link svg{
+    min-width: 32px;
+    margin: 0 24px;
+}
+
+@media only screen and (max-width: 600px) {
+    .toolbar{
+        bottom: 0;
+        width: 100vw;
+        height: 80px
+    }
+
+    .logo{
+        display: none;
+    }
+
+    .toolbar-ul{
+        flex-direction: row;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    .toolbar{
+        width: 100px;
+        height: 100vh;
+        top:0
+    }
+    .toolbar:hover{
+        margin-right: 5px;
+        width: 180px;
+        border-right: 2px solid black;
+    }
+    
+    .toolbar:hover .link-text, .toolbar:hover .user-link-text{
+        display: inline-block;
+    }
+
+    .user-link-text{
+        margin-right: 15px;
+        font-weight: bold;
+    }
+
+    .item-link, .user-item-link{
+        justify-content: center;
+    }
+    
+    
+}

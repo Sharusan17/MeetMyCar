@@ -1,5 +1,6 @@
-import {Container}  from "react-bootstrap"
 import {AuthProvider} from "./AuthContext";
+
+import Layout from "./Layout";
 
 import Home from "./Home";
 import Signup from "./Signup";
@@ -17,16 +18,15 @@ import PrivateRoute from "./PrivateRoute";
 
 function App() {
   return (
-      <Container className="d-flex align-items-center justify-content-center" style={{minHeight: "1000px"}}>
-        <div className="w-100" style={{ maxWidth: "400px"}}>
-
           <BrowserRouter>
             <AuthProvider>
               <Routes>
                 <Route path="/" 
                   element={
                     <PrivateRoute>
-                      <Home />
+                      <Layout>
+                        <Home />
+                      </Layout>
                     </PrivateRoute>
                     }
                 />
@@ -42,7 +42,9 @@ function App() {
                 <Route path="/update-profile" 
                   element={
                     <PrivateRoute>
-                      <UpdateProfile />
+                      <Layout>
+                        <UpdateProfile />
+                      </Layout>
                     </PrivateRoute>
                     }
                 />
@@ -66,7 +68,9 @@ function App() {
                 <Route path="/seepost"
                   element={
                     <PrivateRoute>
-                      <SeePost/>
+                      <Layout>
+                        <SeePost/>
+                      </Layout>
                     </PrivateRoute>
                   }
                 />
@@ -78,9 +82,6 @@ function App() {
               </Routes>
             </AuthProvider>
           </BrowserRouter>
-
-       </div>
-      </Container>
   )
 }
 
