@@ -1,5 +1,4 @@
 import React, {useState, useRef} from 'react'
-import {Form} from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
@@ -27,13 +26,12 @@ const SeePost = () => {
     const navigate= useNavigate()
 
     const[posts, setPosts] = useState([
-        {id:1, title: 'Kryo Store', user:'Sharusan', image:`http://localhost:3001/uploads/3f736944d3729d94506db63f9b3f6335`, description: 'Description 1', date:'26/01/24', time:'18:00', vrn:'EA64 SYJ'},
+        {id:1, title: 'Porsche 911 GB', user:'Sharusan', profilePicture:'http://localhost:3001/uploads/3f736944d3729d94506db63f9b3f6335', image:`http://localhost:3001/uploads/b9453f083d3aaf3f3826875e2742faad`, description: 'Check My Car Fastest Car In The World', date:'26/01/24', time:'18:00', vrn:'EA64 SYJ'},
         {id:2, title: 'Post 2', user:'Mate', image:'/uploads', description: 'Description 2'},
         {id:2, title: 'Post 2', user:'Mate', image:'/uploads', description: 'Description 2'},
         {id:2, title: 'Post 2', user:'Mate', image:'/uploads', description: 'Description 2'},
         {id:2, title: 'Post 2', user:'Mate', image:'/uploads', description: 'Description 2'},
     ])
-
 
     async function handleAddPost(){
         
@@ -46,8 +44,13 @@ const SeePost = () => {
                     <div key={post.id} className='post'>
                         <div className='postHead'>
                             <div className='postUserDetails'>
-                                {/* <img src={post.image} width='500' height='400'></img> */}
-                                <p id='postUserName'>{post.user}</p>
+                                {post.profilePicture && (
+                                    <img className='postUserImage'
+                                        src={post.profilePicture} 
+                                        alt="Profile"
+                                    />
+                                )}                                
+                                <p className='postUserName'>{post.user}</p>
                             </div>
                             <div className='postTimeStamp'>
                                 <p>{post.date}</p>
@@ -56,11 +59,21 @@ const SeePost = () => {
                         </div>
                         
                         <div className='post-content'>
-                            <h2 id='postTitle'>{post.title}</h2> 
-                            <img src={post.image} alt={post.title} id='postImage'/>
+                            <h2 className='postTitle'>{post.title}</h2> 
+                            <img src={post.image} alt={post.title} className='postImage'/>
+                            <div className='postSpecs'>
+                                <div>
+                                    {/* Top Speed, BHP, Torque */}
+                                    {/* Red, Green, Yellow */}
+                                    {/* add image with number */}
+                                    <p className='postSpecsName'></p>
+                                </div>
+                                
+                                
+                            </div>
                             <div className='postFooter'>
-                                <p id='postDescription'>{post.description}</p> 
-                                <p id='postVRN'>{post.vrn}</p>
+                                <Link className='postVRN'>{post.vrn}</Link>
+                                <p className='postDescription'>{post.description}</p> 
                             </div> 
                         </div> 
                     </div>
