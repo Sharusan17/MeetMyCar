@@ -1,76 +1,99 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from './AuthContext'
 
 import './SeePost_css.css'
 
 const SeePost = () => {
 
-    const headingRef = useRef()
-    const imageRef = useRef()
-    const descriptionRef = useRef()
-    const commentsRef = useRef()
+    const navigate = useNavigate()
+    const[posts, setPosts] = useState([])
 
-    const [heading, setHeading] = useState('')
-    const [image, setImage] = useState('')
-    const [description, setDescription] = useState('')
-    const [userId, setUserId] = useState('')
-    const [vehicles, setVehicles] = useState([])
-    const [comments, setComments] = useState('')
+    useEffect(() => {
+        async function fetchPostData(){
+            try{
+                const response = await fetch(`http://localhost:3001/posts/view`, {
+                    method: 'GET',
+                    headers: {
+                        'accept': 'application/json',
+                    },
+                });
 
-    const [error, setError] = useState('')
-    const [message, setMessage] = useState('')
-    const [loading, setLoading] = useState(false)
+                if (response.ok){
+                    const data = await response.json()
 
-    const {currentUser} = useAuth()
-    const navigate= useNavigate()
+                    setPosts(data.postData)
 
-    const[posts, setPosts] = useState([
-        {id:1, title: 'Porsche 911 GB', user:'Sharusan', profilePicture:'http://localhost:3001/uploads/3f736944d3729d94506db63f9b3f6335', image:`http://localhost:3001/uploads/b9453f083d3aaf3f3826875e2742faad`, description: 'Check My Car Fastest Car In The World', date:'26/01/24', time:'18:00', vrn:'EA64 SYJ'},
-        {id:2, title: 'Post 2', user:'Mate', image:'/uploads', description: 'Description 2'},
-        {id:2, title: 'Post 2', user:'Mate', image:'/uploads', description: 'Description 2'},
-        {id:2, title: 'Post 2', user:'Mate', image:'/uploads', description: 'Description 2'},
-        {id:2, title: 'Post 2', user:'Mate', image:'/uploads', description: 'Description 2'},
-    ])
+                    console.log("Fetched Post Details")
+                    return data
+                } else{
+                    const errorData = await response.json()
+                    throw new Error(errorData.message)
+                }
+            }catch (error){
+                console.error("Error Fetching Post Data:", error)
+            }
+        }
+        fetchPostData();
+    }, []);
 
-    async function handleAddPost(){
-        
+    const formatDate = (timestamps) => {
+        const date = new Date(timestamps);
+        return date.toLocaleDateString()
     }
+    const formatTime = (timestamps) => {
+        const time = new Date(timestamps);
+        return time.toLocaleTimeString()
+    }
+ 
 
     return (
         <>
             <div className="postList">
                 {posts.map((post) => (
-                    <div key={post.id} className='post'>
+                    <div key={post._id}  className='post'>
                         <div className='postHead'>
                             <div className='postUserDetails'>
-                                {post.profilePicture && (
+                                {post.user.profilePicture && (
                                     <img className='postUserImage'
-                                        src={post.profilePicture} 
+                                        src={`http://localhost:3001/${post.user.profilePicture}`} 
                                         alt="Profile"
                                     />
                                 )}                                
-                                <p className='postUserName'>{post.user}</p>
+                                <p className='postUserName'>{post.user.username}</p>
                             </div>
                             <div className='postTimeStamp'>
-                                <p>{post.date}</p>
-                                <p>{post.time}</p>
+                                <p>{formatDate(post.updatedAt)}</p>
+                                <p>{formatTime(post.updatedAt)}</p>
                             </div>
                         </div>
                         
                         <div className='post-content'>
                             <h2 className='postTitle'>{post.title}</h2> 
-                            <img src={post.image} alt={post.title} className='postImage'/>
+                            <img src={`http://localhost:3001/${post.image}`} alt={post.title} className='postImage'/>
+
                             <div className='postSpecs'>
-                                <div>
-                                    {/* Top Speed, BHP, Torque */}
-                                    {/* Red, Green, Yellow */}
-                                    {/* add image with number */}
-                                    <p className='postSpecsName'></p>
+                                <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,red 0% ${((1.5/post.speedtime)*100)}%,white ${0}% 100%)`}}>
+                                    <h3>{post.speedtime} 
+                                        <span>secs</span>
+                                    </h3>
+                                    <p className='TopSpecsName'> 0 - 60</p>
                                 </div>
-                                
-                                
+
+                                <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,orange 0% ${((post.bhp/1000)*100)}%,white ${0}% 100%)`}}>
+                                    <h3>{post.bhp}
+                                        <span>bhp</span>
+                                    </h3>
+                                    <p className='TopSpecsName'>BHP</p>
+                                </div>
+
+                                <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,green 0% ${post.torque}%,white ${100-post.torque}% 100%)`}}>
+                                    <h3>{post.torque}
+                                        <span>Nm</span>
+                                    </h3>
+                                    <p className='TopSpecsName'>Torque</p>
+                                </div>
                             </div>
+
                             <div className='postFooter'>
                                 <Link className='postVRN'>{post.vrn}</Link>
                                 <p className='postDescription'>{post.description}</p> 
@@ -78,9 +101,7 @@ const SeePost = () => {
                         </div> 
                     </div>
                 ))}
-                    <p>{error}</p>
             </div>    
-
         </>
     )
 }

@@ -14,10 +14,11 @@ router.get("/", (req, res) => {
 //Get Post Data
 router.get('/view', async (req, res) => {
     console.log(req.body);
-    try{       
-        const posts = await Post.find();
+    try{
+        //sorts the post by updatedAt Date/Time (Newest First)
+        const postData = await Post.find().populate('user', 'username profilePicture').sort({updatedAt: -1});
 
-        res.status(201).json({message: "Post Found", posts});
+        res.status(201).json({message: "Post Found", postData});
         console.log("Post Found");
     } catch (error){
         console.error('Error Fetching Posts:', error);

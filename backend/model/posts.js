@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 
 const PostSchema = new mongoose.Schema({
-    heading:{
+    user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users'
+    },
+    title:{
         type: String,
         maxlength: 30,
     },
@@ -10,10 +14,6 @@ const PostSchema = new mongoose.Schema({
     },
     description:{
         type: String
-    },
-    user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
     },
     vehicle: {
         type: mongoose.Schema.Types.ObjectId,
