@@ -61,7 +61,7 @@ router.post('/add', upload.single('image'), async (req, res) => {
 router.put('/edit', upload.single('image'), async (req, res) => {
     try{       
         const {heading, image, description, vehicle} = req.body;
-        const postId = req.params.postId;
+        const postId = req.query.postId;
 
         if(!postId){
             return res.status(400).json({message: "Post Not Found."})
@@ -77,8 +77,8 @@ router.put('/edit', upload.single('image'), async (req, res) => {
             return res.status(404).json({message: "Post Not Able To Update."});
         }
 
-        res.status(201).json({message: "Post Updated", user: postUpdate});
-        console.log("User Updated");
+        res.status(201).json({message: "Post Updated", post: postUpdate});
+        console.log("Post Updated");
     } catch (error){
         console.error('Error Updating Post:', error);
         res.status(500).json({message:" Error Updating Post", detail: error.message});
@@ -100,7 +100,7 @@ router.delete('/delete', async (req, res) => {
             return res.status(404).json({message: "Post Not Able To Delete."});
         }
 
-        res.status(200).json({message: "Post ${postId} Deleted", user: userUpdate});
+        res.status(200).json({message: "Post ${postId} Deleted", post: postDelete});
         console.log("Post Deleted");
     } catch (error){
         console.error('Error Deleting Post:', error);

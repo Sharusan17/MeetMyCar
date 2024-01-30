@@ -12,7 +12,8 @@ import UpdateProfile from "./UpdateProfile";
 import Reauthenticate from "./Reauthenticate";
 
 import SeePost from "./SeePost";
-import AddPost from "./AddPost"
+import AddPost from "./AddPost";
+import EditPost from "./EditPost";
 
 import {BrowserRouter, Routes, Route,} from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
@@ -81,6 +82,16 @@ function App() {
                     <PrivateRoute>
                       <Layout>
                         <AddPost/>
+                      </Layout>
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route path="/editpost"
+                  element={
+                    <PrivateRoute>
+                      <Layout>
+                        <EditPost/>
                       </Layout>
                     </PrivateRoute>
                   }
