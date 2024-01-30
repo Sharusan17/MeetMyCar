@@ -10,6 +10,7 @@ const AddPost = () => {
     const imageRef = useRef()
     const descRef  = useRef()
 
+    const[userId, setuserId] = useState('')
     const [username, setuserName] = useState('')
     const [profilePicture, setprofilePicture] = useState('')
 
@@ -34,7 +35,8 @@ const AddPost = () => {
     
                 if (response.ok){
                     const data = await response.json()
-    
+
+                    setuserId(data.userData._id)
                     setuserName(data.userData.username)
                     setprofilePicture(data.userData.profilePicture)
     
@@ -49,16 +51,33 @@ const AddPost = () => {
             }
         }
         fetchUserData();
-      }, [currentUser.uid]);
+    }, [currentUser.uid]);
 
     async function handleAddPost(e){
         e.preventDefault()
-        
-        const formData = new FormData();
-        formData.append('users')
-        formData.append('title', titleRef.current.value)
-        formData.append('description', descRef.current.value)
-        formData.append('image', imageRef.current.files[0])
+
+       if (titleRef.current.value.length < 2 ){
+            return setError("Title Too Short")
+       }
+
+       if (titleRef.current.value.length > 20 ){
+            return setError("Title Too Long")
+       }
+
+       if (descRef.current.value.length < 2 ){
+            return setError("Description Too Short")
+       }
+
+       if (imageRef.current.files.length < 0) {
+            return setError("Please select an image to upload.")
+       }
+
+
+       const formData = new FormData();
+       formData.append('user', userId)
+       formData.append('title', titleRef.current.value)
+       formData.append('image', imageRef.current.files[0])
+       formData.append('description', descRef.current.value)
 
         try{
             setError('')
@@ -84,7 +103,6 @@ const AddPost = () => {
         }
         setLoading(false) 
     }
- 
 
     return (
         <>
@@ -110,17 +128,17 @@ const AddPost = () => {
                     </div>
 
                     <div className='add-post-content'>
-                        <input type='text'ref={titleRef} placeholder='Title...' className='add_postTitle'></input>
-                        <input type='file'ref={imageRef} placeholder='Insert Image' className='add_postImage'></input> 
+                        <input type='text' ref={titleRef} placeholder='Title...' className='add_postTitle' required></input>
+                        <input type='file' ref={imageRef} placeholder='Insert Image' className='add_postImage' accept="image/*" required></input> 
 
                         <div className='add_postFooter'>
                             <select className='add_postVRN'>
                                 <option>Car 1</option>
                             </select>
-                            <input type='text' ref={descRef} placeholder="Description" className='add_postDescription'></input> 
+                            <input type='text' ref={descRef} placeholder="Description" className='add_postDescription' required></input> 
                         </div>
                     </div>
-                    <p>{error}</p>
+                    <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
                     <button disabled={loading} className="addpostbtn" type="submit">Add Post</button>
 
                 </form>

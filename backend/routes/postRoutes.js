@@ -27,7 +27,7 @@ router.get('/view', async (req, res) => {
 });
 
 //POST Post Data
-router.post('/add', async (req, res) => {
+router.post('/add', upload.single('image'), async (req, res) => {
     try{       
         const newPost = new Post(req.body);
         await newPost.save();
