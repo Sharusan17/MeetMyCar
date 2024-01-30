@@ -68,19 +68,21 @@ const AddPost = () => {
             return setError("Description Too Short")
        }
 
-       if (imageRef.current.files.length < 0) {
+       if (imageRef.current.files.length === 0) {
             return setError("Please select an image to upload.")
        }
 
 
        const formData = new FormData();
-       formData.append('user', userId)
-       formData.append('title', titleRef.current.value)
-       formData.append('image', imageRef.current.files[0])
-       formData.append('description', descRef.current.value)
+       formData.append('user', userId);
+       formData.append('title', titleRef.current.value);
+       formData.append('description', descRef.current.value);
+       formData.append('image', imageRef.current.files[0]);
 
         try{
             setError('')
+            setLoading(true) 
+
 
             const response = await fetch('http://localhost:3001/posts/add', {
                 method: 'POST',

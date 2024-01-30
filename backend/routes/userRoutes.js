@@ -67,7 +67,6 @@ router.post('/register', upload.single('profilePicture'), async (req, res) => {
 //UPDATE User Data
 router.put('/update', upload.single('profilePicture'), async (req, res) => {
     try{       
-        console.log(req.body)
         //check if username is unique
         const userId = req.query.userfb;
         // console.log(userId);
@@ -93,7 +92,7 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
 
         await userUpdate.save();
 
-        res.status(200).json({message: "User Updated", user: userUpdate});
+        res.status(201).json({message: "User Updated", user: userUpdate});
         console.log("User Updated");
     } catch (error){
         console.error('Error updating user:', error);
