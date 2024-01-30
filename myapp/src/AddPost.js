@@ -13,7 +13,7 @@ const AddPost = () => {
     const [username, setuserName] = useState('')
     const [profilePicture, setprofilePicture] = useState('')
 
-    const currentUser = useAuth()
+    const {currentUser} = useAuth()
 
     const [error, setError] = useState()
     const [loading, setLoading] = useState()
@@ -49,7 +49,6 @@ const AddPost = () => {
             }
         }
         fetchUserData();
-        // eslint-disable-next-line
       }, [currentUser.uid]);
 
     async function handleAddPost(e){

@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import './SeePost_css.css'
 
 const SeePost = () => {
 
-    const navigate = useNavigate()
     const[posts, setPosts] = useState([])
 
     useEffect(() => {
@@ -50,16 +49,16 @@ const SeePost = () => {
         <>
             <div className="postList">
                 {posts.map((post) => (
-                    <div key={post._id}  className='post'>
+                    <div key={post.id}  className='post'>
                         <div className='postHead'>
                             <div className='postUserDetails'>
-                                {post.user.profilePicture && (
+                                {post.user?.profilePicture && (
                                     <img className='postUserImage'
                                         src={`http://localhost:3001/${post.user.profilePicture}`} 
                                         alt="Profile"
                                     />
                                 )}                                
-                                <p className='postUserName'>{post.user.username}</p>
+                                <p className='postUserName'>{post.user?.username}</p>
                             </div>
                             <div className='postTimeStamp'>
                                 <p>{formatDate(post.updatedAt)}</p>

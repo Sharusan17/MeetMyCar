@@ -12,6 +12,7 @@ import UpdateProfile from "./UpdateProfile";
 import Reauthenticate from "./Reauthenticate";
 
 import SeePost from "./SeePost";
+import AddPost from "./AddPost"
 
 import {BrowserRouter, Routes, Route,} from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
@@ -70,6 +71,16 @@ function App() {
                     <PrivateRoute>
                       <Layout>
                         <SeePost/>
+                      </Layout>
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route path="/addpost"
+                  element={
+                    <PrivateRoute>
+                      <Layout>
+                        <AddPost/>
                       </Layout>
                     </PrivateRoute>
                   }

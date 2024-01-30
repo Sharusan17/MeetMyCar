@@ -3,17 +3,23 @@ const mongoose = require('mongoose');
 const PostSchema = new mongoose.Schema({
     user:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users'
+        ref: 'Users',
+        required: true,
     },
     title:{
         type: String,
+        minlength: 2,
         maxlength: 30,
+        required: true,
     },
     image:{
-        type: String
+        type: String,
+        required: true,
     },
     description:{
-        type: String
+        type: String,
+        minlength: 2,
+        required: true,
     },
     vehicle: {
         type: mongoose.Schema.Types.ObjectId,
