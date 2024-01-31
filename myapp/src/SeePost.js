@@ -7,6 +7,8 @@ const SeePost = () => {
 
     const[posts, setPosts] = useState([])
 
+    const[menuoptions, setMenuOptions] = useState(false)
+
     useEffect(() => {
         async function fetchPostData(){
             try{
@@ -43,13 +45,16 @@ const SeePost = () => {
         const time = new Date(timestamps);
         return time.toLocaleTimeString()
     }
- 
+
+    const handleShowOptions = () =>{
+        setMenuOptions(!menuoptions)
+    }
 
     return (
         <>
             <div className="postList">
                 {posts.map((post) => (
-                    <div key={post.id}  className='post'>
+                    <div key={post._id}  className='post'>
                         <div className='postHead'>
                             <div className='postUserDetails'>
                                 {post.user?.profilePicture && (
@@ -60,9 +65,36 @@ const SeePost = () => {
                                 )}                                
                                 <p className='postUserName'>{post.user?.username}</p>
                             </div>
+
+                            
                             <div className='postTimeStamp'>
                                 <p>{formatDate(post.updatedAt)}</p>
                                 <p>{formatTime(post.updatedAt)}</p>
+
+                                <div className='postMenuContainer'>
+                                    <button className='postMenu' onClick={handleShowOptions}>
+                                        <div className='postdot'></div>
+                                        <div className='postdot'></div>
+                                        <div className='postdot'></div>
+                                    </button>
+
+                                    {menuoptions && (
+                                        <div className='postOption'>
+                                            <ul>
+                                                <li className='menu-item'>
+                                                    <Link to="/editpost" className='menu-link'>
+                                                        Edit Post
+                                                    </Link>
+                                                </li>
+                                                <li className='menu-item'>
+                                                    <Link to="/deletepost" className='menu-link' id='delete-menu-link'>
+                                                        Delete Post
+                                                    </Link>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                         
@@ -98,6 +130,7 @@ const SeePost = () => {
                                 <p className='postDescription'>{post.description}</p> 
                             </div> 
                         </div> 
+                        
                     </div>
                 ))}
             </div>    

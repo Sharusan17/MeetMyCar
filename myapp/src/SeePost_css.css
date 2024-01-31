@@ -48,6 +48,57 @@
     margin-top: 15px;
 }
 
+.postMenuContainer{
+    position: relative;
+    display: flex;
+    justify-content: flex-end ;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+.postMenu{
+    display: flex;
+    border: none;
+    background: none;
+}
+
+.postdot{
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: black;
+    margin-left: 2px;   
+}
+
+.postOption{
+    padding: 5px 5px 0 0;
+    border-radius: 10px;
+    border: 1px solid gray;
+    z-index: 1;
+}
+
+.menu-item{
+    display: block;
+    line-height: 20px;
+}
+
+.menu-link{
+    text-decoration: none;
+    color: #333333;
+}
+
+.menu-link:hover{
+    color: #6a6969;
+}
+
+#delete-menu-link{
+    color: crimson;
+}
+
+#delete-menu-link:hover{
+    color: red;
+}
+
 .postTimeStamp{
     font-family: 'Courier New', Courier, monospace;
     font-weight: 600;
