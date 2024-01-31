@@ -1,10 +1,12 @@
 import React, {useState, useEffect, useRef} from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
 import './AddPost_css.css'
 
 const EditPost = () => {
+
+    const {postId} = useParams()
 
     const titleRef = useRef()
     const imageRef = useRef()
@@ -62,8 +64,6 @@ const EditPost = () => {
     useEffect(() => {
         async function fetchPostData(){
             try{
-                const postId = '65b6a31ab98413b36e4d8429';
-    
                 const response = await fetch(`http://localhost:3001/posts/view?postId=${encodeURIComponent(postId)}`, {
                     method: 'GET',
                     headers: {
@@ -117,8 +117,6 @@ const EditPost = () => {
             try{
                 setLoading(true)
                 setError('')
-
-                const postId = '65b6a31ab98413b36e4d8429';
 
                 const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                     method: 'PUT',

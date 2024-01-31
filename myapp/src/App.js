@@ -87,7 +87,7 @@ function App() {
                   }
                 />
 
-                <Route path="/editpost"
+                <Route path="/editpost/:postId"
                   element={
                     <PrivateRoute>
                       <Layout>
