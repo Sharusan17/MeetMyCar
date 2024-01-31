@@ -62,7 +62,7 @@ const EditPost = () => {
     useEffect(() => {
         async function fetchPostData(){
             try{
-                const postId = '65ba4ec832c37c87f6a9f692';
+                const postId = '65b6a31ab98413b36e4d8429';
     
                 const response = await fetch(`http://localhost:3001/posts/view?postId=${encodeURIComponent(postId)}`, {
                     method: 'GET',
@@ -99,7 +99,7 @@ const EditPost = () => {
             return setError("Title Too Short")
        }
 
-       if (titleRef.current.value.length > 20 ){
+       if (titleRef.current.value.length > 30 ){
             return setError("Title Too Long")
        }
 
@@ -108,7 +108,7 @@ const EditPost = () => {
        }
 
 
-       if ((titleRef.current.value !== title) || (descRef.current.value !== desc)) {
+       if ((titleRef.current.value !== title) || (imageChange === true ) || (descRef.current.value !== desc)) {
             const formData = new FormData();
             formData.append('title', titleRef.current.value);
             formData.append('image', imageRef.current.files[0])
@@ -118,7 +118,7 @@ const EditPost = () => {
                 setLoading(true)
                 setError('')
 
-                const postId = '65ba4ec832c37c87f6a9f692';
+                const postId = '65b6a31ab98413b36e4d8429';
 
                 const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                     method: 'PUT',
@@ -127,6 +127,7 @@ const EditPost = () => {
 
                 if (response.ok){
                     console.log("Updated Post Data")
+                    navigate('/seepost')
                 } else{
                     const errorData = await response.json()
                     setError("Failed To Update Post Data")
