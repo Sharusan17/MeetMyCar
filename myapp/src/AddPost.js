@@ -10,9 +10,11 @@ const AddPost = () => {
     const imageRef = useRef()
     const descRef  = useRef()
 
-    const[userId, setuserId] = useState('')
-    const [username, setuserName] = useState('')
-    const [profilePicture, setprofilePicture] = useState('')
+    const[userId, setuserId] = useState()
+    const [username, setuserName] = useState()
+    const [profilePicture, setprofilePicture] = useState()
+
+    const[image, setImage] = useState()
 
     const {currentUser} = useAuth()
 
@@ -106,6 +108,10 @@ const AddPost = () => {
         setLoading(false) 
     }
 
+    function handleImageInput(e){
+        setImage(URL.createObjectURL(e.target.files[0]))
+    }
+
     return (
         <>
             <div className='addPost'>
@@ -131,7 +137,8 @@ const AddPost = () => {
 
                     <div className='add-post-content'>
                         <input type='text' ref={titleRef} placeholder='Title...' className='add_postTitle' required></input>
-                        <input type='file' ref={imageRef} placeholder='Insert Image' className='add_postImage' accept="image/*" required></input> 
+                        <input type='file' ref={imageRef}  placeholder='Insert Image' className='add_postImageBtn' onChange={handleImageInput} required></input> 
+                        <img src={image} className='add_postImage'></img>
 
                         <div className='add_postFooter'>
                             <select className='add_postVRN'>
