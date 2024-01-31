@@ -61,23 +61,32 @@ router.post('/add', upload.single('image'), async (req, res) => {
 router.put('/edit', upload.single('image'), async (req, res) => {
     console.log(req.body)
     try{       
-        const {title, image, description, vehicle} = req.body;
         const postId = req.query.postId;
 
         if(!postId){
             return res.status(400).json({message: "Post Not Found."})
         }
+        const postUpdate = await Post.findById(postId, {new: true});
 
-        const postUpdate = await Post.findByIdAndUpdate(
-            postId,
-            {title, image, description, vehicle},
-            {new: true}
-        );
-  
         if(!postUpdate){
             return res.status(404).json({message: "Post Not Able To Update."});
         }
 
+        if(req.body.title){
+            postUpdate.title = req.body.title;
+        }
+        if(req.file){
+            postUpdate.image = req.file.path;
+        }
+        if(req.body.description){
+            postUpdate.description = req.body.description;
+        }
+        if(req.body.vehicle){
+            postUpdate.vehicle = req.body.vehicle;
+        }
+
+        await postUpdate.save();
+  
         res.status(201).json({message: "Post Updated", post: postUpdate});
         console.log("Post Updated");
     } catch (error){
