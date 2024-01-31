@@ -59,8 +59,9 @@ router.post('/add', upload.single('image'), async (req, res) => {
 
 //UPDATE Post Data
 router.put('/edit', upload.single('image'), async (req, res) => {
+    console.log(req.body)
     try{       
-        const {heading, image, description, vehicle} = req.body;
+        const {title, image, description, vehicle} = req.body;
         const postId = req.query.postId;
 
         if(!postId){
@@ -69,7 +70,7 @@ router.put('/edit', upload.single('image'), async (req, res) => {
 
         const postUpdate = await Post.findByIdAndUpdate(
             postId,
-            {heading, image, description, vehicle},
+            {title, image, description, vehicle},
             {new: true}
         );
   
