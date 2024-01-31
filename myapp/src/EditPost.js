@@ -10,13 +10,15 @@ const EditPost = () => {
     const imageRef = useRef()
     const descRef  = useRef()
 
-    const[userId, setuserId] = useState('')
-    const [username, setuserName] = useState('')
-    const [profilePicture, setprofilePicture] = useState('')
+    const[userId, setuserId] = useState()
+    const [username, setuserName] = useState()
+    const [profilePicture, setprofilePicture] = useState()
 
-    const [title, setTitle] = useState('')
-    const [image, setImage] = useState('')
-    const [desc, setDesc] = useState('')
+    const [title, setTitle] = useState()
+    const [image, setImage] = useState()
+    const [desc, setDesc] = useState()
+
+    const [imageChange, setImageChange] = useState(false)
 
     const {currentUser} = useAuth()
 
@@ -60,7 +62,7 @@ const EditPost = () => {
     useEffect(() => {
         async function fetchPostData(){
             try{
-                const postId = '65b6a31ab98413b36e4d8429';
+                const postId = '65ba4ec832c37c87f6a9f692';
     
                 const response = await fetch(`http://localhost:3001/posts/view?postId=${encodeURIComponent(postId)}`, {
                     method: 'GET',
@@ -75,7 +77,6 @@ const EditPost = () => {
                     setTitle(data.postData.title)
                     setImage(data.postData.image)
                     setDesc(data.postData.description)
-
     
                     console.log("Fetched Post Details")
                     return data
@@ -106,45 +107,46 @@ const EditPost = () => {
             return setError("Description Too Short")
        }
 
-    //    if (imageRef.current.files.length === 0) {
-    //         return setError("Please select an image to upload.")
-    //    }
 
-       if ((titleRef.current.value !== title) || (imageRef.current.files[0] !== image) || (descRef.current.value !== desc)) {
-        const formData = new FormData();
-        formData.append('title', titleRef.current.value);
-        formData.append('description', descRef.current.value);
-        formData.append('image', imageRef.current.files[0]);
+       if ((titleRef.current.value !== title) || (descRef.current.value !== desc)) {
+            const formData = new FormData();
+            formData.append('title', titleRef.current.value);
+            formData.append('image', imageRef.current.files[0])
+            formData.append('description', descRef.current.value);
 
-        try{
-            setLoading(true)
-            setError('')
+            try{
+                setLoading(true)
+                setError('')
 
-            const postId = '65b6a31ab98413b36e4d8429';
+                const postId = '65ba4ec832c37c87f6a9f692';
 
-            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
-                method: 'PUT',
-                body: formData,
-            });
+                const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                    method: 'PUT',
+                    body: formData,
+                });
 
-            if (response.ok){
-                console.log("Updated Post Data")
-            } else{
-                const errorData = await response.json()
-                setError("Failed To Update Post Data")
+                if (response.ok){
+                    console.log("Updated Post Data")
+                } else{
+                    const errorData = await response.json()
+                    setError("Failed To Update Post Data")
+                    console.error("Error Updating Post Data:", error)
+                    throw new Error(errorData.message)
+                }
+            }catch (error){
                 console.error("Error Updating Post Data:", error)
-                throw new Error(errorData.message)
+                setError("Failed To Update Post Data")
             }
-        }catch (error){
-            console.error("Error Updating Post Data:", error)
-            setError("Failed To Update Post Data")
+            setLoading(false)
+        }else{
+            setError('No Changes To Post Data')
+            return
         }
-        setLoading(false)
-    }else{
-        setError('No Changes To Post Data')
-        return
     }
 
+    function handleImageInput(e){
+        setImage(URL.createObjectURL(e.target.files[0]))
+        setImageChange(true)
     }
 
     return (
@@ -172,7 +174,8 @@ const EditPost = () => {
 
                     <div className='add-post-content'>
                         <input type='text' ref={titleRef} defaultValue={title} className='add_postTitle' ></input>
-                        <input type='file' ref={imageRef} src={`http://localhost:3001/${image}`}   className='add_postImage' accept="image/*" ></input> 
+                        <input type='file' ref={imageRef} defaultValue={image} placeholder='Insert Image' className='add_postImageBtn' onChange={handleImageInput} ></input> 
+                        <img src={imageChange ? image :`http://localhost:3001/${image}`} className='add_postImage'></img>
 
                         <div className='add_postFooter'>
                             <select className='add_postVRN'>
