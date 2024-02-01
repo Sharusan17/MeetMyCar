@@ -8,10 +8,19 @@ const SeePost = () => {
     const[posts, setPosts] = useState([])
 
     const[menuoptions, setMenuOptions] = useState(false)
+    const[confirmDeletePost, setconfirmDeletePost] = useState(false)
+
+    const[message, setMessage] = useState()
+    const[error, setError] = useState()
+    const[nopost, setNoPost] = useState()
+    const[loading, setLoading] = useState()
+
 
     useEffect(() => {
         async function fetchPostData(){
             try{
+                setError('')
+                setMessage('')
                 const response = await fetch(`http://localhost:3001/posts/view`, {
                     method: 'GET',
                     headers: {
@@ -23,8 +32,11 @@ const SeePost = () => {
                     const data = await response.json()
 
                     setPosts(data.postData)
-
                     console.log("Fetched Post Details")
+
+                    if(!data.postData || data.postData.length === 0){
+                        setNoPost("No car posts? Looks like the traffic jam is over. Be the first on the road!")
+                    }
                     return data
                 } else{
                     const errorData = await response.json()
@@ -32,6 +44,7 @@ const SeePost = () => {
                 }
             }catch (error){
                 console.error("Error Fetching Post Data:", error)
+                setError("Error Fetching Post. Try Again Later")
             }
         }
         fetchPostData();
@@ -48,13 +61,49 @@ const SeePost = () => {
 
     const handleShowOptions = () =>{
         setMenuOptions(!menuoptions)
+        setconfirmDeletePost(false)
+    }
+
+    const handleShowDelete = () => {
+        setconfirmDeletePost(!confirmDeletePost)
+    }
+
+    async function handleDelete(postId) {
+        try{
+            setError('')
+            setMessage('')
+            setLoading(true)
+
+            const response = await fetch(`http://localhost:3001/posts/delete?postId=${encodeURIComponent(postId)}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok){
+                console.log("Deleted Post")
+                setMessage("Post Deleted")
+                setTimeout(() => {
+                    window.location.reload(false);
+                }, 2000)
+            } else{
+                console.error("Error Deleting Post:")
+            }
+        }catch (error){
+            console.error("Error Deleting Post:")
+            setError("Error Deleting Post. Try Again Later")
+        }
+        setLoading(false)
     }
 
     return (
         <>
+            <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{nopost}</p>
+
             <div className="postList">
                 {posts.map((post) => (
                     <div key={post._id}  className='post'>
+                    <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{error}</p>
+                    <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{message}</p>
+
                         <div className='postHead'>
                             <div className='postUserDetails'>
                                 {post.user?.profilePicture && (
@@ -82,12 +131,12 @@ const SeePost = () => {
                                         <div className='postOption'>
                                             <ul>
                                                 <li className='menu-item'>
-                                                    <Link to="/editpost" className='menu-link'>
+                                                    <Link to={`/editpost/${post._id}`} className='menu-link'>
                                                         Edit Post
                                                     </Link>
                                                 </li>
                                                 <li className='menu-item'>
-                                                    <Link to="/deletepost" className='menu-link' id='delete-menu-link'>
+                                                    <Link onClick={handleShowDelete} className='menu-link' id='delete-menu-link'>
                                                         Delete Post
                                                     </Link>
                                                 </li>
@@ -97,6 +146,12 @@ const SeePost = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {confirmDeletePost && (
+                            <div>
+                                <button className="deletepostbtn" disabled={loading} onClick={() => handleDelete(post._id)}>Confirm Delete</button>
+                            </div>
+                        )}
                         
                         <div className='post-content'>
                             <h2 className='postTitle'>{post.title}</h2> 

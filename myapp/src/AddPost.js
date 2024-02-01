@@ -23,6 +23,9 @@ const AddPost = () => {
 
     const navigate = useNavigate()
 
+    const [date, setDate] = useState()
+    const [time, setTime] = useState()
+
     useEffect(() => {
         async function fetchUserData(){
             try{
@@ -112,6 +115,18 @@ const AddPost = () => {
         setImage(URL.createObjectURL(e.target.files[0]))
     }
 
+    useEffect(() => {
+        const currentDateTime = () => {
+            const currentDate = new Date()
+            setDate(currentDate.toLocaleDateString())
+            setTime(currentDate.toLocaleTimeString())
+        }
+        currentDateTime()
+
+        const intervalId = setInterval(currentDateTime, 1000)
+        return () => clearInterval(intervalId)
+    }, [])
+
     return (
         <>
             <div className='addPost'>
@@ -130,8 +145,8 @@ const AddPost = () => {
                             <p className='showUserName'>{username}</p>
                         </div>
                         <div className='showTimeStamp'>
-                            <p>26-10-2024</p>
-                            <p>18:00</p>
+                            <p>{date}</p>
+                            <p>{time}</p>
                         </div>
                     </div>
 

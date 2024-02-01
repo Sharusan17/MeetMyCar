@@ -99,6 +99,19 @@
     color: red;
 }
 
+.deletepostbtn{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    background-color: rgb(45,45,45);
+    color: white;
+    border-radius: 15px;
+    font-weight: 500;
+    padding: 6px 15px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 .postTimeStamp{
     font-family: 'Courier New', Courier, monospace;
     font-weight: 600;

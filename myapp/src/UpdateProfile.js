@@ -253,7 +253,7 @@ const UpdateProfile = () => {
                         <Form.Control type="array" ref={vehiclesRef} defaultValue={vehicles} placeholder=''  />
                     </Form.Group>
 
-                    <p>{error}</p>
+                    <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{error}</p>
 
                     <Button disabled={loading} className="w-100 mt-2" type="submit">Update</Button>
 

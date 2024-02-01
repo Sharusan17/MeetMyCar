@@ -98,7 +98,7 @@ router.put('/edit', upload.single('image'), async (req, res) => {
 //DELETE Post Data
 router.delete('/delete', async (req, res) => {
     try{       
-        const postId = req.params.postId;
+        const postId = req.query.postId;
 
         if(!postId){
             return res.status(400).json({message: "Post Not Found."})
@@ -110,7 +110,7 @@ router.delete('/delete', async (req, res) => {
             return res.status(404).json({message: "Post Not Able To Delete."});
         }
 
-        res.status(200).json({message: "Post ${postId} Deleted", post: postDelete});
+        res.status(200).json({message: "Post ${postId} Deleted", post: postDeleted});
         console.log("Post Deleted");
     } catch (error){
         console.error('Error Deleting Post:', error);

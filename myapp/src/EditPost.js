@@ -24,6 +24,9 @@ const EditPost = () => {
 
     const {currentUser} = useAuth()
 
+    const [date, setDate] = useState()
+    const [time, setTime] = useState()
+
     const [error, setError] = useState()
     const [loading, setLoading] = useState()
 
@@ -90,6 +93,18 @@ const EditPost = () => {
         }
         fetchPostData();
     }, []);
+
+    useEffect(() => {
+        const currentDateTime = () => {
+            const currentDate = new Date()
+            setDate(currentDate.toLocaleDateString())
+            setTime(currentDate.toLocaleTimeString())
+        }
+        currentDateTime()
+
+        const intervalId = setInterval(currentDateTime, 1000)
+        return () => clearInterval(intervalId)
+    }, [])
 
 
     async function handleUpdatePost(e){
@@ -166,8 +181,8 @@ const EditPost = () => {
                             <p className='showUserName'>{username}</p>
                         </div>
                         <div className='showTimeStamp'>
-                            <p>26-10-2024</p>
-                            <p>18:00</p>
+                            <p>{date}</p>
+                            <p>{time}</p>
                         </div>
                     </div>
 
