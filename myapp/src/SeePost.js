@@ -10,10 +10,10 @@ const SeePost = () => {
     const[menuoptions, setMenuOptions] = useState(false)
     const[confirmDeletePost, setconfirmDeletePost] = useState(false)
 
-    const[message, setMessage] = useState()
-    const[error, setError] = useState()
-    const[nopost, setNoPost] = useState()
-    const[loading, setLoading] = useState()
+    const[message, setMessage] = useState('')
+    const[error, setError] = useState('')
+    const[nopost, setNoPost] = useState('')
+    const[loading, setLoading] = useState('')
 
 
     useEffect(() => {

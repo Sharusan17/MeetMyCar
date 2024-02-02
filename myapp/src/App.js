@@ -1,6 +1,7 @@
 import {AuthProvider} from "./AuthContext";
 
 import Layout from "./Layout";
+import Home_Layout from "./Home_Layout";
 
 import Home from "./Home";
 import Signup from "./Signup";
@@ -36,7 +37,9 @@ function App() {
                 <Route path="/verify" 
                   element={
                     <PrivateRoute>
-                      <VerifyEmail />
+                      <Home_Layout>
+                        <VerifyEmail />
+                      </Home_Layout>
                     </PrivateRoute>
                     }
                 />
@@ -62,7 +65,9 @@ function App() {
                 <Route path="/registervehicle"
                   element={
                     <PrivateRoute>
-                      <RegisterVehicle/>
+                      <Home_Layout>
+                        <RegisterVehicle/>
+                      </Home_Layout>
                     </PrivateRoute>
                   }
                 />
@@ -96,10 +101,30 @@ function App() {
                     </PrivateRoute>
                   }
                 />
-                
-                <Route path="/signup" Component={Signup} />
-                <Route path="/login" Component={Login} />
-                <Route path="/forgot-password" Component={ForgotPassword} />
+
+                <Route path="/signup"
+                  element={
+                    <Home_Layout>
+                      <Signup/>
+                    </Home_Layout>
+                  }
+                />
+
+                <Route path="/login"
+                  element={
+                    <Home_Layout>
+                      <Login/>
+                    </Home_Layout>
+                  }
+                />
+
+                <Route path="/forgot-password"
+                  element={
+                    <Home_Layout>
+                      <ForgotPassword/>
+                    </Home_Layout>
+                  }
+                />
 
               </Routes>
             </AuthProvider>

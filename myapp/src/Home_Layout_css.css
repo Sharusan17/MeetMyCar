@@ -1,0 +1,10 @@
+.banner-layout {
+    display: flex;
+    height: 100vh;
+}
+.forms {
+    flex: 1;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}

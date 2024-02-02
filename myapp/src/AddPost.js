@@ -10,21 +10,21 @@ const AddPost = () => {
     const imageRef = useRef()
     const descRef  = useRef()
 
-    const[userId, setuserId] = useState()
-    const [username, setuserName] = useState()
-    const [profilePicture, setprofilePicture] = useState()
+    const[userId, setuserId] = useState('')
+    const [username, setuserName] = useState('')
+    const [profilePicture, setprofilePicture] = useState('')
 
-    const[image, setImage] = useState()
+    const[image, setImage] = useState('')
 
     const {currentUser} = useAuth()
 
-    const [error, setError] = useState()
-    const [loading, setLoading] = useState()
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState('')
 
     const navigate = useNavigate()
 
-    const [date, setDate] = useState()
-    const [time, setTime] = useState()
+    const [date, setDate] = useState('')
+    const [time, setTime] = useState('')
 
     useEffect(() => {
         async function fetchUserData(){

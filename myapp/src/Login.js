@@ -52,7 +52,6 @@ const Login = () => {
                         Log In
                         <p id="slogan_text">Drive By Your Friends</p>
                     </h1>
-                    <div id="red-corner"></div>
                 </header>
 
                 <form onSubmit={handleSubmit} className='loginForm'>
@@ -72,8 +71,6 @@ const Login = () => {
                     <div id="forgotPassPage" className="w-100 text-center mt-3">
                         <Link to="/forgot-password" id="forgotLink">Forgot Password</Link>
                     </div>
-
-                    <img src="https://i.ibb.co/FsSc9k1/Screenshot-2023-11-07-at-18-34-47-fotor-bg-remover-20231107185715.png" alt="Porsche Car"/>
 
 
                     <div id="signupPage" className="w-100 text-center mt-2">

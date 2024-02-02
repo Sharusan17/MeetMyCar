@@ -5,7 +5,7 @@ import TitleBar from './TitleBar'
 
 import './Layout_css.css'
 
-const Layout = ({children, title}) => {
+const Layout = ({children}) => {
 
 
   return (

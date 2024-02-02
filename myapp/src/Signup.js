@@ -106,7 +106,6 @@ const Signup = () => {
                     Sign Up
                     <p id="slogan_text">Join Our Family</p>
                 </h1>
-                <div id="red-corner"></div>
             </header>
 
             <form onSubmit={handleSubmit} className='signUpForm'>
@@ -148,7 +147,6 @@ const Signup = () => {
                 {message}
             </form>
 
-            <img src="https://i.ibb.co/FsSc9k1/Screenshot-2023-11-07-at-18-34-47-fotor-bg-remover-20231107185715.png" alt="Porsche Car"/>
             
             <div id="loginpage" className="w-100 text-center mt-2">
                 Already have an account? <Link to="/login" id='loginlink'> Login Here</Link>

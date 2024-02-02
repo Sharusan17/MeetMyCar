@@ -12,23 +12,23 @@ const EditPost = () => {
     const imageRef = useRef()
     const descRef  = useRef()
 
-    const[userId, setuserId] = useState()
-    const [username, setuserName] = useState()
-    const [profilePicture, setprofilePicture] = useState()
+    const[userId, setuserId] = useState('')
+    const [username, setuserName] = useState('')
+    const [profilePicture, setprofilePicture] = useState('')
 
-    const [title, setTitle] = useState()
-    const [image, setImage] = useState()
-    const [desc, setDesc] = useState()
+    const [title, setTitle] = useState('')
+    const [image, setImage] = useState('')
+    const [desc, setDesc] = useState('')
 
     const [imageChange, setImageChange] = useState(false)
 
     const {currentUser} = useAuth()
 
-    const [date, setDate] = useState()
-    const [time, setTime] = useState()
+    const [date, setDate] = useState('')
+    const [time, setTime] = useState('')
 
-    const [error, setError] = useState()
-    const [loading, setLoading] = useState()
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState('')
 
     const navigate = useNavigate()
 

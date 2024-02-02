@@ -1,0 +1,49 @@
+.Banner {
+    width: 55%;
+    box-shadow: 2px 4px 5px 2px darkgray;
+}
+
+.Title{
+    margin: 70px 0px 10px 70px;
+}
+
+.Title h1{
+    font-size: 60px;
+    color: black;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.Title span{
+    color: red;
+    display: block;
+    font-size: 15px;
+    font-family:'Courier New', Courier, monospace; 
+}
+
+.image{
+    max-width: 100%;
+    width: 70%;
+    height: auto;
+}
+
+.Footer{
+    font-size: 12px;
+    color: red;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+}
+
+.Footer p {
+    border-right: 2px solid black; 
+    display: inline-block; 
+    animation: blink-caret 0.75s step-end infinite; 
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+  
+@keyframes blink-caret {
+    50% { border-color: transparent; }
+}
