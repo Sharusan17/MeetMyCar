@@ -83,13 +83,14 @@ router.get('/search', async (req, res) => {
 
         const dataImg = await apiImageResponse.json();
 
-        const responseData = { datainfo, dataImg}
-
         if (apiResponse.ok && apiImageResponse.ok) {
+            const responseData = {
+                datainfo,
+                dataImg
+            }
             res.json(responseData);
         } else {
             res.status(apiResponse.status).json({ message: "Error fetching data from the external API.", details: datainfo });
-            res.status(apiImageResponse.status).json({ message: "Error fetching image data from the external API.", details: dataImg });
         }
     } catch (error) {
         console.error('Error making fetch request:', error);
