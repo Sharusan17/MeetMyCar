@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import Banner from './Banner'
-import RegisterVehicle from './RegisterVehicle'
 
 import './Home_Layout_css.css'
 
@@ -12,12 +11,15 @@ const Home_Layout = ({children}) => {
     setVehicleImage(img)
   }
 
+  const childrenWithProps = React.Children.map(children, child => 
+    React.cloneElement(child, { updateImage })
+  );
+
   return (
     <div className='banner-layout'>
         <Banner  imageSrc={vehicleImage}/>
         <div className='forms'>
-          <RegisterVehicle updateImage={updateImage} />
-          {children}
+          {childrenWithProps}
         </div>
     </div>
   )
