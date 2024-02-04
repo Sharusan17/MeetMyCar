@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-
 import './Banner_css.css'
-import imageSrc from './banner.jpg'; 
+import defaultPicSrc from './banner.jpg'; 
 
-const Banner = () => {
+const Banner = ({imageSrc}) => {
 
   const [text, setText] = useState('')
 
@@ -25,7 +24,7 @@ const Banner = () => {
           <div className='Title'>
             <h1>MeetMyCar <span>Car Social Media</span> </h1>
           </div>
-          <img className='image' src={imageSrc} alt='BannerImg'></img>
+          <img className='image' src={imageSrc || defaultPicSrc} alt='Vehicle Image'></img>
           <div className='Footer'>
             <p>{text}</p>
           </div>

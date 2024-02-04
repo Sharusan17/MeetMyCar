@@ -47,7 +47,7 @@ const Login = () => {
       <>
             <div className="Card">
 
-            <header>
+                <header>
                     <h1 id="login_text">
                         Log In
                         <p id="slogan_text">Drive By Your Friends</p>

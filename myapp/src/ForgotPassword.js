@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react'
-import {Form, Button} from 'react-bootstrap'
+import {Form} from 'react-bootstrap'
 import { useAuth } from './AuthContext'
 import {Link} from 'react-router-dom'
 
@@ -11,8 +11,6 @@ const ForgotPassword = () => {
     const [error, setError] = useState('')
     const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(false)
-
-
 
 
     async function handleSubmit(e){
@@ -33,30 +31,32 @@ const ForgotPassword = () => {
 
   return (
       <>
-            <body>
-                <h1 className="text-center mb-4">Reset Password</h1>
-                <form onSubmit={handleSubmit}>
+            <div className="Card">
+                <header>
+                    <h1 id="login_text">
+                        Reset Password
+                    </h1>
+                </header>                
+                
+                <form onSubmit={handleSubmit} className='loginForm'>
 
-                  {message}
-                    
+                    <p className="w-100 text-center mt-2" id="error_Msg">{message}</p>
+
                     <Form.Group id="email">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" ref={emailRef} required />
-                    </Form.Group>            
+                        <Form.Control type="email" placeholder="Email" ref={emailRef} required />
+                    </Form.Group>  
    
-                    <p>{error}</p>
+                    <p className="w-100 text-center mt-2 mb-1" id="error_Msg">{error}</p>
                     
-                    <Button disabled={loading} className="w-100 mt-3" type="submit">Reset Password</Button>
+                    <button disabled={loading} id="button" className="w-100 mt-1" type="submit">Reset Password</button>
 
-                    <div className="w-100 text-center mt-3">
-                        <Link to="/login">Login</Link>
+                    <div id="loginPage" className="w-100 text-center mt-2">
+                        <Link to="/login" id="loginlink">Login Here</Link>
                     </div>
 
                 </form>
 
-                   
-
-            </body>
+            </div>
 
             
         

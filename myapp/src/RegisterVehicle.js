@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 
 import './RegisterVehicle_css.css'
 
-export default function RegisterVehicle() {
+export default function RegisterVehicle({updateImage}) {
 
     const [carData, setCarData] = useState([])
     const [makeOptions, setmakeOptions] = useState([])
@@ -122,14 +122,16 @@ export default function RegisterVehicle() {
                 // console.log("API Data: ", data);
                 // console.log(data.VehicleRegistration.Make)
 
-                const VRN_vehicleMake = data.VehicleRegistration.Make;
+                const VRN_vehicleMake = data.datainfo.VehicleRegistration.Make;
                 setvehicleMake(VRN_vehicleMake)
-                const VRN_vehicleModel = data.VehicleRegistration.Model;
+                const VRN_vehicleModel = data.datainfo.VehicleRegistration.Model;
                 setvehicleModel(VRN_vehicleModel)
-                const VRN_vehicleFuel = data.VehicleRegistration.FuelType;
+                const VRN_vehicleFuel = data.datainfo.VehicleRegistration.FuelType;
                 setvehicleFuel(VRN_vehicleFuel)
-                const VRN_vehicleTransmission = data.VehicleRegistration.TransmissionType;
+                const VRN_vehicleTransmission = data.datainfo.VehicleRegistration.TransmissionType;
                 setvehicleTransmission(VRN_vehicleTransmission)
+
+                updateImage(data.dataImg.VehicleImages.ImageDetailsList[0].ImageUrl)
 
                 setMessage(
                     <div>
@@ -152,7 +154,6 @@ export default function RegisterVehicle() {
                 setShowSelectedButton(true);
             });
     }
-    
 
     
   return (
@@ -163,7 +164,6 @@ export default function RegisterVehicle() {
                         Add Your Vehicle
                         <p id="slogan_text">Show Your Vehicle</p>
                     </h1>
-                    <div id="red-corner"></div>
                 </header>
 
                 <form onSubmit={handleSearchVehicle} className='addVehicle_Form'>
