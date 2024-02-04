@@ -11,7 +11,7 @@ const Home_Layout = ({children}) => {
     setVehicleImage(img)
   }
 
-  const childrenWithProps = React.Children.map(children, child => 
+  const childrenProps = React.Children.map(children, child => 
     React.cloneElement(child, { updateImage })
   );
 
@@ -19,7 +19,7 @@ const Home_Layout = ({children}) => {
     <div className='banner-layout'>
         <Banner  imageSrc={vehicleImage}/>
         <div className='forms'>
-          {childrenWithProps}
+          {childrenProps}
         </div>
     </div>
   )
