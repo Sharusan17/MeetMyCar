@@ -29,9 +29,7 @@ const Banner = ({imageSrc}) => {
             <p>{text}</p>
           </div>
       </div>
-      
     </>
-    
   )
 }
 export default Banner

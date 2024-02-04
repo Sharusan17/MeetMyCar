@@ -134,6 +134,18 @@ img{
     font-size: larger;
 }
 
+#homepage{
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 20px;
+}
+
+#homepage:hover{
+    color: red;
+    transition: 0.3s ease;
+    font-size: 12px;
+}
+
 /* Media query for smaller screens */
 @media (max-width: 768px) {
     .Card {

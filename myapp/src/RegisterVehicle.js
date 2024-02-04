@@ -237,6 +237,10 @@ export default function RegisterVehicle({updateImage}) {
                 <div id="findVehicle" className="w-100 text-center mt-2">
                     Can't find your car? <Link id='findlink' onClick={handleFindCar}> Find Here</Link>
                 </div>
+
+                <div id="homepage" className="w-100 text-center mt-2">
+                     <Link to="/" id='findlink' > Add Vehicle Later</Link>
+                </div>
             </div>
         
       </>
