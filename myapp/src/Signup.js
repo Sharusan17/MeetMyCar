@@ -144,7 +144,7 @@ const Signup = () => {
 
                 <button disabled={loading} id="button" className="w-100 mt-2" type="submit">Sign Up</button>
                     
-                {message}
+                <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
             </form>
 
             

@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react'
 import { useAuth } from './AuthContext'
 import {useLocation, useNavigate} from 'react-router-dom'
 
+import './VerifyEmail_css.css'
+
 const VerifyEmail = () => {
 
     const [verified, setVerified] = useState(false)
@@ -13,7 +15,6 @@ const VerifyEmail = () => {
 
     const navigate = useNavigate()
     const location = useLocation()
-
 
 
     useEffect(() => {
@@ -72,22 +73,33 @@ const VerifyEmail = () => {
 
   return (
       <>
-        <h1 className="text-center mb-4">Verify Email</h1>
-        <div>
-            <p>{message}</p>
-            <p>{error}</p>
-            {verified 
-                ? (
-                    <p>Email Verified Reloading....</p>
-                ):(
-                <>
-                    <p>Please Verify Email. Check Inbox or Junk</p>
-                    <button onClick={resendEmail} disabled={emailSent}>
-                        {emailSent ? 'Email Sending...' : 'Resend Verification Email'}
-                    </button>
-                </>
-            )}
-        </div>
+            <div className="Card">
+                <header>
+                    <h1 id="login_text">
+                        Verify Email
+                    </h1>
+                </header>  
+
+                <div className='center_H'>
+                    <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
+                    {verified 
+                        ? (
+                            <p className='verify_text'>Email Verified Reloading....</p>
+                        ):(
+                        <>
+                            <p className='verify_text'>Check Inbox For Verification Email</p>
+                            <div className='center'>
+
+                                <button id="verifybtn" onClick={resendEmail} disabled={emailSent}>
+                                    {emailSent ? 'Email Sending...' : 'Resend Verification Email'}
+                                </button>
+                            </div>
+                        </>
+                    )}
+                    <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
+                </div>                 
+            </div>
+        
       </> 
   )
 }

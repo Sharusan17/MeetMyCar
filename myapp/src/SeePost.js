@@ -102,7 +102,7 @@ const SeePost = () => {
                 {posts.map((post) => (
                     <div key={post._id}  className='post'>
                     <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{error}</p>
-                    <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{message}</p>
+                    <p className="w-100 text-center mt-2 mb-0" id="success_Msg">{message}</p>
 
                         <div className='postHead'>
                             <div className='postUserDetails'>

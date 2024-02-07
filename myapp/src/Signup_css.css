@@ -74,6 +74,12 @@ header{
 
 #passwordConfirmation{
     border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+#profilePicture{
+    border-radius: 5px;
+    margin-bottom: 10px;
 }
 
 input:hover{
@@ -93,6 +99,12 @@ input:focus{
     color: red;
 }
 
+#success_Msg{
+    font-weight: 600;
+    font-size: 12px;
+    color: green;
+}
+
 #button{
     background-color: rgb(45,45,45);
     color: white;
@@ -105,10 +117,7 @@ input:focus{
     height: 120%;
     border-color: blue;
     transition: border-color 0.5s ease-in;
-    box-shadow: 2px 2px 5px 1px rgb(122, 122, 122);
 }
-
-
 
 img{
     width: 180px;
@@ -133,5 +142,5 @@ img{
 #loginlink:hover{
     color: red;
     transition: 0.3s ease;
-    font-size: larger;
+    font-size: 14px;
 }

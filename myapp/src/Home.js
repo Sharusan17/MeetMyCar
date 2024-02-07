@@ -6,7 +6,7 @@ import { useAuth } from './AuthContext'
 export default function Home() {
   const [error, setError] = useState("")
   const {currentUser, logout} = useAuth()
-  const navigate= useNavigate()
+  const navigate = useNavigate()
 
   async function handleLogOut(){
     setError('')

@@ -1,16 +1,19 @@
 import React, {useRef, useState} from 'react'
 import {Form} from 'react-bootstrap'
 import { useAuth } from './AuthContext'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 
 
 const ForgotPassword = () => {
 
     const emailRef = useRef()
     const {passwordReset} = useAuth()
+
     const [error, setError] = useState('')
     const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
+
 
 
     async function handleSubmit(e){
@@ -21,7 +24,10 @@ const ForgotPassword = () => {
             setError('')
             setLoading(true)
             await passwordReset(emailRef.current.value)
-            setMessage("Check your inbox for further instruction")      
+            setMessage("Check your inbox for further instruction")     
+            setTimeout(() => {
+                navigate("/login")
+            }, 2000) 
         }catch{
             setError("Failed To Reset Password")
         }
@@ -40,7 +46,7 @@ const ForgotPassword = () => {
                 
                 <form onSubmit={handleSubmit} className='loginForm'>
 
-                    <p className="w-100 text-center mt-2" id="error_Msg">{message}</p>
+                    <p className="w-100 text-center mt-2" id="success_Msg">{message}</p>
 
                     <Form.Group id="email">
                         <Form.Control type="email" placeholder="Email" ref={emailRef} required />
@@ -56,11 +62,7 @@ const ForgotPassword = () => {
 
                 </form>
 
-            </div>
-
-            
-        
-
+            </div>  
       </>
     
   )
