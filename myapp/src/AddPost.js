@@ -10,11 +10,11 @@ const AddPost = () => {
     const imageRef = useRef()
     const descRef  = useRef()
 
-    const[userId, setuserId] = useState('')
+    const [userId, setuserId] = useState('')
     const [username, setuserName] = useState('')
     const [profilePicture, setprofilePicture] = useState('')
 
-    const[image, setImage] = useState('')
+    const [image, setImage] = useState('')
 
     const {currentUser} = useAuth()
 

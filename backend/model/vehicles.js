@@ -4,7 +4,7 @@ const VehicleSchema = new mongoose.Schema({
     user:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
-        required: false,
+        required: true,
     },
     vrn:{
         type: String,

@@ -23,7 +23,7 @@ const PostSchema = new mongoose.Schema({
     },
     vehicle: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Vehicle',
+        ref: 'Vehicles',
     },
     comments: [
         {

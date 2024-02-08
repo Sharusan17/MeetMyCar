@@ -1,10 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {Form} from 'react-bootstrap'
+import { useAuth } from './AuthContext'
 import {Link, useNavigate} from 'react-router-dom'
+
 
 import './RegisterVehicle_css.css'
 
 const RegisterVehicle = ({updateImage}) => {
+
+    const [userId, setuserId] = useState('')
+    const {currentUser} = useAuth()
 
     const [carData, setCarData] = useState([])
     const [makeOptions, setmakeOptions] = useState([])
@@ -35,7 +40,6 @@ const RegisterVehicle = ({updateImage}) => {
     const [showButton, setShowButton] = useState(false)
     const [showSelectedButton, setShowSelectedButton] = useState(false)
     const [showOptions, setShowOptions] = useState(false)
-
 
     useEffect(() => {
         async function CarOp(){
@@ -68,7 +72,37 @@ const RegisterVehicle = ({updateImage}) => {
                 });
         }
         CarOp();
-    }, []); 
+    }, []);
+    
+    useEffect(() => {
+        async function fetchUserData(){
+            try{
+                const firebaseUID = currentUser.uid;
+    
+                const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
+                    method: 'GET',
+                    headers: {
+                        'accept': 'application/json',
+                    },
+                });
+    
+                if (response.ok){
+                    const data = await response.json()
+
+                    setuserId(data.userData._id)
+    
+                    console.log("Fetched User Details")
+                    return data
+                } else{
+                    const errorData = await response.json()
+                    throw new Error(errorData.message)
+                }
+            }catch (error){
+                console.error("Error Fetching User Data:", error)
+            }
+        }
+        fetchUserData();
+    }, [currentUser.uid]);
 
     const handleSelectCar= (e) => {
         const selectMake = e.target.value;
@@ -81,6 +115,7 @@ const RegisterVehicle = ({updateImage}) => {
     const handleFindCar= () => {
         setMessage(false)
         setError(false)
+        setVehicleInfo(false)
         setShowOptions(true)
         setShowButton(false)
         setShowSelectedButton(true)
@@ -96,6 +131,7 @@ const RegisterVehicle = ({updateImage}) => {
         
                         
         const formData = new FormData();
+        formData.append('user', userId);
         formData.append('vrn', vehicleReg.current.value);
         formData.append('image', vehicleImage);
         formData.append('vehicleInfo', JSON.stringify(vehicleData));
