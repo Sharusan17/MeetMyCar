@@ -1,100 +1,116 @@
 const express = require('express');
+const Vehicle = require('../model/vehicles');
 const router = express.Router();
 
-//Vehicle List
-router.get('/list', async (req, res) => {
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'})
 
-    const fetch = (await import('node-fetch')).default;
-    try {
-        const where = encodeURIComponent(JSON.stringify({
-            "Make": {
-              "$exists": true
-            },
-            "Model": {
-              "$exists": true
-            }
-        }));
+router.use(express.json());
 
-        const APP_ID = process.env.PARSE_APP_ID;
-        const REST_API_KEY = process.env.PARSE_REST_API_KEY;
+router.get("/", (req, res) => {
+    res.send("Vehicles")
+})
 
-        const apiResponse = await fetch(`https://parseapi.back4app.com/classes/Carmodels_Car_Model_List?limit=9899&order=Make,Model&keys=Make,Model&where=${where}`,
-            {
-                headers:{
-                    'X-Parse-Application-Id': APP_ID,
-                    'X-Parse-REST-API-Key': REST_API_KEY,
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
+//Get Vehicle Data
+router.get('/view', async (req, res) => {
+    console.log(req.body);
+    try{
+        const vehicleId = req.query.vehicleId;
 
-        const responseBody = await apiResponse.text();
-
-        if (apiResponse.ok) {
-            const data = JSON.parse(responseBody);
-            res.json(data);
-        } else {
-            // console.log('API Response Status:', apiResponse.status);
-            // console.log('API Response Body:', responseBody);
-            res.status(apiResponse.status).json({ message: "Error fetching data from the external API.", details: responseBody });
+        if(!vehicleId){
+            return res.status(400).json({message: "Vehicle Not Found."})
         }
-    } catch (error) {
-        console.error('Error making fetch request:', error);
-        res.status(500).json({ message: "Internal server error.", details: error.message });
+    
+        vehicleData = await Vehicle.findOne({_id: vehicleId}).populate('user', 'username');
+
+        if(!vehicleData){
+            return res.status(404).json({message: "Vehicle Details Not Found."});
+        }
+
+        res.status(200).json({message: "Vehicle Found", vehicleData});
+        console.log("Vehicle Found");
+    } catch (error){
+        console.error('Error Fetching Vehicle:', error);
+        res.status(500).json({message:" Error Fetching Vehicle", detail: error.message});
     }
 });
 
+//POST Vehicle Data
+router.post('/add', upload.single('image'), async (req, res) => {
+    console.log(req.body);
+    try{       
+        const newVehicle = new Vehicle(req.body);
 
-//Vehicle Search
-router.get('/search', async (req, res) => {
-
-    const fetch = (await import('node-fetch')).default;
-    try {
-        const LIVE_APP_ID = process.env.CAR_LIVE_API;
-        const TEST_APP_ID = process.env.CAR_TEST_API;
-
-        const VehicleReg = req.query.vrn
-
-        if(!VehicleReg){
-            return res.status(400).json({message: "Vehicle Registration Number Required."})
+        //Parses The VehicleInfo Into Nested Objects
+        if (req.body.vehicleInfo){
+            newVehicle.vehicleInfo = JSON.parse(req.body.vehicleInfo)
         }
 
-        // console.log(VehicleReg);
+        await newVehicle.save();
 
-        const apiResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/ukvehicledata?apikey=${TEST_APP_ID}&vrm=${VehicleReg}`
-            ,{
-                method:'GET',
-                headers:{
-                    'accept': 'application/json',
-                },
-            }
-        );
+        res.status(201).json({message: "Vehicle Added Successfully", newVehicle});
+        console.log("Vehicle Added Successfully");
+    } catch (error){
+        console.error('Error Adding Vehicle:', error);
+        res.status(500).json({message:" Error Adding Vehicle", detail: error.message});
+    }
+});
 
-        const datainfo = await apiResponse.json();
+//UPDATE Vehicle Data
+router.put('/edit', upload.single('image'), async (req, res) => {
+    console.log(req.body)
+    try{       
+        const vehicleId = req.query.vehicleId;
 
-        const apiImageResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/vehicleimage?apikey=${TEST_APP_ID}&vrm=${VehicleReg}`
-            ,{
-                method:'GET',
-                headers:{
-                    'accept': 'application/json',
-                },
-            }
-        );
-
-        const dataImg = await apiImageResponse.json();
-
-        if (apiResponse.ok && apiImageResponse.ok) {
-            const responseData = {
-                datainfo,
-                dataImg
-            }
-            res.json(responseData);
-        } else {
-            res.status(apiResponse.status).json({ message: "Error fetching data from the external API.", details: datainfo });
+        if(!vehicleId){
+            return res.status(400).json({message: "Vehicle Not Found."})
         }
-    } catch (error) {
-        console.error('Error making fetch request:', error);
-        res.status(500).json({ message: "Internal server error.", details: error.message });
+        const vehicleUpdate = await Vehicle.findById(vehicleId, {new: true});
+
+        if(!vehicleUpdate){
+            return res.status(404).json({message: "Vehicle Not Able To Update."});
+        }
+
+        if(req.body.vrn){
+            vehicleUpdate.vrn = req.body.vrn;
+        }
+        if(req.file){
+            vehicleUpdate.image = req.file.path;
+        }
+        if(req.body.vehicleInfo){
+            vehicleUpdate.vehicleInfo = req.body.vehicleInfo;
+        }
+
+        await vehicleUpdate.save();
+  
+        res.status(201).json({message: "Vehicle Updated", vehicle: vehicleUpdate});
+        console.log("Vehicle Updated");
+    } catch (error){
+        console.error('Error Updating Vehicle:', error);
+        res.status(500).json({message:" Error Updating Vehicle", detail: error.message});
+    }
+});
+
+//DELETE Vehicle Data
+router.delete('/delete', async (req, res) => {
+    try{       
+        const vehicleId = req.query.vehicleId;
+
+        if(!vehicleId){
+            return res.status(400).json({message: "Vehicle Not Found."})
+        }
+
+        const vehicleDeleted = await Vehicle.findByIdAndDelete( vehicleId);
+  
+        if(!vehicleDeleted){
+            return res.status(404).json({message: "Vehicle Not Able To Remove."});
+        }
+
+        res.status(200).json({message: "Vehicle ${vehicleId} Removed", vehicle: vehicleDeleted});
+        console.log("Vehicle Removed");
+    } catch (error){
+        console.error('Error Removing Vehicle:', error);
+        res.status(500).json({message:" Error Removing Vehicle", detail: error.message});
     }
 });
 

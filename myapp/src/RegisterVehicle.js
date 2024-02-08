@@ -1,10 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {Form} from 'react-bootstrap'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 
 import './RegisterVehicle_css.css'
 
-export default function RegisterVehicle({updateImage}) {
+const RegisterVehicle = ({updateImage}) => {
 
     const [carData, setCarData] = useState([])
     const [makeOptions, setmakeOptions] = useState([])
@@ -14,10 +14,12 @@ export default function RegisterVehicle({updateImage}) {
     const transmissionOptions = ["Manual", "Automatic", "Semi-Auto"]
 
     const vehicleReg = useRef()
+    const [vehicleData, setVehicleData] = useState([])
     const [vehicleMake, setvehicleMake] = useState('')
     const [vehicleModel, setvehicleModel] = useState('')
     const [vehicleFuel, setvehicleFuel] = useState('')
     const [vehicleTransmission, setvehicleTransmission] = useState('')
+    const [vehicleImage, setVehicleImage] = useState('')
 
     const [selectedMake, setSelectedMake] = useState('');
     const [selectedModel, setSelectedModel] = useState([]);
@@ -26,6 +28,10 @@ export default function RegisterVehicle({updateImage}) {
 
     const [error, setError] = useState('')
     const [message, setMessage] = useState('')
+    const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
+
+    const [vehicleInfo, setVehicleInfo] = useState('')
     const [showButton, setShowButton] = useState(false)
     const [showSelectedButton, setShowSelectedButton] = useState(false)
     const [showOptions, setShowOptions] = useState(false)
@@ -36,7 +42,7 @@ export default function RegisterVehicle({updateImage}) {
             setError('');
             setMessage('')
 
-            fetch('http://localhost:3001/vehicle/list')
+            fetch('http://localhost:3001/vehicleAPI/list')
                 .then(response => {
                     if (response.ok) {
                         return response.json();
@@ -85,6 +91,40 @@ export default function RegisterVehicle({updateImage}) {
         console.log("Add Button Pressed")
         console.log(`Added Car: Make ${vehicleMake} Model: ${vehicleModel} 
                         Fuel: ${vehicleFuel} Transmission: ${vehicleTransmission}`)
+
+        console.log('VehicleData:', vehicleData)
+        
+                        
+        const formData = new FormData();
+        formData.append('vrn', vehicleReg.current.value);
+        formData.append('image', vehicleImage);
+        formData.append('vehicleInfo', JSON.stringify(vehicleData));
+    
+        try{
+            setError('')
+            setMessage('')
+            setLoading(true) 
+
+            const response = await fetch('http://localhost:3001/vehicles/add', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok){
+                const data = await response.json()
+                console.log("Add Vehicle Successful")
+                setMessage(`${vehicleReg.current.value} Has Been Added`)
+                return data
+            } else{
+                const errorData = await response.json()
+                throw new Error(errorData.message)
+            }
+        }catch (error){
+            console.error("Error Adding Vehicle:", error)
+            setError("Failed To Add Vehicle")
+            
+        }
+        setLoading(false) 
     }
 
     async function handleaddSelectedCar(e) {
@@ -105,7 +145,7 @@ export default function RegisterVehicle({updateImage}) {
 
         const vehicleRegValue = vehicleReg.current.value;
         
-        fetch(`http://localhost:3001/vehicle/search?vrn=${encodeURIComponent(vehicleRegValue)}`)
+        fetch(`http://localhost:3001/vehicleAPI/search?vrn=${encodeURIComponent(vehicleRegValue)}`)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -121,6 +161,7 @@ export default function RegisterVehicle({updateImage}) {
             .then(data => {
                 // console.log("API Data: ", data);
                 // console.log(data.VehicleRegistration.Make)
+                setVehicleData(data.datainfo)
 
                 const VRN_vehicleMake = data.datainfo.VehicleRegistration.Make;
                 setvehicleMake(VRN_vehicleMake)
@@ -132,8 +173,9 @@ export default function RegisterVehicle({updateImage}) {
                 setvehicleTransmission(VRN_vehicleTransmission)
 
                 updateImage(data.dataImg.VehicleImages.ImageDetailsList[0].ImageUrl)
+                setVehicleImage(data.dataImg.VehicleImages.ImageDetailsList[0].ImageUrl)
 
-                setMessage(
+                setVehicleInfo(
                     <div>
                         <span>Make: {VRN_vehicleMake || 'No Make available.'} </span><br />
                         <span>Model: {VRN_vehicleModel || 'No Model available.'} </span><br />
@@ -177,8 +219,10 @@ export default function RegisterVehicle({updateImage}) {
 
                     <button id="button" className="w-100 mt-2" type="submit">Search Vehicle</button>
 
-                    <p id='vehicleDetail'>{message}</p>
+                    <p id='vehicleDetail'>{vehicleInfo}</p>
                 </form>
+
+                <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
 
                 {showButton && (
                     <form className='addVehicle_Form' onSubmit={handleaddCar}>
@@ -229,7 +273,7 @@ export default function RegisterVehicle({updateImage}) {
                     )} 
 
                     {showSelectedButton && (
-                        <button id="button" className="w-100 mt-2" type="submit" >Add Selected Vehicle</button>
+                        <button id="button" disabled={loading} className="w-100 mt-2" type="submit" >Add Selected Vehicle</button>
                     )}
                 </form>
 
@@ -247,3 +291,5 @@ export default function RegisterVehicle({updateImage}) {
     
   )
 }
+
+export default RegisterVehicle

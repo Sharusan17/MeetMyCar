@@ -28,7 +28,7 @@ const EditPost = () => {
     const [time, setTime] = useState('')
 
     const [error, setError] = useState('')
-    const [loading, setLoading] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
