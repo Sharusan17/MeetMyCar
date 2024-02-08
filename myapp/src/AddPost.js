@@ -153,7 +153,7 @@ const AddPost = () => {
                     <div className='add-post-content'>
                         <input type='text' ref={titleRef} placeholder='Title...' className='add_postTitle' required></input>
                         <input type='file' ref={imageRef}  placeholder='Insert Image' className='add_postImageBtn' onChange={handleImageInput} required></input> 
-                        <img src={image} className='add_postImage'></img>
+                        <img src={image} alt='Post' className='add_postImage'></img>
 
                         <div className='add_postFooter'>
                             <select className='add_postVRN'>

@@ -1,8 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {Form} from 'react-bootstrap'
 import { useAuth } from './AuthContext'
-import {Link, useNavigate} from 'react-router-dom'
-
+import {Link} from 'react-router-dom'
 
 import './RegisterVehicle_css.css'
 
@@ -34,7 +33,6 @@ const RegisterVehicle = ({updateImage}) => {
     const [error, setError] = useState('')
     const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(false)
-    const navigate = useNavigate()
 
     const [vehicleInfo, setVehicleInfo] = useState('')
     const [showButton, setShowButton] = useState(false)
@@ -232,7 +230,6 @@ const RegisterVehicle = ({updateImage}) => {
                 setShowSelectedButton(true);
             });
     }
-
     
   return (
       <>
