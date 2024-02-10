@@ -67,9 +67,7 @@ router.post('/register', upload.single('profilePicture'), async (req, res) => {
 //UPDATE User Data
 router.put('/update', upload.single('profilePicture'), async (req, res) => {
     try{       
-        //check if username is unique
         const userId = req.query.userfb;
-        // console.log(userId);
 
         if(!userId){
             return res.status(400).json({message: "User Not Found."})
@@ -86,8 +84,11 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
         if(req.file){
             userUpdate.profilePicture = req.file.path;
         }
-        if(req.body.vehicle){
-            userUpdate.vehicle = req.body.vehicle;
+        if(req.body.vehicleId){
+            const vehicleId = req.body.vehicleId;
+            if (!userUpdate.vehicles.includes(vehicleId)){
+                userUpdate.vehicles.push(vehicleId)
+            }
         }
 
         await userUpdate.save();

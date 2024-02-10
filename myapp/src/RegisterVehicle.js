@@ -143,16 +143,28 @@ const RegisterVehicle = ({updateImage}) => {
                 method: 'POST',
                 body: formData,
             });
-
-            if (response.ok){
-                const data = await response.json()
-                console.log("Add Vehicle Successful")
-                setMessage(`${vehicleReg.current.value} Has Been Added`)
-                return data
-            } else{
+                
+            if (!response.ok){
                 const errorData = await response.json()
                 throw new Error(errorData.message)
             }
+            const data = await response.json()
+
+            const firebaseUID = currentUser.uid;
+
+            const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'PUT',
+                body: JSON.stringify({vehicleId: data.newVehicle._id}),
+            });
+
+            if (!userResponse.ok){
+                const errorData = await response.json()
+                throw new Error(errorData.message)
+            } 
+
+            console.log("Add Vehicle Successful")
+            setMessage(`${vehicleReg.current.value} Has Been Added`)
+
         }catch (error){
             console.error("Error Adding Vehicle:", error)
             setError("Failed To Add Vehicle")

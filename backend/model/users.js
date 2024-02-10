@@ -37,10 +37,10 @@ const UserSchema = new mongoose.Schema({
     profilePicture:{
         type: String,
     },
-    vehicles:{
-        type: Array,
-        default: [],
-    }
+    vehicles:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Vehicles',
+    }]
 },
     {
         collection: 'Users',
