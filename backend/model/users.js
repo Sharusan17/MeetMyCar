@@ -37,10 +37,19 @@ const UserSchema = new mongoose.Schema({
     profilePicture:{
         type: String,
     },
-    vehicles:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Vehicles',
-    }]
+    vehicles:[
+        {
+            _id: false,
+            vehicleId:{ 
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Vehicles',
+            },
+            vrn:{
+                type: String,
+                required: true
+            }
+        }
+    ]
 },
     {
         collection: 'Users',

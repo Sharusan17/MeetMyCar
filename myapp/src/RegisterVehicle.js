@@ -152,9 +152,13 @@ const RegisterVehicle = ({updateImage}) => {
 
             const firebaseUID = currentUser.uid;
 
+            const Vehicle_formData = new FormData();
+            Vehicle_formData.append('vehicleId', data.newVehicle._id);
+            Vehicle_formData.append('vrn', data.newVehicle.vrn);
+
             const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
-                body: JSON.stringify({vehicleId: data.newVehicle._id}),
+                body: Vehicle_formData,
             });
 
             if (!userResponse.ok){

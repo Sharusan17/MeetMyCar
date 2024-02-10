@@ -84,10 +84,10 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
         if(req.file){
             userUpdate.profilePicture = req.file.path;
         }
-        if(req.body.vehicleId){
+        if(req.body.vehicleId && req.body.vrn){
             const vehicleId = req.body.vehicleId;
             if (!userUpdate.vehicles.includes(vehicleId)){
-                userUpdate.vehicles.push(vehicleId)
+                userUpdate.vehicles.push({vehicleId: vehicleId, vrn: req.body.vrn});
             }
         }
 
