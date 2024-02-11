@@ -46,6 +46,11 @@ router.post('/add', upload.single('image'), async (req, res) => {
         if (req.file){
             newPost.image = req.file.path;
         }
+        
+        if(req.body.vehicleId && req.body.vrn){
+            const vehicleId = req.body.vehicleId;
+            newPost.vehicles = ({vehicleId: vehicleId, vrn: req.body.vrn});
+        }
 
         await newPost.save();
 
@@ -81,8 +86,9 @@ router.put('/edit', upload.single('image'), async (req, res) => {
         if(req.body.description){
             postUpdate.description = req.body.description;
         }
-        if(req.body.vehicle){
-            postUpdate.vehicle = req.body.vehicle;
+        if(req.body.vehicleId && req.body.vrn){
+            const vehicleId = req.body.vehicleId;
+            postUpdate.vehicles = ({vehicleId: vehicleId, vrn: req.body.vrn});
         }
 
         await postUpdate.save();

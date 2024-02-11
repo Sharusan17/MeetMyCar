@@ -21,10 +21,18 @@ const PostSchema = new mongoose.Schema({
         minlength: 2,
         required: true,
     },
-    vehicle: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Vehicles',
+    vehicles:{
+        _id: false,
+        vehicleId:{ 
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Vehicles',
+        },
+        vrn:{
+            type: String,
+            required: true
+        }
     },
+    
     comments: [
         {
             user: {

@@ -19,8 +19,10 @@ const EditPost = () => {
     const [title, setTitle] = useState('')
     const [image, setImage] = useState('')
     const [desc, setDesc] = useState('')
+    const [vehicle, setVehicle] = useState([])
 
     const [imageChange, setImageChange] = useState(false)
+    const [selectVehicle, setSelectedVehicle] = useState([])
 
     const {currentUser} = useAuth()
 
@@ -50,6 +52,7 @@ const EditPost = () => {
                     setuserId(data.userData._id)
                     setuserName(data.userData.username)
                     setprofilePicture(data.userData.profilePicture)
+                    setVehicle(data.userData.vehicles)
     
                     console.log("Fetched User Details")
                     return data
@@ -80,6 +83,7 @@ const EditPost = () => {
                     setTitle(data.postData.title)
                     setImage(data.postData.image)
                     setDesc(data.postData.description)
+                    setSelectedVehicle(data.postData.vehicles)
     
                     console.log("Fetched Post Details")
                     return data
@@ -123,11 +127,13 @@ const EditPost = () => {
        }
 
 
-       if ((titleRef.current.value !== title) || (imageChange === true ) || (descRef.current.value !== desc)) {
+       if ((titleRef.current.value !== title) || (imageChange === true ) || (descRef.current.value !== desc) || (selectVehicle.vrn !== vehicle[0].vrn)) {
             const formData = new FormData();
             formData.append('title', titleRef.current.value);
             formData.append('image', imageRef.current.files[0])
             formData.append('description', descRef.current.value);
+            formData.append('vehicleId', selectVehicle.vehicleId)
+            formData.append('vrn', selectVehicle.vrn)
 
             try{
                 setLoading(true)
@@ -157,6 +163,12 @@ const EditPost = () => {
             return
         }
     }
+
+    function handleSelectVehicle(e){
+        const vehicle_Id= e.target.value;
+        const selectVehicle = vehicle.find(v => v.vehicleId === vehicle_Id)
+        setSelectedVehicle(selectVehicle);
+    };
 
     function handleImageInput(e){
         setImage(URL.createObjectURL(e.target.files[0]))
@@ -192,8 +204,11 @@ const EditPost = () => {
                         <img src={imageChange ? image :`http://localhost:3001/${image}`} className='add_postImage'></img>
 
                         <div className='add_postFooter'>
-                            <select className='add_postVRN'>
-                                <option>Car 1</option>
+                            <select className='add_postVRN' onChange={handleSelectVehicle} value={selectVehicle?.vehicleId} required>
+                                    <option value="" disabled>VRN</option>
+                                    {vehicle.map(vehicle => ( 
+                                        <option key={vehicle.vehicleId} value={vehicle.vehicleId}> {vehicle.vrn} </option>
+                                    ))}
                             </select>
                             <input type='text' ref={descRef} defaultValue={desc} className='add_postDescription' ></input> 
                         </div>

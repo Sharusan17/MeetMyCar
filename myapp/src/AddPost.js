@@ -13,8 +13,10 @@ const AddPost = () => {
     const [userId, setuserId] = useState('')
     const [username, setuserName] = useState('')
     const [profilePicture, setprofilePicture] = useState('')
+    const [vehicle, setVehicle] = useState([])
 
     const [image, setImage] = useState('')
+    const [selectVehicle, setselectedVehicle] = useState([])
 
     const {currentUser} = useAuth()
 
@@ -44,6 +46,7 @@ const AddPost = () => {
                     setuserId(data.userData._id)
                     setuserName(data.userData.username)
                     setprofilePicture(data.userData.profilePicture)
+                    setVehicle(data.userData.vehicles)
     
                     console.log("Fetched User Details")
                     return data
@@ -83,6 +86,10 @@ const AddPost = () => {
        formData.append('title', titleRef.current.value);
        formData.append('description', descRef.current.value);
        formData.append('image', imageRef.current.files[0]);
+       formData.append('vehicleId', selectVehicle.vehicleId)
+       formData.append('vrn', selectVehicle.vrn)
+
+       console.log(selectVehicle)
 
         try{
             setError('')
@@ -114,6 +121,12 @@ const AddPost = () => {
     function handleImageInput(e){
         setImage(URL.createObjectURL(e.target.files[0]))
     }
+
+    function handleSelectVehicle(e){
+        const vehicle_Id= e.target.value;
+        const selectVehicle = vehicle.find(v => v.vehicleId === vehicle_Id)
+        setselectedVehicle(selectVehicle);
+    };
 
     useEffect(() => {
         const currentDateTime = () => {
@@ -156,8 +169,11 @@ const AddPost = () => {
                         <img src={image} alt='Post' className='add_postImage'></img>
 
                         <div className='add_postFooter'>
-                            <select className='add_postVRN'>
-                                <option>Car 1</option>
+                            <select className='add_postVRN' onChange={handleSelectVehicle} value={selectVehicle.vehicleId} required>
+                                <option value="" disabled>VRN</option>
+                                {vehicle.map(vehicle => ( 
+                                    <option key={vehicle.vehicleId} value={vehicle.vehicleId}> {vehicle.vrn} </option>
+                                ))}
                             </select>
                             <input type='text' ref={descRef} placeholder="Description" className='add_postDescription' required></input> 
                         </div>
