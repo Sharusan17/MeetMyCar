@@ -183,11 +183,11 @@ const SeePost = () => {
                             <img src={`http://localhost:3001/${post.image}`} alt={post.title} className='postImage'/>
 
                             <div className='postSpecs'>
-                                <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,red 0% ${((1.5/post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Acceleration.ZeroTo60Mph)*100)}%,white ${0}% 100%)`}}>
-                                    <h3>{post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Acceleration.ZeroTo60Mph} 
-                                        <span>secs</span>
+                                <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,red 0% ${((post.vehicle_Data?.vehicleData.vehicleInfo.Performance.MaxSpeed.Mph/350)*100)}%,white ${0}% 100%)`}}>
+                                    <h3>{post.vehicle_Data?.vehicleData.vehicleInfo.Performance.MaxSpeed.Mph} 
+                                        <span>mph</span>
                                     </h3>
-                                    <p className='TopSpecsName'> 0 - 60</p>
+                                    <p className='TopSpecsName'>Top Speed</p>
                                 </div>
 
                                 <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,orange 0% ${((post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Power.Bhp/800)*100)}%,white ${0}% 100%)`}}>
