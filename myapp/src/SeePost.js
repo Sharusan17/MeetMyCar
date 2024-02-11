@@ -58,7 +58,7 @@ const SeePost = () => {
                     setPosts(vehiclePost)
                     console.log("Fetched Post Details")
 
-                    if(!vehiclePost || vehiclePost === 0){
+                    if(!vehiclePost || vehiclePost.length === 0){
                         setNoPost("No car posts? Looks like the traffic jam is over. Be the first on the road!")
                     } 
 

@@ -23,6 +23,8 @@ const EditPost = () => {
 
     const [imageChange, setImageChange] = useState(false)
     const [selectVehicle, setSelectedVehicle] = useState([])
+    const [oldSelectedVehicle, setOldSelectedVehicle] = useState([])
+
 
     const {currentUser} = useAuth()
 
@@ -84,6 +86,7 @@ const EditPost = () => {
                     setImage(data.postData.image)
                     setDesc(data.postData.description)
                     setSelectedVehicle(data.postData.vehicles)
+                    setOldSelectedVehicle(data.postData.vehicles)
     
                     console.log("Fetched Post Details")
                     return data
@@ -127,7 +130,7 @@ const EditPost = () => {
        }
 
 
-       if ((titleRef.current.value !== title) || (imageChange === true ) || (descRef.current.value !== desc) || (selectVehicle.vrn !== vehicle[0].vrn)) {
+       if ((titleRef.current.value !== title) || (imageChange === true ) || (descRef.current.value !== desc) || (selectVehicle.vrn !== oldSelectedVehicle.vrn)) {
             const formData = new FormData();
             formData.append('title', titleRef.current.value);
             formData.append('image', imageRef.current.files[0])
