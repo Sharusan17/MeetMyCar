@@ -31,18 +31,43 @@ const SeePost = () => {
                 if (response.ok){
                     const data = await response.json()
 
-                    setPosts(data.postData)
+                    const vehiclePost = await Promise.all(data.postData.map(async (post) => {
+                        if(post.vehicles?.vehicleId){
+                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles/view?vehicleId=${encodeURIComponent(post.vehicles.vehicleId)}`, {
+                                method: 'GET',
+                                headers: {
+                                    'accept': 'application/json',
+                                },
+                            });
+
+                            if(VehicleReponse.ok){
+                                const vehicle_Data = await VehicleReponse.json()
+                                return {
+                                    ...post,
+                                     vehicle_Data
+                                }
+                            } else{
+                                console.error("Error Fetching Vehicle Data:", error)
+                                setError("Error Fetching Vehicle. Try Again Later")
+                                return post                       
+                            }
+                        }
+                        return post
+                    }))
+
+                    setPosts(vehiclePost)
                     console.log("Fetched Post Details")
 
-                    if(!data.postData || data.postData.length === 0){
+                    if(!vehiclePost || vehiclePost === 0){
                         setNoPost("No car posts? Looks like the traffic jam is over. Be the first on the road!")
-                    }
-                    return data
+                    } 
+
                 } else{
                     const errorData = await response.json()
                     throw new Error(errorData.message)
                 }
-            }catch (error){
+
+            } catch (error){
                 console.error("Error Fetching Post Data:", error)
                 setError("Error Fetching Post. Try Again Later")
             }
@@ -158,22 +183,22 @@ const SeePost = () => {
                             <img src={`http://localhost:3001/${post.image}`} alt={post.title} className='postImage'/>
 
                             <div className='postSpecs'>
-                                <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,red 0% ${((1.5/post.speedtime)*100)}%,white ${0}% 100%)`}}>
-                                    <h3>{post.speedtime} 
+                                <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,red 0% ${((1.5/post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Acceleration.ZeroTo60Mph)*100)}%,white ${0}% 100%)`}}>
+                                    <h3>{post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Acceleration.ZeroTo60Mph} 
                                         <span>secs</span>
                                     </h3>
                                     <p className='TopSpecsName'> 0 - 60</p>
                                 </div>
 
-                                <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,orange 0% ${((post.bhp/1000)*100)}%,white ${0}% 100%)`}}>
-                                    <h3>{post.bhp}
+                                <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,orange 0% ${((post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Power.Bhp/800)*100)}%,white ${0}% 100%)`}}>
+                                    <h3>{post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Power.Bhp}
                                         <span>bhp</span>
                                     </h3>
                                     <p className='TopSpecsName'>BHP</p>
                                 </div>
 
-                                <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,green 0% ${post.torque}%,white ${100-post.torque}% 100%)`}}>
-                                    <h3>{post.torque}
+                                <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,green 0% ${((post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Torque.Nm)/1000)*100}%,white ${0}% 100%)`}}>
+                                    <h3>{post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Torque.Nm}
                                         <span>Nm</span>
                                     </h3>
                                     <p className='TopSpecsName'>Torque</p>
@@ -181,7 +206,7 @@ const SeePost = () => {
                             </div>
 
                             <div className='postFooter'>
-                                <Link className='postVRN'>{post.vrn}</Link>
+                                <Link className='postVRN'>{post.vehicles?.vrn}</Link>
                                 <p className='postDescription'>{post.description}</p> 
                             </div> 
                         </div> 
