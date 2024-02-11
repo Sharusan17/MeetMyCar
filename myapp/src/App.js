@@ -16,6 +16,8 @@ import SeePost from "./SeePost";
 import AddPost from "./AddPost";
 import EditPost from "./EditPost";
 
+import Garage from "./Garage";
+
 import {BrowserRouter, Routes, Route,} from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 
@@ -97,6 +99,16 @@ function App() {
                     <PrivateRoute>
                       <Layout>
                         <EditPost/>
+                      </Layout>
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route path="/garage"
+                  element={
+                    <PrivateRoute>
+                      <Layout>
+                        <Garage/>
                       </Layout>
                     </PrivateRoute>
                   }

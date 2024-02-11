@@ -28,7 +28,7 @@ export default function Home() {
 
         <Link to="/reauthenticate" className="btn btn-primary w-100 mt-3"> Update Profile</Link>
 
-        <Link to="/registervehicle" className="btn btn-dark w-100 mt-3"> Register Vehicle</Link>
+        <Link to="/garage" className="btn btn-dark w-100 mt-3"> Check Garage</Link>
 
         <div className="w-100 text-center mt-2">
             <Button variant="link" onClick={handleLogOut}> Log Out </Button>
