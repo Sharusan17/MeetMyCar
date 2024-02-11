@@ -7,12 +7,17 @@ import './Garage_css.css'
 
 const Garage = () => {
 
+
     const [vehicle, setVehicle] = useState([])
     const [selectedVehicle, setSelectedVehicle] = useState('')
     const [openModal, setOpenModal] = useState(false)
-    
+    const [confirmDeleteVehicle, setconfirmDeleteVehicle] = useState(false)
+
     const {currentUser} = useAuth()
+
+    const [message, setMessage] = useState('')
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         async function fetchUserData(){
@@ -71,7 +76,51 @@ const Garage = () => {
     const handleSelectCard = (vehicle) => {
         console.log("Selected:", vehicle)
         setSelectedVehicle(vehicle)
+        setconfirmDeleteVehicle(false)
         setOpenModal(true)
+    }
+
+    async function handleDelete(vehicleId){
+
+        if (!confirmDeleteVehicle){
+            setconfirmDeleteVehicle(true)
+            return
+        }
+
+        setLoading(true)
+        setError('')
+        setMessage('')
+
+        try{
+            const firebaseUID = currentUser.uid;
+
+            const response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({vehicleIdRemove: vehicleId})
+            });
+
+            if (response.ok){
+                console.log("Deleted Vehicle")
+                setMessage("Vehicle Deleted")
+                setOpenModal(false)
+                setTimeout(() => {
+                    window.location.reload(false);
+                }, 1000)
+            } else{
+                const errorData = await response.json()
+                setError("Failed To Delete Vehicle")
+                console.error("Error Deleting Vehicle:", error)
+                throw new Error(errorData.message)
+            }
+        }catch (error){
+            console.error("Error Deleting Vehicle:", error)
+            setError("Failed To Delete Vehicle")
+        }finally{
+            setLoading(false)
+        }
     }
 
     return (
@@ -86,6 +135,7 @@ const Garage = () => {
                     <Link to="/registervehicle" className="btn btn-dark"> Add Vehicle</Link>
                 </header>   
 
+                <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
 
                 <div className='Cards'>
@@ -124,7 +174,108 @@ const Garage = () => {
                     <div className='Modal'>
                         {selectedVehicle ? (
                             <>
-                                <h2>{selectedVehicle.vehicleData?.vehicleInfo.VehicleRegistration.MakeModel}</h2>
+                                <div className='modalHeader'>
+                                    <h3>{selectedVehicle.vehicleData?.vehicleInfo.VehicleRegistration.MakeModel}</h3>
+                                    <p>{selectedVehicle.vehicleData?.vrn}</p>
+                                </div> 
+
+                                <div className='modalImage'>
+                                    <img src={selectedVehicle.vehicleData?.image} alt='Vehicle'></img>
+                                </div>
+
+                                <div className='modalData'>
+                                    
+                                    <div className='line'> 
+                                        <span className='lineText'>Information</span>
+                                    </div>
+
+                                    <div className='dataInfo'>
+                                        <div>
+                                            <h4 className='info_title'>Colour</h4>
+                                            <p className='info_data'>{selectedVehicle.vehicleData?.vehicleInfo.VehicleRegistration.Colour}</p>
+                                        </div>
+                                        <div>
+                                            <h4 className='info_title'>Year</h4>
+                                            <p className='info_data'>{selectedVehicle.vehicleData?.vehicleInfo.VehicleRegistration.YearOfManufacture}</p>
+                                        </div>
+
+                                        <div>
+                                            <h4 className='info_title'>Door</h4>
+                                            <p className='info_data'>{selectedVehicle.vehicleData?.vehicleInfo.SmmtDetails.NumberOfDoors}</p>
+                                        </div>
+                                        <div>
+                                            <h4 className='info_title'>Seat</h4>
+                                            <p className='info_data'>{selectedVehicle.vehicleData?.vehicleInfo.VehicleRegistration.SeatingCapacity}</p>
+                                        </div>
+
+                                        <div>
+                                            <h4 className='info_title'>Transmission</h4>
+                                            <p className='info_data'>{selectedVehicle.vehicleData?.vehicleInfo.VehicleRegistration.Transmission}</p>
+                                        </div> 
+                                        <div>
+                                            <h4 className='info_title'>Fuel</h4>
+                                            <p className='info_data'>{selectedVehicle.vehicleData?.vehicleInfo.VehicleRegistration.FuelType}</p>
+                                        </div> 
+                                    </div> 
+
+                                    <div className='line'> 
+                                        <span className='lineText'>Performance</span>
+                                    </div>
+
+                                    <div className='dataInfo'>
+                                        <div>
+                                            <h4 className='info_title'>BrakeHorse</h4>
+                                            <p className='info_data'>{selectedVehicle.vehicleData?.vehicleInfo.Performance.Power.Bhp} BHP</p>
+                                        </div>
+                                        <div>
+                                            <h4 className='info_title'>Torque</h4>
+                                            <p className='info_data'>{selectedVehicle.vehicleData?.vehicleInfo.Performance.Torque.Nm} Nm</p>
+                                        </div>
+
+                                        <div>
+                                            <h4 className='info_title'>Max Speed</h4>
+                                            <p className='info_data'>{selectedVehicle.vehicleData?.vehicleInfo.Performance.MaxSpeed.Mph} MPH</p>
+                                        </div>
+                                        <div>
+                                            <h4 className='info_title'>MPG</h4>
+                                            <p className='info_data'>{selectedVehicle.vehicleData?.vehicleInfo.Consumption.Combined.Mpg}</p>
+                                        </div>
+                                    </div> 
+
+                                    <div className='line'> 
+                                        <span className='lineText'>Valuation</span>
+                                    </div>
+
+                                    <div className='dataValue'>
+                                        <div>
+                                            <h4 className='info_title'>Auction</h4>
+                                            <p className='info_data'>£{selectedVehicle.vehicleData?.vehicleValue?.ValuationList.Auction}</p>
+                                            <p className='info_change'> &#8595; {Math.round(((selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) - (selectedVehicle.vehicleData?.vehicleValue?.ValuationList.Auction)) / (selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) * 100) }%</p>
+                                        </div>
+                                        <div>
+                                            <h4 className='info_title'>Trade</h4>
+                                            <p className='info_data'>£{selectedVehicle.vehicleData?.vehicleValue?.ValuationList.TradeAverage}</p>
+                                            <p className='info_change'> &#8595; {Math.round(((selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) - (selectedVehicle.vehicleData?.vehicleValue?.ValuationList.TradeAverage)) / (selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) * 100) }%</p>
+                                        </div>
+
+                                        <div>
+                                            <h4 className='info_title'>Private</h4>
+                                            <p className='info_data'>£{selectedVehicle.vehicleData?.vehicleValue?.ValuationList.PrivateAverage}</p>
+                                            <p className='info_change'> &#8595; {Math.round(((selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) - (selectedVehicle.vehicleData?.vehicleValue?.ValuationList.PrivateAverage)) / (selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) * 100) }%</p>
+                                        </div>
+                                    </div>
+
+                                    {confirmDeleteVehicle ? (
+                                        <>
+                                            <button disabled={loading}  className="btn btn-outline-danger w-100 mt-2" variant="danger" onClick={() => handleDelete(selectedVehicle.vehicleData?._id)}>Confirm Delete</button>
+                                        </>
+                                    ) :(
+                                        <>
+                                            <button disabled={loading}  className="btn btn-outline-dark w-100 mt-2" type="submit"  onClick={() => handleDelete(selectedVehicle.vehicleData?._id)}>Delete Vehicle</button>
+                                        </>
+                                    )}
+                                </div>
+
                             </>
                         ) : <p>Loading....</p>}
                     </div>

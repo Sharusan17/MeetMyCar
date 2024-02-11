@@ -91,13 +91,17 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
             }
         }
 
+        if(req.body.vehicleIdRemove){
+            userUpdate.vehicles = userUpdate.vehicles.filter(vehicle => vehicle.vehicleId !== req.body.vehicleIdRemove)
+        }
+
         await userUpdate.save();
 
         res.status(201).json({message: "User Updated", user: userUpdate});
         console.log("User Updated");
     } catch (error){
         console.error('Error updating user:', error);
-        res.status(500).json({message:" Error updaing User", detail: error.message});
+        res.status(500).json({message:" Error updating User", detail: error.message});
     }
 });
 
