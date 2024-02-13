@@ -66,7 +66,8 @@ router.post('/register', upload.single('profilePicture'), async (req, res) => {
 
 //UPDATE User Data
 router.put('/update', upload.single('profilePicture'), async (req, res) => {
-    try{       
+    try{
+
         const userId = req.query.userfb;
 
         if(!userId){
@@ -92,7 +93,7 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
         }
 
         if(req.body.vehicleIdRemove){
-            userUpdate.vehicles = userUpdate.vehicles.filter(vehicle => vehicle.vehicleId !== req.body.vehicleIdRemove)
+            userUpdate.vehicles.pull({vehicleId: req.body.vehicleIdRemove})
         }
 
         await userUpdate.save();
