@@ -77,7 +77,6 @@
 
 .Modal{
     width: 500px;
-    height: fit-content;
     background: white;
     border: 1px solid gray;
     border-radius: 15px;
@@ -86,16 +85,26 @@
 }
 
 .modalHeader{
-    padding-top: 10px;
+    padding-top: 5px;
+    padding-bottom: 0;
     text-align: left;
+    display: flex;
+    justify-content: space-between;
+}
+
+.modalHeader button{
+    align-self: flex-end;
+    margin-right: 5px;
 }
 
 .modalHeader h3{
     font-size: 25px;
 }
+
 .modalHeader p{
     width: fit-content;
     padding: 2px 5px 2px 5px;
+    margin-bottom: 0;
     font-size: 17px;
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-weight: 600;
@@ -170,4 +179,83 @@
     color: red;
     font-size: 12px;
     margin-bottom: 5px;
+}
+
+.dataCheckList{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.dataCheck{
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.historyInfo{
+    padding: 0 10px 0 10px;
+}
+
+.motContainer{
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 5px;
+}
+
+.motHeader{
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.motHeader span{
+    font-weight: 500;
+}
+
+.motList{
+    padding: 5px;
+}
+
+.motRow{
+    display: flex;
+    justify-content: space-between;
+}
+
+.mot_test{
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.mot_num, .mot_mile, .mot_date, .mot_fail_text{
+    font-size: 12px;
+}
+
+.mot_mile span{
+    font-weight: 800;
+}
+
+.mot_fail_type{
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.mot_fail_text{
+    font-size: 10px;
+}
+
+.motLine{
+    height: 1px;
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+.change_data{
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 0;
 }
