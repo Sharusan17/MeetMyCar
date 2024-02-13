@@ -94,11 +94,35 @@ router.get('/search', async (req, res) => {
 
         const dataValue = await apiValueResponse.json();
 
-        if (apiResponse.ok && apiImageResponse.ok && apiValueResponse.ok) {
+        const apiMOTResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/mot?apikey=${TEST_APP_ID}&vrm=${VehicleReg}`
+            ,{
+                method:'GET',
+                headers:{
+                    'accept': 'application/json',
+                },
+            }
+        );
+
+        const dataMOT = await apiMOTResponse.json();
+
+        const apiHistoryResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/vehicleregistration?apikey=${TEST_APP_ID}&vrm=${VehicleReg}`
+        ,{
+            method:'GET',
+            headers:{
+                'accept': 'application/json',
+            },
+        }
+    );
+
+    const dataHistory = await apiHistoryResponse.json();
+
+        if (apiResponse.ok && apiImageResponse.ok && apiValueResponse.ok && apiMOTResponse.ok && apiHistoryResponse.ok) {
             const responseData = {
                 datainfo,
                 dataImg,
-                dataValue
+                dataValue,
+                dataMOT,
+                dataHistory
             }
             res.json(responseData);
         } else {

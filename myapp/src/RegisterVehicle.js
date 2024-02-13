@@ -20,6 +20,9 @@ const RegisterVehicle = ({updateImage}) => {
     const vehicleReg = useRef()
     const [vehicleData, setVehicleData] = useState([])
     const [vehicleValue, setVehicleValue] = useState([])
+    const [vehicleMOT, setVehicleMOT] = useState([])
+    const [vehicleHistory, setVehicleHistory] = useState([])
+
     const [vehicleMake, setvehicleMake] = useState('')
     const [vehicleModel, setvehicleModel] = useState('')
     const [vehicleFuel, setvehicleFuel] = useState('')
@@ -135,6 +138,9 @@ const RegisterVehicle = ({updateImage}) => {
         formData.append('image', vehicleImage);
         formData.append('vehicleInfo', JSON.stringify(vehicleData));
         formData.append('vehicleValue', JSON.stringify(vehicleValue));
+        formData.append('vehicleMOT', JSON.stringify(vehicleMOT));
+        formData.append('vehicleHistory', JSON.stringify(vehicleHistory));
+
     
         try{
             setError('')
@@ -215,6 +221,8 @@ const RegisterVehicle = ({updateImage}) => {
                 // console.log(data.VehicleRegistration.Make)
                 setVehicleData(data.datainfo)
                 setVehicleValue(data.dataValue)
+                setVehicleMOT(data.dataMOT)
+                setVehicleHistory(data.dataHistory)
 
                 const VRN_vehicleMake = data.datainfo.VehicleRegistration.Make;
                 setvehicleMake(VRN_vehicleMake)

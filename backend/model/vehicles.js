@@ -21,6 +21,14 @@ const VehicleSchema = new mongoose.Schema({
     vehicleValue:{
         type: Object,
         required: true,
+    },
+    vehicleMOT:{
+        type: Object,
+        required: true,
+    },
+    vehicleHistory:{
+        type: Object,
+        required: true,
     }
 },
     {

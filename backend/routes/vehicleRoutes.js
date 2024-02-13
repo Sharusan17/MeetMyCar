@@ -51,6 +51,16 @@ router.post('/add', upload.single('image'), async (req, res) => {
             newVehicle.vehicleValue = JSON.parse(req.body.vehicleValue)
         }
 
+        //Parses The VehicleMOT Into Nested Objects
+        if (req.body.vehicleMOT){
+            newVehicle.vehicleMOT = JSON.parse(req.body.vehicleMOT)
+        }
+
+        //Parses The VehicleHistory Into Nested Objects
+        if (req.body.vehicleHistory){
+            newVehicle.vehicleHistory = JSON.parse(req.body.vehicleHistory)
+        }
+
         await newVehicle.save();
 
         res.status(201).json({message: "Vehicle Added Successfully", newVehicle});
@@ -87,6 +97,12 @@ router.put('/edit', upload.single('image'), async (req, res) => {
         }
         if (req.body.vehicleValue){
             newVehicle.vehicleValue = JSON.parse(req.body.vehicleValue)
+        }
+        if (req.body.vehicleMOT){
+            newVehicle.vehicleMOT = JSON.parse(req.body.vehicleMOT)
+        }
+        if (req.body.vehicleHistory){
+            newVehicle.vehicleHistory = JSON.parse(req.body.vehicleHistory)
         }
 
         await vehicleUpdate.save();
