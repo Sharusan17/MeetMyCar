@@ -15,13 +15,16 @@ router.get("/", (req, res) => {
 router.get('/details', async (req, res) => {
     try{       
         const userId = req.query.userfb;
+        const userid = req.query.userid;
+
+        let query = userid ? {_id: userid} : {user_fbId: userId}
         
         // console.log(userId);
 
-        if(!userId){
+        if(!query){
             return res.status(400).json({message: "User Not Found."})
         }
-        const userData = await User.findOne({user_fbId: userId});
+        const userData = await User.findOne(query);
 
         if(!userData){
             return res.status(404).json({message: "User Details Not Found."});

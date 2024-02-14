@@ -105,7 +105,7 @@ function App() {
                   }
                 />
 
-                <Route path="/profile"
+                <Route path="/profile/:userid"
                   element={
                     <PrivateRoute>
                       <Layout>

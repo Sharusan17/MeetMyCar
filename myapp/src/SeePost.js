@@ -137,7 +137,7 @@ const SeePost = () => {
                                         alt="Profile"
                                     />
                                 )}                                
-                                <p className='postUserName'>{post.user?.username}</p>
+                                <Link to={`/profile/${post.user._id}`} className='postUserName'>{post.user?.username}</Link>
                             </div>
 
                             

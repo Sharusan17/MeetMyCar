@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
 import './Profile_css.css'
 
 const Profile = () => {
     const {currentUser} = useAuth()
+    const {userid} = useParams()
 
     const [userId, setuserId] = useState('')
     const [username, setuserName] = useState('')
@@ -24,8 +26,18 @@ const Profile = () => {
                 setError('')
 
                 const firebaseUID = currentUser.uid;
+
+                let userQuery
+
+                if(userid){
+                    userQuery = `userid=${encodeURIComponent(userid)}`
+                } else{
+                    userQuery = `userfb=${encodeURIComponent(firebaseUID)}`
+                }
+
+                console.log(userQuery)
     
-                const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`http://localhost:3001/users/details?${userQuery}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -74,7 +86,7 @@ const Profile = () => {
             }
         }
         fetchUserData();
-    }, [currentUser.uid]);
+    }, [currentUser.uid, userid]);
 
     const handleSelectCard = (post) => {
         console.log("Selected:", post)

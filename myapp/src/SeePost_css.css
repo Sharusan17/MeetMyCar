@@ -46,6 +46,8 @@
 .postUserName{
     font-weight: bold;
     margin-top: 15px;
+    text-decoration: none;
+    color: black;
 }
 
 .postMenuContainer{
