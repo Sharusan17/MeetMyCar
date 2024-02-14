@@ -101,15 +101,33 @@ const AddPost = () => {
                 body: formData,
             });
 
-            if (response.ok){
-                const data = await response.json()
-                console.log("Add Post Successful")
-                navigate("/seepost")
-                return data
-            } else{
+            if (!response.ok){
                 const errorData = await response.json()
                 throw new Error(errorData.message)
             }
+
+            const data = await response.json()
+
+            console.log(data.newPost._id)
+
+            const firebaseUID = currentUser.uid;
+
+            const Post_formData = new FormData();
+            Post_formData.append('postId', data.newPost._id);
+
+            const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'PUT',
+                body: Post_formData,
+            });
+
+            if (!userResponse.ok){
+                const errorData = await response.json()
+                throw new Error(errorData.message)
+            } 
+
+            console.log("Add Post Successful")
+            navigate("/seepost")
+
         }catch (error){
             console.error("Error Creating Post:", error)
             setError("Failed To Create Post")

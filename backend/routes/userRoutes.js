@@ -85,13 +85,17 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
         if(req.file){
             userUpdate.profilePicture = req.file.path;
         }
+        if(req.body.postId){
+            if (!userUpdate.posts.includes(req.body.postId)){
+                userUpdate.posts.push({postId: req.body.postId});
+            }
+        }
         if(req.body.vehicleId && req.body.vrn){
             const vehicleId = req.body.vehicleId;
             if (!userUpdate.vehicles.includes(vehicleId)){
                 userUpdate.vehicles.push({vehicleId: vehicleId, vrn: req.body.vrn});
             }
         }
-
         if(req.body.vehicleIdRemove){
             userUpdate.vehicles.pull({vehicleId: req.body.vehicleIdRemove})
         }

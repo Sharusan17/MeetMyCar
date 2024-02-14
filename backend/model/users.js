@@ -37,6 +37,15 @@ const UserSchema = new mongoose.Schema({
     profilePicture:{
         type: String,
     },
+    posts:[
+        {
+            _id: false,
+            postId:{ 
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Posts',
+            }
+        }
+    ],
     vehicles:[
         {
             _id: false,
