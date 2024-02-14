@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
 import './Profile_css.css'
@@ -162,7 +161,7 @@ const Profile = () => {
                             <p> <span>55</span> Following</p>
                         </div>
                         
-                        <Link to="/garage" className="btn btn-dark" id='checkbtn'> Check Vehicle</Link>
+                        <Link to={`/garage/${userid}`} className="btn btn-dark" id='checkbtn'> Check Vehicle</Link>
                     </div>
                     
                 </header>   

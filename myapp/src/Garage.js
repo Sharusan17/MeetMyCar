@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 import {Popup} from 'reactjs-popup'
 
 import './Garage_css.css'
 
 const Garage = () => {
-
+    const {userid} = useParams()
 
     const [vehicle, setVehicle] = useState([])
     const [selectedVehicle, setSelectedVehicle] = useState('')
@@ -27,7 +27,17 @@ const Garage = () => {
 
                 const firebaseUID = currentUser.uid;
     
-                const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
+                let userQuery
+
+                if(userid){
+                    userQuery = `userid=${encodeURIComponent(userid)}`
+                } else{
+                    userQuery = `userfb=${encodeURIComponent(firebaseUID)}`
+                }
+
+                console.log(userQuery)
+    
+                const response = await fetch(`http://localhost:3001/users/details?${userQuery}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',

@@ -1,12 +1,48 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Button } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
 export default function Home() {
-  const [error, setError] = useState("")
+  const [userId, setuserId] = useState('')
   const {currentUser, logout} = useAuth()
+
+  const [error, setError] = useState("")
   const navigate = useNavigate()
+
+  useEffect(() => {
+    async function fetchUserData(){
+        try{
+            setError('')
+            const firebaseUID = currentUser.uid;
+            // console.log(firebaseUID)
+
+            const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'GET',
+                headers: {
+                    'accept': 'application/json',
+                },
+            });
+
+            if (response.ok){
+                const data = await response.json()
+
+                setuserId(data.userData._id)
+                console.log("Fetched User Details")
+                return data
+            } else{
+                const errorData = await response.json()
+                setError("Failed To Fetch User Data")
+                throw new Error(errorData.message)
+            }
+        }catch (error){
+            console.error("Error Fetching User Data:", error)
+            setError("Failed To Fetch User Data")
+        }
+    }
+    fetchUserData();
+    // eslint-disable-next-line
+}, [currentUser.uid]);
 
   async function handleLogOut(){
     setError('')
@@ -28,7 +64,7 @@ export default function Home() {
 
         <Link to="/reauthenticate" className="btn btn-primary w-100 mt-3"> Update Profile</Link>
 
-        <Link to="/garage" className="btn btn-dark w-100 mt-3"> Check Garage</Link>
+        <Link to={`/garage/${userId}`} className="btn btn-dark w-100 mt-3"> Check Garage</Link>
 
         <div className="w-100 text-center mt-2">
             <Button variant="link" onClick={handleLogOut}> Log Out </Button>

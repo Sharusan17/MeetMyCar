@@ -115,7 +115,7 @@ function App() {
                   }
                 />
 
-                <Route path="/garage"
+                <Route path="/garage/:userid"
                   element={
                     <PrivateRoute>
                       <Layout>
