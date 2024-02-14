@@ -11,7 +11,7 @@
     flex-direction: row;
 }
 
-.showUserDetails button{
+.showUserDetails #followbtn{
     margin-left: 25px;
     width: 100px;
 }
@@ -49,7 +49,7 @@
     gap: 25px;
 }
 
-.showUserData button{
+.showUserData #checkbtn{
     align-self: flex-end;
     margin-right: 0;
 }
@@ -57,16 +57,17 @@
 .Card_Post{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    padding: 0, 25px, 0, 25px;
     gap: 20px;
+    margin-left: 25px;
 }
 
 .postCard{
     width: 300px;
     height: 320px;
-    padding: 20px;
     background-color: rgb(255, 255, 255);
     border: 1px solid gray;
+    position: relative;
+    overflow: hidden;
     border-radius: 15px;
     z-index: 1;
     transition: box-shadow 0.3s ease;
@@ -76,11 +77,38 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.7);
 }
 
-.cardImage img{
-    max-width: 100%;
+.cardPostImage img{
+    min-width: 100%;
+    min-height: 320px;
+    border-radius: 15px;
+    transition: 0.5s ease-in;
+}
+
+.postCard:hover img{
+    filter: grayscale(1) brightness(0.5);
+}
+
+.cardContent{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    object-fit: cover;
-    transition: 0.5s ease-in-out;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.cardFooter p{
+    text-align: left;
+}
+
+.postCard:hover .cardContent{
+    opacity: 1;
 }
 
 

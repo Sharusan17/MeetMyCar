@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
 import './Profile_css.css'
@@ -138,31 +139,32 @@ const Profile = () => {
                         </div>
                         
 
-                        <button className='btn btn-dark'> Follow</button>
+                        <button className='btn btn-dark' id='followbtn'> Follow</button>
 
                     </div>
-                    
 
                     <div className='showUserData'>
                         <div className='showUserDataNum'>
-                            <p> <span>5</span> Posts</p>
+                            <p> <span>{posts.length}</span> Posts</p>
                             <p> <span>10</span> Followers</p>
                             <p> <span>55</span> Following</p>
                         </div>
                         
-                        <button className='btn btn-dark'> Check Vehicle</button>
+                        <Link to="/garage" className="btn btn-dark" id='checkbtn'> Check Vehicle</Link>
                     </div>
                     
                 </header>   
+                
 
                 <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
+
 
                 <div className='Card_Post'>
                     {posts.map((post, index) => (
                         <div key={index}  className='postCard' onClick={() => handleSelectCard(post)}>
 
-                                <div className='cardImage'>
+                                <div className='cardPostImage'>
                                     <img src={`http://localhost:3001/${post?.postData?.image}`} alt={post?.postData?.title}/> 
                                 </div>
 
@@ -173,9 +175,7 @@ const Profile = () => {
                                     </div>
 
                                     <div className='cardFooter'>
-                                        <div>
-                                            <p>{post?.postData?.description}</p>
-                                        </div>                        
+                                        <p>{post?.postData?.description}</p>
                                     </div>
                                 </div>
                                 
