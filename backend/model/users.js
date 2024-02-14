@@ -35,8 +35,14 @@ const UserSchema = new mongoose.Schema({
         match: [/.+\@.+\..+/]
     },
     profilePicture:{
-        type: String,
+        type: String
     },
+    followers:[{
+        type: String
+    }],
+    following:[{
+        type: String
+    }],
     posts:[
         {
             _id: false,

@@ -8,9 +8,14 @@ const Profile = () => {
     const {currentUser} = useAuth()
     const {userid} = useParams()
 
-    const [userId, setuserId] = useState('')
-    const [username, setuserName] = useState('')
-    const [profilePicture, setprofilePicture] = useState('')
+    const [currentUserId, setCurrentUserId] = useState('')
+
+    const [userId, setProfileUserId] = useState('')
+    const [username, setProfileuserName] = useState('')
+    const [profilePicture, setProfileprofilePicture] = useState('')
+
+    const [followers, setProfileFollowers] = useState('')
+    const [following, setProfileFollowing] = useState('')
 
     const [posts, setPost] = useState([])
     const [confirmDeletePost, setconfirmDeletePost] = useState(false)
@@ -20,23 +25,11 @@ const Profile = () => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        async function fetchUserData(){
+        async function fetchProfileData(){
             try{
                 setError('')
-
-                const firebaseUID = currentUser.uid;
-
-                let userQuery
-
-                if(userid){
-                    userQuery = `userid=${encodeURIComponent(userid)}`
-                } else{
-                    userQuery = `userfb=${encodeURIComponent(firebaseUID)}`
-                }
-
-                console.log(userQuery)
     
-                const response = await fetch(`http://localhost:3001/users/details?${userQuery}`, {
+                const response = await fetch(`http://localhost:3001/users/details?userid=${encodeURIComponent(userid)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -46,9 +39,11 @@ const Profile = () => {
                 if (response.ok){
                     const data = await response.json()
 
-                    setuserId(data.userData._id)
-                    setuserName(data.userData.username)
-                    setprofilePicture(data.userData.profilePicture)
+                    setProfileUserId(data.userData._id)
+                    setProfileuserName(data.userData.username)
+                    setProfileprofilePicture(data.userData.profilePicture)
+                    setProfileFollowers(data.userData.followers)
+                    setProfileFollowing(data.userData.following)
 
                     const postData = await Promise.all(data.userData.posts.map(async (post) => {
                         if(post?.postId){
@@ -84,8 +79,41 @@ const Profile = () => {
                 setError("Error Fetching User. Try Again Later")
             }
         }
-        fetchUserData();
+        fetchProfileData();
     }, [currentUser.uid, userid]);
+
+    useEffect(() => {
+        async function fetchCurrentUserData(){
+            try{
+                setError('')
+                const firebaseUID = currentUser.uid;
+
+                const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
+                    method: 'GET',
+                    headers: {
+                        'accept': 'application/json',
+                    },
+                });
+
+                if (response.ok){
+                    const data = await response.json()
+
+                    setCurrentUserId(data.userData._id)
+
+                    console.log("Fetched Current User Details")
+                    return data
+                } else{
+                    const errorData = await response.json()
+                    setError("Failed To Fetch Current User Data")
+                    throw new Error(errorData.message)
+                }
+            }catch (error){
+                console.error("Error Fetching Current User Data:", error)
+                setError("Failed To Fetch Current User Data")
+            }
+        }
+        fetchCurrentUserData();
+    }, [currentUser.uid]); 
 
     const handleSelectCard = (post) => {
         console.log("Selected:", post)
@@ -134,6 +162,53 @@ const Profile = () => {
         }
     }
 
+    async function handleFollow(){
+
+        setLoading(true)
+        setError('')
+        setMessage('')
+
+        try{
+            const firebaseUID = currentUser.uid;
+
+            const response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({following: userId})
+            });
+
+            if (!response.ok){
+                const errorData = await response.json()
+                setError("Failed To Follow Account")
+                console.error("Error Following Account:", error)
+                throw new Error(errorData.message)  
+            }
+
+            const Followersresponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userid)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({followers: currentUserId})
+            });
+
+            if (!Followersresponse.ok){
+                const errorData = await response.json()
+                setError("Failed To Update User Followers")
+                console.error("Error Updating User Followers:", error)
+                throw new Error(errorData.message)  
+            }
+
+        }catch (error){
+            console.error("Error Following Account:", error)
+            setError("Failed To Follow Account")
+        }finally{
+            setLoading(false)
+        }
+    }
+
     return (
         <>
             <div className='showProfile'>        
@@ -149,16 +224,15 @@ const Profile = () => {
                             <p className='showUserName'>{username}</p>
                         </div>
                         
-
-                        <button className='btn btn-dark' id='followbtn'> Follow</button>
+                        <button className='btn btn-dark' id='followbtn' onClick={() => handleFollow()}> Follow</button>
 
                     </div>
 
                     <div className='showUserData'>
                         <div className='showUserDataNum'>
                             <p> <span>{posts.length}</span> Posts</p>
-                            <p> <span>10</span> Followers</p>
-                            <p> <span>55</span> Following</p>
+                            <p> <span>{followers.length}</span> Followers</p>
+                            <p> <span>{following.length}</span> Following</p>
                         </div>
                         
                         <Link to={`/garage/${userid}`} className="btn btn-dark" id='checkbtn'> Check Vehicle</Link>

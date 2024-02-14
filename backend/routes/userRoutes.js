@@ -72,11 +72,16 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
     try{
 
         const userId = req.query.userfb;
+        const userid = req.query.userid;
 
-        if(!userId){
+        let query = userid ? {_id: userid} : {user_fbId: userId}
+        
+
+        if(!query){
             return res.status(400).json({message: "User Not Found."})
         }
-        const userUpdate = await User.findOne({user_fbId: userId});
+
+        const userUpdate = await User.findOne(query);
 
         if(!userUpdate){
             return res.status(404).json({message: "User to Update Not Found."});
@@ -87,6 +92,16 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
         }
         if(req.file){
             userUpdate.profilePicture = req.file.path;
+        }
+        if(req.body.followers){
+            if (!userUpdate.followers.includes(req.body.followers)){
+                userUpdate.followers.push(req.body.followers);
+            }
+        }
+        if(req.body.following){
+            if (!userUpdate.following.includes(req.body.following)){
+                userUpdate.following.push(req.body.following);
+            }
         }
         if(req.body.postId){
             if (!userUpdate.posts.includes(req.body.postId)){
