@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {Form} from 'react-bootstrap'
 import { useAuth } from './AuthContext'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 
 import './RegisterVehicle_css.css'
 
@@ -37,6 +37,7 @@ const RegisterVehicle = ({updateImage}) => {
     const [error, setError] = useState('')
     const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     const [vehicleInfo, setVehicleInfo] = useState('')
     const [showButton, setShowButton] = useState(false)
@@ -176,6 +177,10 @@ const RegisterVehicle = ({updateImage}) => {
 
             console.log("Add Vehicle Successful")
             setMessage(`${vehicleReg.current.value} Has Been Added`)
+
+            setTimeout(() => {
+                navigate(`/garage/${userId}`)
+            }, 2000)
 
         }catch (error){
             console.error("Error Adding Vehicle:", error)
@@ -343,7 +348,7 @@ const RegisterVehicle = ({updateImage}) => {
                 </div>
 
                 <div id="homepage" className="w-100 text-center mt-2">
-                     <Link to="/" id='findlink' > Add Vehicle Later</Link>
+                     <Link to={`/profile/${userId}`} id='findlink' > Add Vehicle Later</Link>
                 </div>
             </div>
         

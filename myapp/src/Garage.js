@@ -144,7 +144,7 @@ const Garage = () => {
                         <p id="slogan_text">Check Out Your Vehicles</p>
                     </h1>
 
-                    <Link to="/registervehicle" className="btn btn-dark"> Add Vehicle</Link>
+                    <Link to="/registervehicle" className="btn btn-dark" id='addvehiclebtn'> Add Vehicle</Link>
                 </header>   
 
                 <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>

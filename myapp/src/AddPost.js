@@ -126,7 +126,7 @@ const AddPost = () => {
             } 
 
             console.log("Add Post Successful")
-            navigate("/seepost")
+            navigate("/")
 
         }catch (error){
             console.error("Error Creating Post:", error)

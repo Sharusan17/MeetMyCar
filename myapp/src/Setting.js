@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
-export default function Home() {
+const Setting = () => {
   const [userId, setuserId] = useState('')
   const {currentUser, logout} = useAuth()
 
@@ -58,7 +58,7 @@ export default function Home() {
   return (
     <div>
 
-        <h1 className="text-center mb-4">Profile</h1>
+        <h1 className="text-center mb-4">Setting</h1>
         <p>{error}</p>
         <strong>Email: </strong> {currentUser.email}
 
@@ -73,3 +73,6 @@ export default function Home() {
     </div>
   )
 }
+
+export default Setting
+

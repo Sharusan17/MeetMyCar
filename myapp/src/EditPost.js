@@ -149,7 +149,7 @@ const EditPost = () => {
 
                 if (response.ok){
                     console.log("Updated Post Data")
-                    navigate('/seepost')
+                    navigate('/')
                 } else{
                     const errorData = await response.json()
                     setError("Failed To Update Post Data")

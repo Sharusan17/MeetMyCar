@@ -3,10 +3,10 @@ import {AuthProvider} from "./AuthContext";
 import Layout from "./Layout";
 import Home_Layout from "./Home_Layout";
 
-import Home from "./Home";
 import Signup from "./Signup";
 import RegisterVehicle  from "./RegisterVehicle";
 import Login from "./Login";
+import Setting from "./Setting";
 import VerifyEmail from "./VerifyEmail";
 import ForgotPassword from "./ForgotPassword"
 import UpdateProfile from "./UpdateProfile";
@@ -31,7 +31,7 @@ function App() {
                   element={
                     <PrivateRoute>
                       <Layout>
-                        <Home />
+                        <SeePost />
                       </Layout>
                     </PrivateRoute>
                     }
@@ -75,11 +75,11 @@ function App() {
                   }
                 />
 
-                <Route path="/seepost"
+                <Route path="/setting"
                   element={
                     <PrivateRoute>
                       <Layout>
-                        <SeePost/>
+                        <Setting/>
                       </Layout>
                     </PrivateRoute>
                   }

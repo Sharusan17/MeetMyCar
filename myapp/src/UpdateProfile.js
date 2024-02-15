@@ -150,7 +150,7 @@ const UpdateProfile = () => {
         }
 
         Promise.all(toupdate).then(() => {
-            navigate('/')
+            navigate('/setting')
         }).catch( (error) => {
             console.log("Failed to Update Account" , error)
             if (error.code === 'auth/operation-not-allowed'){
@@ -274,7 +274,7 @@ const UpdateProfile = () => {
 
             
         <div className="w-100 text-center mt-2">
-            <Link to="/">  Go Back Home</Link>
+            <Link to="/setting">  Go Back Home</Link>
         </div>
       </>
   )
