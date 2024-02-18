@@ -288,7 +288,9 @@ const Garage = () => {
                                                     <p className='info_change'> &#8595; {Math.round(((selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.OTR) - (selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.PrivateAverage)) / (selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) * 100) }%</p>
                                                 </div>
                                             </div>
-
+                                            <div className='dataValueFooter'>
+                                                <p>*Compared To OTR(On The Road) Price*</p>
+                                            </div>
                                         </>
                                     ): 
                                         <>
@@ -390,11 +392,11 @@ const Garage = () => {
 
                                 {confirmDeleteVehicle ? (
                                         <>
-                                            <button disabled={loading}  className="btn btn-outline-danger w-100 mt-2" variant="danger" onClick={() => handleDelete(selectedVehicle.vehicleData?._id)}>Confirm Delete</button>
+                                            <button disabled={loading}  className="btn btn-outline-danger w-100 mt-1" variant="danger" onClick={() => handleDelete(selectedVehicle.vehicleData?._id)}>Confirm Delete</button>
                                         </>
                                     ) :(
                                         <>
-                                            <button disabled={loading}  className="btn btn-outline-dark w-100 mt-2" type="submit"  onClick={() => handleDelete(selectedVehicle.vehicleData?._id)}>Delete Vehicle</button>
+                                            <button disabled={loading}  className="btn btn-outline-dark w-100 mt-1" type="submit"  onClick={() => handleDelete(selectedVehicle.vehicleData?._id)}>Delete Vehicle</button>
                                         </>
                                 )}
                             </>

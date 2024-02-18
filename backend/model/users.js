@@ -37,12 +37,30 @@ const UserSchema = new mongoose.Schema({
     profilePicture:{
         type: String
     },
-    followers:[{
-        type: String
-    }],
-    following:[{
-        type: String
-    }],
+    followers:[
+        {
+            _id: false,
+            followerId:{ 
+                type: String,
+            },
+            followerName:{
+                type: String,
+                required: true
+            }
+        }
+    ],
+    following:[
+        {
+            _id: false,
+            followeringId:{ 
+                type: String,
+            },
+            followeringName:{
+                type: String,
+                required: true
+            }
+        }
+    ],
     posts:[
         {
             _id: false,

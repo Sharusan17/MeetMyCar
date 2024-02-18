@@ -93,21 +93,23 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
         if(req.file){
             userUpdate.profilePicture = req.file.path;
         }
-        if(req.body.followers){
-            if (!userUpdate.followers.includes(req.body.followers)){
-                userUpdate.followers.push(req.body.followers);
+        if(req.body.followersId && req.body.followersname){
+            const followerId = req.body.followersId;
+            if (!userUpdate.followers.includes(followerId)){
+                userUpdate.followers.push({followerId: followerId, followerName: req.body.followersname});
             }
         }
         if(req.body.followersToRemove){
-            userUpdate.followers.pull(req.body.followersToRemove)
+            userUpdate.followers.pull({followerId: req.body.followersToRemove})
         }
-        if(req.body.following){
-            if (!userUpdate.following.includes(req.body.following)){
-                userUpdate.following.push(req.body.following);
+        if(req.body.followeringId && req.body.followeringName){
+            const followeringId = req.body.followeringId;
+            if (!userUpdate.following.includes(followeringId)){
+                userUpdate.following.push({followeringId: followeringId, followeringName: req.body.followeringName});
             }
         }
         if(req.body.followingtoRemove){
-            userUpdate.following.pull(req.body.followingtoRemove)
+            userUpdate.following.pull({followeringId: req.body.followingtoRemove})
         }
         if(req.body.postId){
             if (!userUpdate.posts.includes(req.body.postId)){

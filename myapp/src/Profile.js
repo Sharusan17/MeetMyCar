@@ -10,19 +10,22 @@ const Profile = () => {
     const {userid} = useParams()
 
     const [currentUserId, setCurrentUserId] = useState('')
+    const [currentUserName, setCurrentUserName] = useState('')
     const [currentUserFollowing, setCurrentUserFollowing] = useState('')
 
     const [userId, setProfileUserId] = useState('')
     const [username, setProfileuserName] = useState('')
     const [profilePicture, setProfileprofilePicture] = useState('')
 
-    const [followers, setProfileFollowers] = useState('')
-    const [following, setProfileFollowing] = useState('')
+    const [followers, setProfileFollowers] = useState([])
+    const [following, setProfileFollowing] = useState([])
 
     const [posts, setPost] = useState([])
     const [showfollowbtn, setFollowbtn] = useState(true)
     const [selectedPost, setselectedPost] = useState('')
     const [openModal, setOpenModal] = useState(false)
+    const [openFollowerModal, setOpenFollowerModal] = useState(false)
+    const [openFollowingModal, setOpenFollowingModal] = useState(false)
     const [confirmDeletePost, setconfirmDeletePost] = useState(false)
 
     const [message, setMessage] = useState('')
@@ -105,6 +108,7 @@ const Profile = () => {
                     const data = await response.json()
 
                     setCurrentUserId(data.userData._id)
+                    setCurrentUserName(data.userData.username)
                     setCurrentUserFollowing(data.userData.following)
 
                     console.log("Fetched Current User Details")
@@ -191,7 +195,7 @@ const Profile = () => {
         function fetchCurrentUserFollowing(){
             try{
                 setError('')
-                const isFollowing = currentUserFollowing.some((followingUser) => followingUser === userId)
+                const isFollowing = currentUserFollowing.some((followingUser) => followingUser.followeringId === userId)
                 console.log("Is Following:", isFollowing)
                 if(isFollowing){
                     setFollowbtn(false)
@@ -218,7 +222,7 @@ const Profile = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({following: userId})
+                body: JSON.stringify({followeringId: userId, followeringName: username})
             });
 
             if (!response.ok){
@@ -233,7 +237,7 @@ const Profile = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({followers: currentUserId})
+                body: JSON.stringify({followersId: currentUserId, followersname: currentUserName})
             });
 
             if (!Followersresponse.ok){
@@ -329,11 +333,18 @@ const Profile = () => {
                     <div className='showUserData'>
                         <div className='showUserDataNum'>
                             <p> <span>{posts.length}</span> Posts</p>
-                            <p> <span>{followers.length}</span> Followers</p>
-                            <p> <span>{following.length}</span> Following</p>
+                            <p onClick={() => setOpenFollowerModal(true)}> <span>{followers.length}</span> Followers</p>
+                            <p onClick={() => setOpenFollowingModal(true)}> <span>{following.length}</span> Following</p>
                         </div>
+
+                        {showfollowbtn ? (
+                                <></>
+                            ) : (
+                                <>
+                                    <Link to={`/garage/${userid}`} className="btn btn-dark" id='checkbtn'> Check Vehicle</Link>
+                                </>
+                        )}
                         
-                        <Link to={`/garage/${userid}`} className="btn btn-dark" id='checkbtn'> Check Vehicle</Link>
                     </div>
                     
                 </header>   
@@ -403,7 +414,51 @@ const Profile = () => {
                             </>
                         ) : <p>Loading....</p>}
                     </div>
-                </Popup> 
+                </Popup>
+
+                <Popup open={openFollowerModal} closeOnDocumentClick onClose={() => setOpenFollowerModal(false)} className='Popup'>
+                    <div className='FollowModal'>
+                        <>
+                            <div className='modalFollowHeader'>
+                                <div>
+                                    <h3>Followers</h3>
+                                </div>
+                            </div> 
+
+                            <div className='line'></div>
+
+                            <div className='modalFollowData'>
+                                {followers.map((followers, index) => (
+                                    <div key={index} >
+                                        <p>{followers.followerName}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    </div>
+                </Popup>
+
+                <Popup open={openFollowingModal} closeOnDocumentClick onClose={() => setOpenFollowingModal(false)} className='Popup'>
+                    <div className='FollowModal'>
+                        <>
+                            <div className='modalFollowHeader'>
+                                <div>
+                                    <h3>Followering</h3>
+                                </div>
+                            </div> 
+
+                            <div className='line'></div>
+
+                            <div className='modalFollowData'>
+                                {following.map((following, index) => (
+                                    <div key={index} >
+                                        <p>{following.followeringName}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    </div>
+                </Popup>  
             </div>
         </>
     )

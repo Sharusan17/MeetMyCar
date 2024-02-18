@@ -153,6 +153,28 @@
     width: 50%;
 }
 
+.FollowModal{
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 15px;
+    padding: 20px;
+    width: 300px;
+    min-height: 300px;
+}
+
+.modalFollowHeader{
+    text-align: left;
+    font-weight: 200;
+}
+
+.modalFollowData{
+    margin-top: 20px;
+    padding: 0;
+    text-align: center;
+    font-size: 17px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 600;
+}
 
 
 
