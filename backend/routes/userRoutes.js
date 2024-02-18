@@ -108,6 +108,9 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
                 userUpdate.posts.push({postId: req.body.postId});
             }
         }
+        if(req.body.postIdRemove){
+            userUpdate.posts.pull({postId: req.body.postIdRemove})
+        }
         if(req.body.vehicleId && req.body.vrn){
             const vehicleId = req.body.vehicleId;
             if (!userUpdate.vehicles.includes(vehicleId)){

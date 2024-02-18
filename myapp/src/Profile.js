@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthContext'
+import {Popup} from 'reactjs-popup'
 
 import './Profile_css.css'
 
@@ -18,11 +19,14 @@ const Profile = () => {
     const [following, setProfileFollowing] = useState('')
 
     const [posts, setPost] = useState([])
+    const [selectedPost, setselectedPost] = useState('')
+    const [openModal, setOpenModal] = useState(false)
     const [confirmDeletePost, setconfirmDeletePost] = useState(false)
 
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
         async function fetchProfileData(){
@@ -117,7 +121,13 @@ const Profile = () => {
 
     const handleSelectCard = (post) => {
         console.log("Selected:", post)
+        setselectedPost(post)
+        setOpenModal(true)
         setconfirmDeletePost(false)
+    }
+
+    const handleEdit = (postId) => {
+        navigate(`/editpost/${postId}`)
     }
 
     async function handleDelete(postId){
@@ -139,21 +149,33 @@ const Profile = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({postIDRemove: postId})
+                body: JSON.stringify({postIdRemove: postId})
             });
 
-            if (response.ok){
-                console.log("Deleted Vehicle")
-                setMessage("Post Deleted")
-                setTimeout(() => {
-                    window.location.reload(false);
-                }, 1000)
-            } else{
+            if (!response.ok){
                 const errorData = await response.json()
                 setError("Failed To Delete Post")
-                console.error("Error Deleting Post:", error)
+                console.error("Error Deleting Post On User:", error)
                 throw new Error(errorData.message)
             }
+            const deletePost_response = await fetch(`http://localhost:3001/posts/delete?postId=${encodeURIComponent(postId)}`, {
+                method: 'DELETE',
+            });
+
+            if(!deletePost_response.ok){
+                const errorData = await response.json()
+                setError("Failed To Delete Post")
+                console.error("Error Deleting Post: On Post Server", error)
+                throw new Error(errorData.message)
+            }
+
+            console.log("Deleted Post")
+            setMessage("Post Deleted")
+            setOpenModal(false)
+            setTimeout(() => {
+                window.location.reload(false);
+            }, 1000)
+
         }catch (error){
             console.error("Error Deleting Post:", error)
             setError("Failed To Delete Post")
@@ -266,7 +288,46 @@ const Profile = () => {
                                 
                         </div>
                     ))}
-                </div>   
+                </div>
+
+                <Popup open={openModal} closeOnDocumentClick onClose={() => setOpenModal(false)} className='Popup'>
+                    <div className='Modal'>
+                        {selectedPost ? (
+                            <>
+                                <div className='modalHeader'>
+                                    <div>
+                                        <h3>{selectedPost.postData?.title}</h3>
+                                        <p>{selectedPost.postData?.vehicles?.vrn}</p>
+                                    </div>
+                                </div> 
+
+                                <div className='modalImage'>
+                                    <img src={`http://localhost:3001/${selectedPost?.postData?.image}`} alt={selectedPost?.postData?.title}/> 
+                                </div>
+
+                                <div className='modalDesc'>
+                                    <p>{selectedPost?.postData?.description}</p>
+                                </div>
+
+                                {confirmDeletePost ? (
+                                        <>
+                                            <div className='buttonContainer'>
+                                                <button disabled={loading}  className="btn btn-outline-dark" type="submit"  onClick={() => handleEdit(selectedPost.postData._id)}>Edit Post</button>
+                                                <button disabled={loading}  className="btn btn-outline-danger" variant="danger" onClick={() => handleDelete(selectedPost.postData?._id)}>Confirm Delete</button>
+                                            </div>
+                                        </>
+                                    ) :(
+                                        <>
+                                            <div className='buttonContainer'>
+                                                <button disabled={loading}  className="btn btn-outline-dark" type="submit"  onClick={() => handleEdit(selectedPost.postData._id)}>Edit Post</button>
+                                                <button disabled={loading}  className="btn btn-outline-dark" type="submit"  onClick={() => handleDelete(selectedPost.postData?._id)}>Delete Post</button>
+                                            </div>
+                                        </>
+                                )}
+                            </>
+                        ) : <p>Loading....</p>}
+                    </div>
+                </Popup> 
             </div>
         </>
     )

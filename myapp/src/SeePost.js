@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth } from './AuthContext'
 
 import './SeePost_css.css'
 
 const SeePost = () => {
+    const {currentUser} = useAuth()
 
     const[posts, setPosts] = useState([])
 
@@ -103,15 +105,28 @@ const SeePost = () => {
                 method: 'DELETE',
             });
 
-            if (response.ok){
-                console.log("Deleted Post")
-                setMessage("Post Deleted")
-                setTimeout(() => {
-                    window.location.reload(false);
-                }, 2000)
-            } else{
+            if (!response.ok){
                 console.error("Error Deleting Post:")
             }
+            const firebaseUID = currentUser.uid;
+
+            const userDelete_response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({postIdRemove: postId})
+            });
+
+            if(!userDelete_response.ok){
+                console.error("Error Deleting Post:")
+            }
+            console.log("Deleted Post")
+            setMessage("Post Deleted")
+            setTimeout(() => {
+                window.location.reload(false);
+            }, 2000)
+
         }catch (error){
             console.error("Error Deleting Post:")
             setError("Error Deleting Post. Try Again Later")

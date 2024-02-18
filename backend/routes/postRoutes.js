@@ -24,10 +24,10 @@ router.get('/view', async (req, res) => {
                 return res.status(400).json({message: "Post Not Found."})
             }
         }else{
+            //sorts the post by updatedAt Date/Time (Newest First)
             postData = await Post.find().populate('user', 'username profilePicture').sort({updatedAt: -1});
         }
 
-        //sorts the post by updatedAt Date/Time (Newest First)
 
         res.status(200).json({message: "Post Found", postData});
         console.log("Post Found");
