@@ -10,6 +10,7 @@ const Profile = () => {
     const {userid} = useParams()
 
     const [currentUserId, setCurrentUserId] = useState('')
+    const [currentUserFollowing, setCurrentUserFollowing] = useState('')
 
     const [userId, setProfileUserId] = useState('')
     const [username, setProfileuserName] = useState('')
@@ -19,6 +20,7 @@ const Profile = () => {
     const [following, setProfileFollowing] = useState('')
 
     const [posts, setPost] = useState([])
+    const [showfollowbtn, setFollowbtn] = useState(true)
     const [selectedPost, setselectedPost] = useState('')
     const [openModal, setOpenModal] = useState(false)
     const [confirmDeletePost, setconfirmDeletePost] = useState(false)
@@ -83,8 +85,8 @@ const Profile = () => {
                 setError("Error Fetching User. Try Again Later")
             }
         }
-        fetchProfileData();
-    }, [currentUser.uid, userid]);
+        fetchProfileData()
+    }, [currentUser.uid, userid])
 
     useEffect(() => {
         async function fetchCurrentUserData(){
@@ -103,6 +105,7 @@ const Profile = () => {
                     const data = await response.json()
 
                     setCurrentUserId(data.userData._id)
+                    setCurrentUserFollowing(data.userData.following)
 
                     console.log("Fetched Current User Details")
                     return data
@@ -184,6 +187,23 @@ const Profile = () => {
         }
     }
 
+    useEffect(() => {
+        function fetchCurrentUserFollowing(){
+            try{
+                setError('')
+                const isFollowing = currentUserFollowing.some((followingUser) => followingUser === userId)
+                console.log("Is Following:", isFollowing)
+                if(isFollowing){
+                    setFollowbtn(false)
+                }
+            }catch (error){
+                console.error("Error Checking if Following:", error)
+                setError("Failed to check if user is following")
+            }
+        }
+        fetchCurrentUserFollowing()
+    }, [currentUserFollowing, userId])
+
     async function handleFollow(){
 
         setLoading(true)
@@ -222,10 +242,59 @@ const Profile = () => {
                 console.error("Error Updating User Followers:", error)
                 throw new Error(errorData.message)  
             }
+            setFollowbtn(false)
 
         }catch (error){
             console.error("Error Following Account:", error)
             setError("Failed To Follow Account")
+        }finally{
+            setLoading(false)
+        }
+    }
+
+    async function handleUnfollow(){
+
+        setLoading(true)
+        setError('')
+        setMessage('')
+
+        try{
+            const firebaseUID = currentUser.uid;
+
+            const response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({followingtoRemove: userId})
+            });
+
+            if (!response.ok){
+                const errorData = await response.json()
+                setError("Failed To Unfollow Account")
+                console.error("Error Unfollowing Account:", error)
+                throw new Error(errorData.message)  
+            }
+
+            const Followersresponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userid)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({followersToRemove: currentUserId})
+            });
+
+            if (!Followersresponse.ok){
+                const errorData = await response.json()
+                setError("Failed To Update User Followers")
+                console.error("Error Updating User Followers:", error)
+                throw new Error(errorData.message)  
+            }
+            setFollowbtn(true)
+
+        }catch (error){
+            console.error("Error Unfollowing Account:", error)
+            setError("Failed To Unfollow Account")
         }finally{
             setLoading(false)
         }
@@ -245,9 +314,16 @@ const Profile = () => {
                             )}
                             <p className='showUserName'>{username}</p>
                         </div>
-                        
-                        <button className='btn btn-dark' id='followbtn' onClick={() => handleFollow()}> Follow</button>
 
+                        {showfollowbtn ? (
+                                <>
+                                    <button className='btn btn-dark' id='followbtn' onClick={() => handleFollow()}> Follow</button>
+                                </>
+                            ) : (
+                                <>
+                                    <button className='btn btn-dark' id='followbtn' onClick={() => handleUnfollow()}> Unfollow</button>
+                                </>
+                        )}
                     </div>
 
                     <div className='showUserData'>

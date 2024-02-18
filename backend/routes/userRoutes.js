@@ -98,10 +98,16 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
                 userUpdate.followers.push(req.body.followers);
             }
         }
+        if(req.body.followersToRemove){
+            userUpdate.followers.pull(req.body.followersToRemove)
+        }
         if(req.body.following){
             if (!userUpdate.following.includes(req.body.following)){
                 userUpdate.following.push(req.body.following);
             }
+        }
+        if(req.body.followingtoRemove){
+            userUpdate.following.pull(req.body.followingtoRemove)
         }
         if(req.body.postId){
             if (!userUpdate.posts.includes(req.body.postId)){
