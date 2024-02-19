@@ -18,6 +18,7 @@ import EditPost from "./EditPost";
 
 import Profile from "./Profile";
 import Garage from "./Garage";
+import CompareSpecs from "./CompareSpecs";
 
 import {BrowserRouter, Routes, Route,} from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
@@ -120,6 +121,16 @@ function App() {
                     <PrivateRoute>
                       <Layout>
                         <Garage/>
+                      </Layout>
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route path="/race"
+                  element={
+                    <PrivateRoute>
+                      <Layout>
+                        <CompareSpecs/>
                       </Layout>
                     </PrivateRoute>
                   }
