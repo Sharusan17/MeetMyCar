@@ -6,21 +6,25 @@ import './CompareSpecs_css.css'
 
 const CompareSpecs = () => {
     const {userid} = useParams()
+    const {currentUser} = useAuth()
+
+    const [currentUserId, setCurrentUserId] = useState('')
+    const [currentUserName, setCurrentUserName] = useState('')
+    const [currentUserProfile, setCurrentUserProfile] = useState('')
+    const [currentUserFollowing, setCurrentUserFollowing] = useState('')
 
     const [vehicle, setVehicle] = useState([])
     const [selectedVehicle, setSelectedVehicle] = useState('')
 
-    const {currentUser} = useAuth()
 
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        async function fetchUserData(){
+        async function fetchCurrentUserData(){
             try{
                 setError('')
-
                 const firebaseUID = currentUser.uid;
     
                 let userQuery
@@ -39,46 +43,29 @@ const CompareSpecs = () => {
                         'accept': 'application/json',
                     },
                 });
-    
+
                 if (response.ok){
                     const data = await response.json()
 
-                    const vehicleData = await Promise.all(data.userData.vehicles.map(async (vehicle) => {
-                        if(vehicle?.vehicleId){
-                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles/view?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
-                                method: 'GET',
-                                headers: {
-                                    'accept': 'application/json',
-                                },
-                            });
+                    setCurrentUserId(data.userData._id)
+                    setCurrentUserName(data.userData.username)
+                    setCurrentUserProfile(data.userData.profilePicture)
+                    setCurrentUserFollowing(data.userData.following)
 
-                            if(VehicleReponse.ok){
-                                const vehicle_Data = await VehicleReponse.json()
-                                return vehicle_Data
-                            } else{
-                                console.error("Error Fetching Vehicle Data:", error)
-                                setError("Error Fetching Your Vehicles. Try Again Later")
-                                return null
-                            }
-                        }
-                    }))
-
-                    const vehicleWithData = vehicleData.filter(vehicle => vehicle !== null)
-                    setVehicle(vehicleWithData)
-    
-                    console.log("Fetched User Details")
+                    console.log("Fetched Current User Details")
                     return data
                 } else{
                     const errorData = await response.json()
+                    setError("Failed To Fetch Current User Data")
                     throw new Error(errorData.message)
                 }
             }catch (error){
-                console.error("Error Fetching User Data:", error)
-                setError("Error Fetching User. Try Again Later")
+                console.error("Error Fetching Current User Data:", error)
+                setError("Failed To Fetch Current User Data")
             }
         }
-        fetchUserData();
-    }, [currentUser.uid]);
+        fetchCurrentUserData();
+    }, [currentUser.uid]); 
 
     const handleSelectCard = (vehicle) => {
         console.log("Selected:", vehicle)
@@ -99,7 +86,57 @@ const CompareSpecs = () => {
                 <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
 
-                <div className='CompareContainer'>
+                <div className='compareUser'>
+                    <div className='vehicle1User'>
+                        <div className='vehicleUserRow'>
+                            {currentUserProfile && (
+                                <img className='vehicleUserProfile'
+                                    src={`http://localhost:3001/${currentUserProfile}`} 
+                                    alt="Profile"
+                                />
+                            )}
+                            <p className='vehicleUserName'>hellolast</p>
+                        </div>
+                        
+                        <p className='vehicleName'>BMW 4 Series</p>
+                        <p className='vehicleVRN'>EA64 SYJ</p>
+                    </div>
+
+                    <div className='vehicle2User'>
+                        <div className='vehicleUserRow'>
+                            {currentUserProfile && (
+                                <img className='vehicleUserProfile'
+                                    src={`http://localhost:3001/${currentUserProfile}`} 
+                                    alt="Profile"
+                                />
+                            )}
+                            <p className='vehicleUserName'>hellolast</p>
+                        </div>                        
+                        
+                        <p className='vehicleName'>Mercedes Benz</p>
+                        <p className='vehicleVRN'>DA67 KJY</p>
+                    </div>
+                </div>
+                
+                <div className='compareSpecData'>
+                    <div className='compareSpecDataRow'>
+                        <p>120</p>
+                        <h4>Engine</h4>
+                        <p>110</p>
+                    </div>
+                </div>
+
+                <div className='compareRace'>
+                    <div className="vehicle1Race" style={{ transform: `translateX(0%)` }}>
+                        <img src='https://cdn2.vdicheck.com/VehicleImages/Image.ashx?Id=C46C4C00-94D3-4447-8BBD-F9A22FE46948'></img>
+                    </div>
+
+                    <div className="vehicle2Race" style={{ transform: `translateX(0%)` }}>
+                    <img src='https://cdn2.vdicheck.com/VehicleImages/Image.ashx?Id=C46C4C00-94D3-4447-8BBD-F9A22FE46948'></img>
+                    </div>
+                </div>
+
+                {/* <div className='CompareContainer'>
                     <div className='compareHead'>
                         <div className='vehicle1Header'>
                             <h3>EA64SYJ</h3>
@@ -111,7 +148,7 @@ const CompareSpecs = () => {
 
                         <div className='vehicle2Header'>
                             <h3>DG55LJK</h3>
-                            <img></img>
+                            <img src='https://cdn2.vdicheck.com/VehicleImages/Image.ashx?Id=61867749-220D-465D-8457-5B623D83879F'></img>
                             <h3>BMW 4-Series</h3>
                         </div>
                     </div>
@@ -147,7 +184,7 @@ const CompareSpecs = () => {
                             <p>110</p>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
         </>
     )

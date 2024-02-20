@@ -1,3 +1,98 @@
+.compareUser{
+    display: flex;
+    flex-direction: row;
+    margin: 0 50px;
+    padding: 0;
+    justify-content: space-between;
+    align-items: center; 
+}
+
+.vehicleUserRow{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    margin-bottom: 10px;
+}
+
+.vehicleUserProfile{
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+}
+
+.vehicleUserName{
+    align-self: center;
+    margin-left: 10px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.compareUser .vehicleName{
+    margin-top: 15px;
+    margin-bottom: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.compareUser .vehicleVRN{
+    margin: 0;
+    width: fit-content;
+    padding: 2px 3px 2px 3px;
+    font-size: 15px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: black;
+    background-color: rgb(255, 200, 70);
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.compareSpecData{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.compareSpecDataRow{
+    width: 350px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
+}
+
+.compareSpecDataRow p{
+    font-size: 20px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.compareSpecDataRow h4{
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.compareRace{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    position: absolute;
+    bottom: 150px;
+    left: 100px;
+    gap: 50px;
+}
+
+.compareRace img{
+    max-width: 400px;
+    width: 100%;
+    height: auto; 
+    transform: scaleX(-1);
+}
+
 .compareHead{
     display: flex;
     flex-direction: row;
@@ -17,9 +112,14 @@
 }
 
 .vehicle1Header img, .vehicle2Header img{
-    max-width: 300px;
-    aspect-ratio: 1;
-    height: auto;
+    max-width: 400px;
+    width: 100%;
+    height: auto; 
+    mix-blend-mode: multiply;
+}
+
+.vehicle1Header img{
+    transform: scaleX(-1);
 }
 
 .compareData{

@@ -70,10 +70,11 @@
 }
 
 .cardImage img{
-    max-width: 200px;
-    display: block;
+    max-width: 350px;
+    width: 100%;
+    aspect-ratio: 1.7;
+    height: auto; 
     margin: 0 auto;
-    height: 100px;
 }
 
 .cardFooter{
@@ -134,9 +135,10 @@
 }
 
 .modalImage img{
-    min-width: 400px;
-    display: block;
-    margin: 0 auto;
+    max-width: 350px;
+    width: 100%;
+    aspect-ratio: 1.7;
+    height: auto; 
 }
 
 .line{
