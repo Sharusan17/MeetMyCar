@@ -16,6 +16,17 @@ const CompareSpecs = () => {
     const [vehicle, setVehicle] = useState([])
     const [selectedVehicle, setSelectedVehicle] = useState('')
 
+    const [specData, setSpecData] = useState([
+        {specName: 'Ready', time:2000},
+        {specName: 'Set', time:1500},
+        {specName: 'Go', time:750},
+        {specName: 'Engine', vehicle1: '120', vehicle2: '110', time:1500},
+        {specName: 'Torque', vehicle1: '210', vehicle2: '1000', time:1500},
+        {specName: 'BHP', vehicle1: '250.5', vehicle2: '250.0', time:1500},
+    ])
+
+    const [specIndex, setSpecIndex] = useState(0)
+    const [vehicle1Large, setVehicle1Large] = useState(null)
 
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
@@ -67,8 +78,41 @@ const CompareSpecs = () => {
         fetchCurrentUserData();
     }, [currentUser.uid]); 
 
-    const handleSelectCard = (vehicle) => {
-        console.log("Selected:", vehicle)
+    useEffect(() => {
+        if (specIndex < specData.length){
+
+            if (specData[specIndex] && specData[specIndex].vehicle1 && specData[specIndex].vehicle2){
+                checkSpec(specData[specIndex])
+            }
+            
+            const nextSpecId = setInterval( () => {
+                setSpecIndex((prevIndex) => {
+                    if (prevIndex + 1 < specData.length){
+                        return prevIndex + 1
+                    } else{
+                        clearInterval(nextSpecId)
+                        return prevIndex
+                    }
+                })
+            } ,specData[specIndex].time)
+            return () => clearInterval(nextSpecId)
+        }
+    }, [specData, specIndex])
+
+    const checkSpec = (currentSpec) => {
+        setVehicle1Large(null)
+        if (parseFloat(currentSpec.vehicle1) > parseFloat(currentSpec.vehicle2)){
+            console.log("Vehicle 1 Spec is larger")
+            setVehicle1Large(true)
+        } 
+        if (parseFloat(currentSpec.vehicle2) > parseFloat(currentSpec.vehicle1)){
+            console.log("Vehicle 2 Spec is larger")
+            setVehicle1Large(false)
+        }
+        if (parseFloat(currentSpec.vehicle2) == parseFloat(currentSpec.vehicle1)){
+            console.log("Vehicle 2 Spec is larger")
+            setVehicle1Large(null)
+        }        
     }
 
     return (
@@ -120,9 +164,9 @@ const CompareSpecs = () => {
                 
                 <div className='compareSpecData'>
                     <div className='compareSpecDataRow'>
-                        <p>120</p>
-                        <h4>Engine</h4>
-                        <p>110</p>
+                        <p className={vehicle1Large === true ? 'green' : vehicle1Large === false ? 'red' : 'green'}>{specData[specIndex]?.vehicle1}</p>
+                        <h4>{specData[specIndex]?.specName}</h4>
+                        <p className={vehicle1Large === false ? 'green' : vehicle1Large === true ? 'red' : 'green'}>{specData[specIndex]?.vehicle2}</p>
                     </div>
                 </div>
 

@@ -70,6 +70,14 @@
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+.compareSpecDataRow .green{
+    color: green;
+}
+
+.compareSpecDataRow .red{
+    color: red;
+}
+
 .compareSpecDataRow h4{
     font-size: 25px;
     font-weight: 700;
