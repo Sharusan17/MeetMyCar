@@ -87,7 +87,7 @@
 }
 
 .Modal{
-    width: 500px;
+    width: max-content;
     background: white;
     border: 1px solid gray;
     border-radius: 15px;
