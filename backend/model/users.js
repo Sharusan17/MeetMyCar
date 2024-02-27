@@ -94,6 +94,10 @@ const UserSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User',
             },
+            vrn:{
+                type: String,
+                required: true
+            }
         }
     ],
     lostPoints:[
@@ -107,6 +111,10 @@ const UserSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User',
             },
+            vrn:{
+                type: String,
+                required: true
+            }
         }
     ],
 },

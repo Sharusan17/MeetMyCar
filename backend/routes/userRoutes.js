@@ -128,14 +128,17 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
         if(req.body.vehicleIdRemove){
             userUpdate.vehicles.pull({vehicleId: req.body.vehicleIdRemove})
         }
-        if(req.body.winVRNPoints && req.body.winUserPoints){
-            userUpdate.winPoints.push({vehicleId: req.body.winVRNPoints, userId: req.body.winUserPoints})
+        if(req.body.winVRNPoints && req.body.winUserPoints && req.body.winVRN){
+            if (!req.body.winUserPoints !== userId){
+                userUpdate.winPoints.push({vehicleId: req.body.winVRNPoints, userId: req.body.winUserPoints, vrn: req.body.winVRN})
+            }
         }
-        if(req.body.lostVRNPoints && req.body.lostUserPoints){
-            userUpdate.lostPoints.push({vehicleId: req.body.lostVRNPoints, userId: req.body.lostUserPoints})
+        if(req.body.lostVRNPoints && req.body.lostUserPoints && req.body.lostVRN){
+            if (req.body.lostUserPoints !== userId){
+                userUpdate.lostPoints.push({vehicleId: req.body.lostVRNPoints, userId: req.body.lostUserPoints, vrn: req.body.lostVRN})
+            }
         }
         
-
         await userUpdate.save();
 
         res.status(201).json({message: "User Updated", user: userUpdate});

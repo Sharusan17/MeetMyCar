@@ -8,9 +8,14 @@ import './Garage_css.css'
 const Garage = () => {
     const {userid} = useParams()
 
+    const [profileWins, setProfileWins] = useState([])
+    const [profileLosts, setProfileLosts] = useState([])
+
     const [vehicle, setVehicle] = useState([])
     const [selectedVehicle, setSelectedVehicle] = useState('')
     const [openModal, setOpenModal] = useState(false)
+    const [openWinModal, setOpenWinModal] = useState(false)
+    const [openLostModal, setOpenLostModal] = useState(false)
     const [confirmDeleteVehicle, setconfirmDeleteVehicle] = useState(false)
     const [showData, setData] = useState(true)
 
@@ -69,6 +74,9 @@ const Garage = () => {
 
                     const vehicleWithData = vehicleData.filter(vehicle => vehicle !== null)
                     setVehicle(vehicleWithData)
+
+                    setProfileWins(data.userData.winPoints)
+                    setProfileLosts(data.userData.lostPoints)
     
                     console.log("Fetched User Details")
                     return data
@@ -144,7 +152,16 @@ const Garage = () => {
                         <p id="slogan_text">Check Out Your Vehicles</p>
                     </h1>
 
-                    <Link to="/registervehicle" className="btn btn-dark" id='addvehiclebtn'> Add Vehicle</Link>
+                    <div className='showUserData'>
+                        <div className='showUserDataNum'>
+                            <p> <span>{vehicle.length}</span> Vehicles</p>
+                            <p onClick={() => setOpenWinModal(true)}> <span>{profileWins.length}</span> Wins</p>
+                            <p onClick={() => setOpenLostModal(true)}> <span>{profileLosts.length}</span> Losts</p>
+                        </div>
+
+                        <Link to="/registervehicle" className="btn btn-dark" id='checkbtn'> Add Vehicle</Link>  
+                    </div>
+                   
                 </header>   
 
                 <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
@@ -402,6 +419,50 @@ const Garage = () => {
                                 )}
                             </>
                         ) : <p>Loading....</p>}
+                    </div>
+                </Popup> 
+
+                <Popup open={openWinModal} closeOnDocumentClick onClose={() => setOpenWinModal(false)} className='Popup'>
+                    <div className='FollowModal'>
+                        <>
+                            <div className='modalFollowHeader'>
+                                <div>
+                                    <h3>Wins</h3>
+                                </div>
+                            </div> 
+
+                            <div className='line'></div>
+
+                            <div className='modalFollowData'>
+                                {profileWins.map((profileWin, index) => (
+                                    <div key={index} >
+                                        <p>{profileWin.vrn}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    </div>
+                </Popup>
+
+                <Popup open={openLostModal} closeOnDocumentClick onClose={() => setOpenLostModal(false)} className='Popup'>
+                    <div className='FollowModal'>
+                        <>
+                            <div className='modalFollowHeader'>
+                                <div>
+                                    <h3>Losts</h3>
+                                </div>
+                            </div> 
+
+                            <div className='line'></div>
+
+                            <div className='modalFollowData'>
+                                {profileLosts.map((profileLost, index) => (
+                                    <div key={index} >
+                                        <p>{profileLost.vrn}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
                     </div>
                 </Popup>      
             </div>

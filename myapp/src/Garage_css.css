@@ -11,19 +11,6 @@
     align-items: center;
 }
 
-
-#addvehiclebtn{
-    margin-right: 20px;
-    transition: background-color 0.3s ease-in;
-}
-
-#addvehiclebtn:hover{
-    border: 1px solid black;
-    font-weight: 600;
-    background-color: transparent;
-    color: black;
-}
-
 .carCard{
     width: 260px;
     height: 350px;

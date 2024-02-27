@@ -50,6 +50,11 @@
     color: black;
 }
 
+.postUserName:hover{
+    font-size: 15px;
+    font-weight: 700;
+}
+
 .postMenuContainer{
     position: relative;
     display: flex;

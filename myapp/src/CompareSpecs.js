@@ -48,6 +48,7 @@ const CompareSpecs = () => {
     const [vehicle2Points, setVehicle2Point] = useState(0)
 
     const [openModal, setOpenModal] = useState(false)
+    const [pointsUpdate, setPointsUpdated] = useState(false)
 
     const [error, setError] = useState('')
 
@@ -180,6 +181,10 @@ const CompareSpecs = () => {
                     } else{
                         clearInterval(nextSpecId)
                         setOpenModal(true)
+                        if (!pointsUpdate){
+                            updatePoints()
+                            setPointsUpdated(true)
+                        }
                         return prevIndex
                     }
                 })
@@ -273,9 +278,106 @@ const CompareSpecs = () => {
                 return spec
             })
             setSpecData(updateSpecData)
+            setSpecIndex(0)
+            setVehicle1Position(0)
+            setVehicle2Position(0)
+            setVehicle1Point(0)
+            setVehicle2Point(0)
+            setOpenModal(false)
+            setPointsUpdated(false)
             setStartRace(true)
         } else{
             setError('Choose Both Vehicles To Start The Race')
+        }
+    }
+
+    async function updatePoints(){
+
+        setError('')
+
+        try{
+            const firebaseUID = currentUser.uid;
+            let response
+            let pointsProfileResponse
+
+            if (vehicle1Points > vehicle2Points){
+                response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({winVRNPoints: selectedProfileVehicle.vehicleData._id, 
+                            winUserPoints: selectedProfileVehicle.vehicleData.user._id,
+                            winVRN: selectedProfileVehicle.vehicleData.vrn})
+                    
+                });
+
+                if (!response.ok){
+                    const errorData = await response.json()
+                    setError("Failed To Update User's Points")
+                    console.error("Error Updating User's Points:", error)
+                    throw new Error(errorData.message)  
+                }
+
+                pointsProfileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userid)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({lostVRNPoints: selectedMyVehicle.vehicleData._id,
+                             lostUserPoints: selectedMyVehicle.vehicleData.user._id,
+                             lostVRN:selectedMyVehicle.vehicleData.vrn})
+                });
+
+                if (!pointsProfileResponse.ok){
+                    const errorData = await response.json()
+                    setError("Failed To Update Profile's Points")
+                    console.error("Error Updating Profile's Points:", error)
+                    throw new Error(errorData.message)  
+                }
+            } 
+
+            else if (vehicle2Points > vehicle1Points){
+                response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({lostVRNPoints: selectedProfileVehicle.vehicleData._id, 
+                            lostUserPoints: selectedProfileVehicle.vehicleData.user._id,
+                            lostVRN:selectedProfileVehicle.vehicleData.vrn})
+                });
+
+                if (!response.ok){
+                    const errorData = await response.json()
+                    setError("Failed To Update User's Points")
+                    console.error("Error Updating User's Points:", error)
+                    throw new Error(errorData.message)  
+                }
+
+                pointsProfileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userid)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({winVRNPoints: selectedMyVehicle.vehicleData._id, 
+                            winUserPoints: selectedMyVehicle.vehicleData.user._id,
+                            winVRN: selectedMyVehicle.vehicleData.vrn})
+                });
+
+                if (!pointsProfileResponse.ok){
+                    const errorData = await response.json()
+                    setError("Failed To Update Profile's Points")
+                    console.error("Error Updating Profile's Points:", error)
+                    throw new Error(errorData.message)  
+                }
+            }
+
+            console.log("Points Updated")
+
+        }catch (error){
+            console.error("Error Updating Points:", error)
+            setError("Failed To Update Points")
         }
     }
 
@@ -302,7 +404,7 @@ const CompareSpecs = () => {
                                     alt="Profile"
                                 />
                             )}
-                            <p className='vehicleUserName'>{currentUserName}</p>
+                            <Link to={`/profile/${currentUserId}`} className='vehicleUserName'>{currentUserName}</Link>
                         </div>
                             
                         <p className='vehicleName'>{selectedMyVehicle?.vehicleData?.vehicleHistory?.make} {selectedMyVehicle?.vehicleData?.vehicleHistory?.model}</p>
@@ -322,7 +424,7 @@ const CompareSpecs = () => {
                                     alt="Profile"
                                 />
                             )}
-                            <p className='vehicleUserName'>{profileUserName}</p>
+                            <Link to={`/profile/${profileUserId}`} className='vehicleUserName'>{profileUserName}</Link>
                         </div>                        
                         
                          <p className='vehicleName'>{selectedProfileVehicle?.vehicleData?.vehicleHistory?.make} {selectedProfileVehicle?.vehicleData?.vehicleHistory?.model}</p>
