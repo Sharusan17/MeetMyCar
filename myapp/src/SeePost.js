@@ -221,7 +221,7 @@ const SeePost = () => {
                             </div>
 
                             <div className='postFooter'>
-                                <Link className='postVRN'>{post.vehicles?.vrn}</Link>
+                                <Link className='postVRN' to={`/race/${post.user._id}`}>{post.vehicles?.vrn}</Link>
                                 <p className='postDescription'>{post.description}</p> 
                             </div> 
                         </div> 

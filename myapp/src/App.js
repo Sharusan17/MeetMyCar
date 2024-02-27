@@ -126,7 +126,7 @@ function App() {
                   }
                 />
 
-                <Route path="/race"
+                <Route path="/race/:userid"
                   element={
                     <PrivateRoute>
                       <Layout>

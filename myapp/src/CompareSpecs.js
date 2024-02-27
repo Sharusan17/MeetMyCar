@@ -14,17 +14,26 @@ const CompareSpecs = () => {
     const [currentUserProfile, setCurrentUserProfile] = useState('')
     const [currentUservehicle, setCurrentUserVehicle] = useState([])
 
-    const [selectedVehicle, setSelectedVehicle] = useState('')
+    const [selectedMyVehicle, setSelectedMyVehicle] = useState('')
+
+    const [profileUserId, setProfileUserId] = useState('')
+    const [profileUserName, setProfileUserName] = useState('')
+    const [profileUserProfile, setProfileUserProfile] = useState('')
+    const [profileUservehicle, setProfileUserVehicle] = useState([])
+
+    const [selectedProfileVehicle, setSelectedProfileVehicle] = useState('')
 
     const [startRace, setStartRace] = useState(false)
-
     const [specData, setSpecData] = useState([
         {specName: 'Ready', time:2000},
         {specName: 'Set', time:1500},
         {specName: 'Go', time:1000},
-        {specName: 'Engine', vehicle1: '200', vehicle2: '110', time:1500},
-        {specName: 'Torque', vehicle1: '300', vehicle2: '200', time:1500},
-        {specName: 'BHP', vehicle1: '250.0', vehicle2: '250.0', time:1750},
+        {specName: 'Speed', vehicle1: '', vehicle2: '', time:1500},
+        {specName: 'Torque', vehicle1: '', vehicle2: '', time:1500},
+        {specName: 'RPM', vehicle1: '', vehicle2: '', time:1500},
+        {specName: 'BHP', vehicle1: '', vehicle2: '', time:1500},
+        {specName: 'MPG', vehicle1: '', vehicle2: '', time:1750},
+
     ])
 
     const [specIndex, setSpecIndex] = useState(0)
@@ -48,17 +57,7 @@ const CompareSpecs = () => {
                 setError('')
                 const firebaseUID = currentUser.uid;
     
-                let userQuery
-
-                if(userid){
-                    userQuery = `userid=${encodeURIComponent(userid)}`
-                } else{
-                    userQuery = `userfb=${encodeURIComponent(firebaseUID)}`
-                }
-
-                console.log(userQuery)
-    
-                const response = await fetch(`http://localhost:3001/users/details?${userQuery}`, {
+                const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -71,7 +70,29 @@ const CompareSpecs = () => {
                     setCurrentUserId(data.userData._id)
                     setCurrentUserName(data.userData.username)
                     setCurrentUserProfile(data.userData.profilePicture)
-                    setCurrentUserVehicle(data.userData.vehicles)
+
+                    const vehicleData = await Promise.all(data.userData.vehicles.map(async (vehicle) => {
+                        if(vehicle?.vehicleId){
+                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles/view?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
+                                method: 'GET',
+                                headers: {
+                                    'accept': 'application/json',
+                                },
+                            });
+
+                            if(VehicleReponse.ok){
+                                const vehicle_Data = await VehicleReponse.json()
+                                return vehicle_Data
+                            } else{
+                                console.error("Error Fetching Vehicle Data:", error)
+                                setError("Error Fetching Your Vehicles. Try Again Later")
+                                return null
+                            }
+                        }
+                    }))
+
+                    const vehicleWithData = vehicleData.filter(vehicle => vehicle !== null)
+                    setCurrentUserVehicle(vehicleWithData)
 
                     console.log("Fetched Current User Details")
                     return data
@@ -87,6 +108,63 @@ const CompareSpecs = () => {
         }
         fetchCurrentUserData();
     }, [currentUser.uid]);
+
+    useEffect(() => {
+        async function fetchProfileUserData(){
+            try{
+                setError('')
+    
+                const response = await fetch(`http://localhost:3001/users/details?userid=${encodeURIComponent(userid)}`, {
+                    method: 'GET',
+                    headers: {
+                        'accept': 'application/json',
+                    },
+                });
+
+                if (response.ok){
+                    const data = await response.json()
+
+                    setProfileUserId(data.userData._id)
+                    setProfileUserName(data.userData.username)
+                    setProfileUserProfile(data.userData.profilePicture)
+
+                    const vehicleData = await Promise.all(data.userData.vehicles.map(async (vehicle) => {
+                        if(vehicle?.vehicleId){
+                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles/view?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
+                                method: 'GET',
+                                headers: {
+                                    'accept': 'application/json',
+                                },
+                            });
+
+                            if(VehicleReponse.ok){
+                                const vehicle_Data = await VehicleReponse.json()
+                                return vehicle_Data
+                            } else{
+                                console.error("Error Fetching Profile's Vehicle Data:", error)
+                                setError("Error Fetching Profile's Vehicles. Try Again Later")
+                                return null
+                            }
+                        }
+                    }))
+
+                    const vehicleWithData = vehicleData.filter(vehicle => vehicle !== null)
+                    setProfileUserVehicle(vehicleWithData)
+
+                    console.log("Fetched Profile's User Details")
+                    return data
+                } else{
+                    const errorData = await response.json()
+                    setError("Failed To Fetch Profile's User Data")
+                    throw new Error(errorData.message)
+                }
+            }catch (error){
+                console.error("Error Fetching Profile's User Data:", error)
+                setError("Failed To Fetch Profile's User Data")
+            }
+        }
+        fetchProfileUserData();
+    }, []);
 
     useEffect(() => {
         if (specIndex < specData.length){
@@ -142,11 +220,64 @@ const CompareSpecs = () => {
         }        
     }
 
-    function handleSelectVehicle(e){
+    function handleSelectMyVehicle(e){
         const vehicle_Id= e.target.value;
-        const selectVehicle = currentUservehicle.find(v => v.vehicleId === vehicle_Id)
-        setSelectedVehicle(selectVehicle);
+        const selectVehicle = currentUservehicle.find(v => v.vehicleData._id === vehicle_Id)
+        setSelectedMyVehicle(selectVehicle);
     };
+
+    function handleSelectProfileVehicle(e){
+        const vehicle_Id= e.target.value;
+        const selectVehicle = profileUservehicle.find(v => v.vehicleData._id === vehicle_Id)
+        setSelectedProfileVehicle(selectVehicle);
+    };
+
+    function updateSpec(){
+        if (selectedMyVehicle && selectedProfileVehicle){
+            const updateSpecData = specData.map((spec) => {
+                if(spec.specName === 'Speed') {
+                    return {
+                        ...spec,
+                        vehicle1: selectedMyVehicle?.vehicleData.vehicleInfo.Performance.MaxSpeed.Mph,
+                        vehicle2: selectedProfileVehicle?.vehicleData.vehicleInfo.Performance.MaxSpeed.Mph
+                    }
+                }
+                else if(spec.specName === 'Torque') {
+                    return {
+                        ...spec,
+                        vehicle1: selectedMyVehicle?.vehicleData.vehicleInfo.Performance.Torque.Nm,
+                        vehicle2: selectedProfileVehicle?.vehicleData.vehicleInfo.Performance.Torque.Nm
+                    }
+                }
+                else if(spec.specName === 'RPM') {
+                    return {
+                        ...spec,
+                        vehicle1: selectedMyVehicle?.vehicleData.vehicleInfo.Performance.Torque.Rpm,
+                        vehicle2: selectedProfileVehicle?.vehicleData.vehicleInfo.Performance.Torque.Rpm
+                    }
+                }
+                else if(spec.specName === 'BHP') {
+                    return {
+                        ...spec,
+                        vehicle1: selectedMyVehicle?.vehicleData.vehicleInfo.Performance.Power.Bhp,
+                        vehicle2: selectedProfileVehicle?.vehicleData.vehicleInfo.Performance.Power.Bhp
+                    }
+                }
+                else if(spec.specName === 'MPG') {
+                    return {
+                        ...spec,
+                        vehicle1: selectedMyVehicle?.vehicleData.vehicleInfo.Consumption.Combined.Mpg,
+                        vehicle2: selectedProfileVehicle?.vehicleData.vehicleInfo.Consumption.Combined.Mpg
+                    }
+                }
+                return spec
+            })
+            setSpecData(updateSpecData)
+            setStartRace(true)
+        } else{
+            setError('Choose Both Vehicles To Start The Race')
+        }
+    }
 
     return (
         <>
@@ -157,7 +288,7 @@ const CompareSpecs = () => {
                         <p id="slogan_text">Check Out Which Vehicle Is Better</p>
                     </h1>
 
-                    <Link to="" className="btn btn-dark" id='addvehiclebtn'> Compare Other Vehicle</Link>
+                    <Link to="" className="btn btn-dark" id='addvehiclebtn'> Race Other Vehicle</Link>
                 </header>   
 
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
@@ -171,14 +302,14 @@ const CompareSpecs = () => {
                                     alt="Profile"
                                 />
                             )}
-                            <p className='vehicleUserName'>hellolast</p>
+                            <p className='vehicleUserName'>{currentUserName}</p>
                         </div>
-                        
-                        <p className='vehicleName'>BMW 4 Series</p>
-                        <select className='vehicleVRN' onChange={handleSelectVehicle} value={selectedVehicle.vehicleId} required>
+                            
+                        <p className='vehicleName'>{selectedMyVehicle?.vehicleData?.vehicleHistory?.make} {selectedMyVehicle?.vehicleData?.vehicleHistory?.model}</p>
+                        <select className='vehicleVRN' onChange={handleSelectMyVehicle} value={selectedMyVehicle?.vehicleData?._id} required>
                             <option value="" disabled>VRN</option>
                             {currentUservehicle.map(vehicle => ( 
-                                <option key={vehicle.vehicleId} value={vehicle.vehicleId}> {vehicle.vrn} </option>
+                                <option key={vehicle?.vehicleData?._id} value={vehicle?.vehicleData?._id}> {vehicle?.vehicleData?.vrn} </option>
                             ))}
                         </select>
                     </div>
@@ -187,15 +318,20 @@ const CompareSpecs = () => {
                         <div className='vehicleUserRow'>
                             {currentUserProfile && (
                                 <img className='vehicleUserProfile'
-                                    src={`http://localhost:3001/${currentUserProfile}`} 
+                                    src={`http://localhost:3001/${profileUserProfile}`} 
                                     alt="Profile"
                                 />
                             )}
-                            <p className='vehicleUserName'>hellolast</p>
+                            <p className='vehicleUserName'>{profileUserName}</p>
                         </div>                        
                         
-                        <p className='vehicleName'>Mercedes Benz</p>
-                        <p className='vehicleVRN'>DA67 KJY</p>
+                         <p className='vehicleName'>{selectedProfileVehicle?.vehicleData?.vehicleHistory?.make} {selectedProfileVehicle?.vehicleData?.vehicleHistory?.model}</p>
+                        <select className='vehicleVRN' onChange={handleSelectProfileVehicle} value={selectedProfileVehicle?.vehicleData?._id} required>
+                            <option value="" disabled>VRN</option>
+                            {profileUservehicle.map(vehicle => ( 
+                                <option key={vehicle?.vehicleData?._id} value={vehicle?.vehicleData?._id}> {vehicle?.vehicleData?.vrn} </option>
+                            ))}
+                        </select>
                     </div>
                 </div>
 
@@ -212,11 +348,11 @@ const CompareSpecs = () => {
 
                             <div className='compareRace'>
                                 <div className="vehicle1Race" style={{ transform: `translateX(${currentV1Position}px)` }}>
-                                    <img src='https://cdn2.vdicheck.com/VehicleImages/Image.ashx?Id=D00E0F25-5089-4986-BB9E-4CFA5AA0E51C'></img>
+                                    <img src={selectedMyVehicle?.vehicleData?.image}></img>
                                 </div>
 
                                 <div className="vehicle2Race" style={{ transform: `translateX(${currentV2Position}px)` }}>
-                                <img src='https://cdn2.vdicheck.com/VehicleImages/Image.ashx?Id=D00E0F25-5089-4986-BB9E-4CFA5AA0E51C'></img>
+                                <img src={selectedProfileVehicle?.vehicleData?.image}></img>
                                 </div>
                             </div>
 
@@ -248,17 +384,17 @@ const CompareSpecs = () => {
                                     </div>
                                     <div className='compareHead'>
                                         <div className='vehicle1Header'>
-                                            <h3>EA64SYJ</h3>
-                                            <img src='https://cdn2.vdicheck.com/VehicleImages/Image.ashx?Id=61867749-220D-465D-8457-5B623D83879F'></img>
-                                            <h3>Mercedes Benz</h3>
+                                            <h3>{selectedMyVehicle?.vehicleData?.vrn}</h3>
+                                            <img src={selectedMyVehicle?.vehicleData?.image}></img>
+                                            <h3>{selectedMyVehicle?.vehicleData?.vehicleHistory?.make} {selectedMyVehicle?.vehicleData?.vehicleHistory?.model}</h3>
                                         </div>
 
                                         <p>VS</p>
 
                                         <div className='vehicle2Header'>
-                                            <h3>DG55LJK</h3>
-                                            <img src='https://cdn2.vdicheck.com/VehicleImages/Image.ashx?Id=61867749-220D-465D-8457-5B623D83879F'></img>
-                                            <h3>BMW 4-Series</h3>
+                                            <h3>{selectedProfileVehicle?.vehicleData?.vrn}</h3>
+                                            <img src={selectedProfileVehicle?.vehicleData?.image}></img>
+                                            <h3>{selectedProfileVehicle?.vehicleData?.vehicleHistory?.make} {selectedProfileVehicle?.vehicleData?.vehicleHistory?.model}</h3>
                                         </div>
                                     </div>
 
@@ -292,7 +428,11 @@ const CompareSpecs = () => {
                     ) : (
                         <>
                             <div className='compareSpecData'>
-                                <button className='btn btn-dark' id='racebtn' onClick={() => setStartRace(true)}> Ready To Race</button>
+                                {selectedMyVehicle&&selectedProfileVehicle ? (
+                                    <button className='btn btn-dark' id='racebtn' onClick={updateSpec}> Ready To Race</button>
+                                ) : (
+                                    <p className="w-100 text-center mt-3 mb-1" id="success_Msg">Choose Both Vehicles To Start The Race</p>
+                                )}
                             </div>
                         </>
                     )}
