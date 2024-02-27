@@ -225,6 +225,18 @@
     padding: 20px 15px 5px 15px;
 }
 
+.raceText{
+    align-self: flex-end;
+    margin: 0;
+    margin-right: 35px;
+    padding-bottom: 5px;
+    text-align: center;
+    text-transform: capitalize;
+    font-size: 15px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: 700;
+}
+
 .postVRN{
     align-self: flex-end;
     margin-right: 20px;

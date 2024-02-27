@@ -155,7 +155,7 @@ const Garage = () => {
                         <div key={index}  className='carCard' onClick={() => handleSelectCard(vehicles)}>
                                 <div className='cardHeader'>
                                     <h3>{vehicles.vehicleData?.vehicleInfo?.VehicleRegistration?.MakeModel}</h3>
-                                    <p>{vehicles.vehicleData?.vrn}</p>
+                                    <Link className='link' to={`/race/${userid}`}>{vehicles.vehicleData?.vrn}</Link>
                                 </div>
 
                                 <div className='cardImage'>
@@ -189,7 +189,8 @@ const Garage = () => {
                                 <div className='modalHeader'>
                                     <div>
                                         <h3>{selectedVehicle.vehicleData?.vehicleInfo?.VehicleRegistration?.MakeModel}</h3>
-                                        <p>{selectedVehicle.vehicleData?.vrn}</p>
+                                        <p className='raceTextGarage'>Race Me</p>
+                                        <Link className='link' to={`/race/${userid}`}>{selectedVehicle.vehicleData?.vrn}</Link>
                                     </div>
                                     {showData ? (
                                         <>

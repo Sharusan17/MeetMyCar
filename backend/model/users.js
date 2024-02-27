@@ -82,7 +82,33 @@ const UserSchema = new mongoose.Schema({
                 required: true
             }
         }
-    ]
+    ],
+    winPoints:[
+        {
+            _id: false,
+            vehicleId:{ 
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Vehicles',
+            },
+            userId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+            },
+        }
+    ],
+    lostPoints:[
+        {
+            _id: false,
+            vehicleId:{ 
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Vehicles',
+            },
+            userId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+            },
+        }
+    ],
 },
     {
         collection: 'Users',
