@@ -365,7 +365,7 @@ const Profile = () => {
                                 <div className='cardContent'>
                                     <div className='cardHeader'>
                                         <h2>{post?.postData?.title}</h2> 
-                                        <p>{post?.postData?.vehicles?.vrn}</p>
+                                        <Link className='postVRN' to={`/race/${userId}`}>{post?.postData?.vehicles?.vrn}</Link>
                                     </div>
 
                                     <div className='cardFooter'>
@@ -384,7 +384,7 @@ const Profile = () => {
                                 <div className='modalHeader'>
                                     <div>
                                         <h3>{selectedPost.postData?.title}</h3>
-                                        <p>{selectedPost.postData?.vehicles?.vrn}</p>
+                                        <Link className='postVRN' to={`/race/${userId}`}>{selectedPost?.postData?.vehicles?.vrn}</Link>
                                     </div>
                                 </div> 
 
