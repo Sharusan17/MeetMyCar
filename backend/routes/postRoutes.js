@@ -71,7 +71,7 @@ router.put('/edit', upload.single('image'), async (req, res) => {
         if(!postId){
             return res.status(400).json({message: "Post Not Found."})
         }
-        const postUpdate = await Post.findById(postId, {new: true});
+        const postUpdate = await Post.findById(postId);
 
         if(!postUpdate){
             return res.status(404).json({message: "Post Not Able To Update."});
@@ -90,7 +90,25 @@ router.put('/edit', upload.single('image'), async (req, res) => {
             const vehicleId = req.body.vehicleId;
             postUpdate.vehicles = ({vehicleId: vehicleId, vrn: req.body.vrn});
         }
-
+        if(req.body.addUserIdLike){
+            const userIdLike = req.body.addUserIdLike
+            if(!postUpdate.likes.includes(userIdLike)){
+                postUpdate.likes.push({userId: userIdLike})
+            }
+        }
+        if(req.body.removeUserIdLike){
+            postUpdate.likes.pull({userId: req.body.removeUserIdLike})
+        }
+        if(req.body.addUserIdSuperFuel){
+            const userIdSuperFuel = req.body.addUserIdSuperFuel
+            if(!postUpdate.superfuel.includes(userIdSuperFuel)){
+                postUpdate.superfuel.push({userId: userIdSuperFuel})
+            }
+        }
+        if(req.body.removeUserIdSuperFuel){
+            postUpdate.superfuel.pull({userId: req.body.removeUserIdSuperFuel})
+        }
+        
         await postUpdate.save();
   
         res.status(201).json({message: "Post Updated", post: postUpdate});

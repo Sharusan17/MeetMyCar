@@ -32,7 +32,15 @@ const PostSchema = new mongoose.Schema({
             required: true
         }
     },
-    
+    likes:[
+        {
+            _id: false,
+            userId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+            }
+        }
+    ],
     comments: [
         {
             user: {
@@ -41,6 +49,15 @@ const PostSchema = new mongoose.Schema({
             },
             text: String,
         },
+    ],
+    superfuel:[
+        {
+            _id: false,
+            userId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+            }
+        }
     ],
 },
     {

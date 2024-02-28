@@ -6,17 +6,17 @@ import './SeePost_css.css'
 
 const SeePost = () => {
     const {currentUser} = useAuth()
+    const [userId, setUserId] = useState('')
 
-    const[posts, setPosts] = useState([])
+    const [posts, setPosts] = useState([])
 
-    const[menuoptions, setMenuOptions] = useState(false)
-    const[confirmDeletePost, setconfirmDeletePost] = useState(false)
+    const [menuoptions, setMenuOptions] = useState(false)
+    const [confirmDeletePost, setconfirmDeletePost] = useState(false)
 
-    const[message, setMessage] = useState('')
-    const[error, setError] = useState('')
-    const[nopost, setNoPost] = useState('')
-    const[loading, setLoading] = useState('')
-
+    const [message, setMessage] = useState('')
+    const [error, setError] = useState('')
+    const [nopost, setNoPost] = useState('')
+    const [loading, setLoading] = useState('')
 
     useEffect(() => {
         async function fetchPostData(){
@@ -77,6 +77,37 @@ const SeePost = () => {
         fetchPostData();
     }, []);
 
+    useEffect(() => {
+        async function fetchUserData(){
+            try{
+                setError('')
+                const firebaseUID = currentUser.uid;
+                const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
+                    method: 'GET',
+                    headers: {
+                        'accept': 'application/json',
+                    },
+                });
+
+                if (response.ok){
+                    const data = await response.json()
+                    setUserId(data.userData._id)
+
+                    console.log("Fetched User Details")
+                    return data
+                } else{
+                    const errorData = await response.json()
+                    setError("Failed To Fetch User Data")
+                    throw new Error(errorData.message)
+                }
+            }catch (error){
+                console.error("Error Fetching User Data:", error)
+                setError("Failed To Fetch User Data")
+            }
+        }
+        fetchUserData();
+    }, [currentUser.uid]);
+
     const formatDate = (timestamps) => {
         const date = new Date(timestamps);
         return date.toLocaleDateString()
@@ -134,6 +165,102 @@ const SeePost = () => {
         setLoading(false)
     }
 
+    async function handleLike(postId) {
+        try{
+            setError('')
+            setLoading(true)
+
+            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({addUserIdLike: userId})
+            });
+
+            if (!response.ok){
+                console.error("Error Updating Like Post:")
+            }
+            console.log("Updated Like Post")
+        }catch (error){
+            console.error("Error Updating Like Post:")
+            setError("Error Updating Like For Post. Try Again Later")
+        }
+        setLoading(false)
+    }
+
+    async function handleUnLike(postId) {
+        try{
+            setError('')
+            setLoading(true)
+
+            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({removeUserIdLike: userId})
+            });
+
+            if (!response.ok){
+                console.error("Error Updating Like Post:")
+            }
+            console.log("Updated Like Post")
+        }catch (error){
+            console.error("Error Updating Like Post:")
+            setError("Error Updating Like For Post. Try Again Later")
+        }
+        setLoading(false)
+    }
+
+    async function handleSuperFuel(postId) {
+        try{
+            setError('')
+            setLoading(true)
+
+            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({addUserIdSuperFuel: userId})
+            });
+
+            if (!response.ok){
+                console.error("Error Updating SuperFuel Post:")
+            }
+            console.log("Updated SuperFuel Post")
+        }catch (error){
+            console.error("Error Updating SuperFuel Post:")
+            setError("Error Updating SuperFuel For Post. Try Again Later")
+        }
+        setLoading(false)
+    }
+
+    async function handleUnSuperFuel(postId) {
+        try{
+            setError('')
+            setLoading(true)
+
+            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({removeUserIdSuperFuel: userId})
+            });
+
+            if (!response.ok){
+                console.error("Error Updating SuperFuel Post:")
+            }
+            console.log("Updated SuperFuel Post")
+        }catch (error){
+            console.error("Error Updating SuperFuel Post:")
+            setError("Error Updating SuperFuel For Post. Try Again Later")
+        }
+        setLoading(false)
+    }
+
     return (
         <>
             <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{nopost}</p>
@@ -141,8 +268,8 @@ const SeePost = () => {
             <div className="postList">
                 {posts.map((post) => (
                     <div key={post._id}  className='post'>
-                    <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{error}</p>
-                    <p className="w-100 text-center mt-2 mb-0" id="success_Msg">{message}</p>
+                        <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{error}</p>
+                        <p className="w-100 text-center mt-2 mb-0" id="success_Msg">{message}</p>
 
                         <div className='postHead'>
                             <div className='postUserDetails'>
@@ -226,6 +353,30 @@ const SeePost = () => {
                                 <p className='postDescription'>{post.description}</p> 
                             </div> 
                         </div> 
+
+                        <div className='postEngagement'>
+                            {post.likes.some((likedUser) => likedUser.userId === userId) ? (
+                                    <>
+                                        <button className='unlikebtn' disabled={loading} onClick={() => handleUnLike(post._id)}><svg xmlns="http://www.w3.org/2000/svg" width="1.7em" height="1.7em" viewBox="0 0 26 26"><path d="M17.869 3.889c-2.096 0-3.887 1.494-4.871 2.524c-.984-1.03-2.771-2.524-4.866-2.524C4.521 3.889 2 6.406 2 10.009c0 3.97 3.131 6.536 6.16 9.018c1.43 1.173 2.91 2.385 4.045 3.729c.191.225.471.355.765.355h.058c.295 0 .574-.131.764-.355c1.137-1.344 2.616-2.557 4.047-3.729C20.867 16.546 24 13.98 24 10.009c0-3.603-2.521-6.12-6.131-6.12"/></svg></button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button className='likebtn' disabled={loading} onClick={() => handleLike(post._id)}><svg xmlns="http://www.w3.org/2000/svg" width="1.7em" height="1.7em" viewBox="0 0 26 26"><path d="M17.869 3.889c-2.096 0-3.887 1.494-4.871 2.524c-.984-1.03-2.771-2.524-4.866-2.524C4.521 3.889 2 6.406 2 10.009c0 3.97 3.131 6.536 6.16 9.018c1.43 1.173 2.91 2.385 4.045 3.729c.191.225.471.355.765.355h.058c.295 0 .574-.131.764-.355c1.137-1.344 2.616-2.557 4.047-3.729C20.867 16.546 24 13.98 24 10.009c0-3.603-2.521-6.12-6.131-6.12"/></svg></button>
+                                    </>
+                            )}
+
+                            <button className='commentbtn'><svg xmlns="http://www.w3.org/2000/svg" width="1.7em" height="1.7em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3 10.4c0-2.24 0-3.36.436-4.216a4 4 0 0 1 1.748-1.748C6.04 4 7.16 4 9.4 4h5.2c2.24 0 3.36 0 4.216.436a4 4 0 0 1 1.748 1.748C21 7.04 21 8.16 21 10.4v1.2c0 2.24 0 3.36-.436 4.216a4 4 0 0 1-1.748 1.748C17.96 18 16.84 18 14.6 18H7.414a1 1 0 0 0-.707.293l-2 2c-.63.63-1.707.184-1.707-.707V13zM9 8a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z" clip-rule="evenodd"/></svg></button>
+                            
+                            {post.superfuel.some((superFuelUser) => superFuelUser.userId === userId) ? (
+                                    <>
+                                        <button className='unsuperfuel' disabled={loading} onClick={() => handleUnSuperFuel(post._id)}><svg xmlns="http://www.w3.org/2000/svg" width="1.7em" height="1.7em" viewBox="0 0 16 16"><path d="M1 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1 2 2v.5a.5.5 0 0 0 1 0V8h-.5a.5.5 0 0 1-.5-.5V4.375a.5.5 0 0 1 .5-.5h1.495c-.011-.476-.053-.894-.201-1.222a.97.97 0 0 0-.394-.458c-.184-.11-.464-.195-.9-.195a.5.5 0 0 1 0-1q.846-.002 1.412.336c.383.228.634.551.794.907c.295.655.294 1.465.294 2.081V7.5a.5.5 0 0 1-.5.5H15v4.5a1.5 1.5 0 0 1-3 0V12a1 1 0 0 0-1-1v4h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1zm2.5 0a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z"/></svg></button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button className='superfuel' disabled={loading} onClick={() => handleSuperFuel(post._id)}><svg xmlns="http://www.w3.org/2000/svg" width="1.7em" height="1.7em" viewBox="0 0 16 16"><path d="M1 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1 2 2v.5a.5.5 0 0 0 1 0V8h-.5a.5.5 0 0 1-.5-.5V4.375a.5.5 0 0 1 .5-.5h1.495c-.011-.476-.053-.894-.201-1.222a.97.97 0 0 0-.394-.458c-.184-.11-.464-.195-.9-.195a.5.5 0 0 1 0-1q.846-.002 1.412.336c.383.228.634.551.794.907c.295.655.294 1.465.294 2.081V7.5a.5.5 0 0 1-.5.5H15v4.5a1.5 1.5 0 0 1-3 0V12a1 1 0 0 0-1-1v4h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1zm2.5 0a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z"/></svg></button>
+                                    </>
+                            )}
+                        </div>
                         
                     </div>
                 ))}

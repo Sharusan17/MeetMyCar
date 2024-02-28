@@ -12,6 +12,7 @@
 
 .post {
     padding: 5px;
+    padding-bottom: 0;
     background-color: #FFFFFF;
     border: 1px solid #CCCCCC;
     margin-bottom: 20px;
@@ -227,7 +228,8 @@
     color: #333333;
     font-size: 1em;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    padding: 20px 15px 5px 15px;
+    padding: 20px 15px 0px 15px;
+    margin-bottom: 0;
 }
 
 .raceText{
@@ -258,6 +260,62 @@
     border: 1px solid black;
     border-radius: 5px;
     padding: 5px  10px 5px 10px;
+}
+
+.postEngagement{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    background-color: rgb(247, 247, 247);
+    margin: 0 auto;
+    margin-top: 5px;
+    padding: 5px;
+    border-top-left-radius: 25% 50px;
+    border-top-right-radius: 25% 50px;
+    width: 35%;
+}
+
+.postEngagement button{
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    margin: 5px;
+}
+
+.likebtn svg {
+    fill: rgb(38,38,38)
+}
+.likebtn svg :hover{
+    fill: red;
+}
+
+.unlikebtn svg{
+    fill: red;
+}
+
+.unlikebtn svg :hover{
+    fill: rgb(38,38,38)
+}
+
+.commentbtn svg :hover{
+    fill: blue;
+}
+
+.superfuel svg {
+    fill: rgb(38,38,38)
+}
+.superfuel svg :hover{
+    fill: rgb(12, 115, 48)
+}
+
+.unsuperfuel svg{
+    fill: rgb(12, 115, 48)
+}
+
+.unsuperfuel svg :hover{
+    fill: rgb(38,38,38)
 }
 
 
