@@ -390,7 +390,7 @@ const CompareSpecs = () => {
                         <p id="slogan_text">Check Out Which Vehicle Is Better</p>
                     </h1>
 
-                    <Link to="" className="btn btn-dark" id='addvehiclebtn'> Race Other Vehicle</Link>
+                    <Link to={`/garage/${currentUserId}`}className="btn btn-dark" id='addvehiclebtn'> Compare My Vehicle</Link>
                 </header>   
 
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
