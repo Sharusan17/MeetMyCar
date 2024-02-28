@@ -287,30 +287,37 @@ const SeePost = () => {
                                 <p>{formatDate(post.updatedAt)}</p>
                                 <p>{formatTime(post.updatedAt)}</p>
 
-                                <div className='postMenuContainer'>
-                                    <button className='postMenu' onClick={handleShowOptions}>
-                                        <div className='postdot'></div>
-                                        <div className='postdot'></div>
-                                        <div className='postdot'></div>
-                                    </button>
+                                {(post.user._id === userId)? (
+                                    <>
+                                        <div className='postMenuContainer'>
+                                            <button className='postMenu' onClick={handleShowOptions}>
+                                                <div className='postdot'></div>
+                                                <div className='postdot'></div>
+                                                <div className='postdot'></div>
+                                            </button>
 
-                                    {menuoptions && (
-                                        <div className='postOption'>
-                                            <ul>
-                                                <li className='menu-item'>
-                                                    <Link to={`/editpost/${post._id}`} className='menu-link'>
-                                                        Edit Post
-                                                    </Link>
-                                                </li>
-                                                <li className='menu-item'>
-                                                    <Link onClick={handleShowDelete} className='menu-link' id='delete-menu-link'>
-                                                        Delete Post
-                                                    </Link>
-                                                </li>
-                                            </ul>
+                                            {menuoptions && (
+                                                <div className='postOption'>
+                                                    <ul>
+                                                        <li className='menu-item'>
+                                                            <Link to={`/editpost/${post._id}`} className='menu-link'>
+                                                                Edit Post
+                                                            </Link>
+                                                        </li>
+                                                        <li className='menu-item'>
+                                                            <Link onClick={handleShowDelete} className='menu-link' id='delete-menu-link'>
+                                                                Delete Post
+                                                            </Link>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
-                                </div>
+                                    </>
+                                    
+                                ) :(
+                                    <></>
+                                )}
                             </div>
                         </div>
 
