@@ -154,6 +154,19 @@ const SeePost = () => {
             if(!userDelete_response.ok){
                 console.error("Error Deleting Post:")
             }
+
+            const userSFResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({removeSuperFuel: -1})
+            });
+
+            if (!userSFResponse.ok){
+                console.error("Error Updating User's SuperFuel:")
+            }
+            
             console.log("Deleted Post")
             setMessage("Post Deleted")
             setTimeout(() => {
@@ -435,12 +448,13 @@ const SeePost = () => {
                                             <button className='likebtn' disabled={loading} onClick={() => handleLike(post._id)}><svg xmlns="http://www.w3.org/2000/svg" width="1.7em" height="1.7em" viewBox="0 0 26 26"><path d="M17.869 3.889c-2.096 0-3.887 1.494-4.871 2.524c-.984-1.03-2.771-2.524-4.866-2.524C4.521 3.889 2 6.406 2 10.009c0 3.97 3.131 6.536 6.16 9.018c1.43 1.173 2.91 2.385 4.045 3.729c.191.225.471.355.765.355h.058c.295 0 .574-.131.764-.355c1.137-1.344 2.616-2.557 4.047-3.729C20.867 16.546 24 13.98 24 10.009c0-3.603-2.521-6.12-6.131-6.12"/></svg></button>
                                         </>
                                 )}
-                                <h3>{post.likes.length} LIKES</h3>
+                                <h3>{post.likes.length} LIKE</h3>
 
                             </div>
 
                             <div className='engagementColumn'>
                                 <button className='commentbtn'><svg xmlns="http://www.w3.org/2000/svg" width="1.7em" height="1.7em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3 10.4c0-2.24 0-3.36.436-4.216a4 4 0 0 1 1.748-1.748C6.04 4 7.16 4 9.4 4h5.2c2.24 0 3.36 0 4.216.436a4 4 0 0 1 1.748 1.748C21 7.04 21 8.16 21 10.4v1.2c0 2.24 0 3.36-.436 4.216a4 4 0 0 1-1.748 1.748C17.96 18 16.84 18 14.6 18H7.414a1 1 0 0 0-.707.293l-2 2c-.63.63-1.707.184-1.707-.707V13zM9 8a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z" clip-rule="evenodd"/></svg></button>
+                                <h3>{post.comments.length} Comment</h3>
                             </div>
 
                             <div className='engagementColumn'>

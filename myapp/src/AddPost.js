@@ -125,6 +125,18 @@ const AddPost = () => {
                 throw new Error(errorData.message)
             } 
 
+            const userSFResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({addSuperFuel: +1})
+            });
+
+            if (!userSFResponse.ok){
+                console.error("Error Updating User's SuperFuel:")
+            }
+
             console.log("Add Post Successful")
             navigate("/")
 

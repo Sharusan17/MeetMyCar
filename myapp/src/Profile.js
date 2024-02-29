@@ -12,6 +12,7 @@ const Profile = () => {
     const [currentUserId, setCurrentUserId] = useState('')
     const [currentUserName, setCurrentUserName] = useState('')
     const [currentUserFollowing, setCurrentUserFollowing] = useState('')
+    const [currentUserSF, setCurrentUserSF] = useState('')
 
     const [userId, setProfileUserId] = useState('')
     const [username, setProfileuserName] = useState('')
@@ -112,6 +113,7 @@ const Profile = () => {
                     setCurrentUserId(data.userData._id)
                     setCurrentUserName(data.userData.username)
                     setCurrentUserFollowing(data.userData.following)
+                    setCurrentUserSF(data.userData.superfuel)
 
                     console.log("Fetched Current User Details")
                     return data
@@ -176,6 +178,18 @@ const Profile = () => {
                 setError("Failed To Delete Post")
                 console.error("Error Deleting Post: On Post Server", error)
                 throw new Error(errorData.message)
+            }
+
+            const userSFResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({removeSuperFuel: -1})
+            });
+
+            if (!userSFResponse.ok){
+                console.error("Error Updating User's SuperFuel:")
             }
 
             console.log("Deleted Post")
@@ -306,6 +320,163 @@ const Profile = () => {
         }
     }
 
+    async function handleLike(postId) {
+        try{
+            setError('')
+            setLoading(true)
+
+            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({addUserIdLike: userId})
+            });
+
+            if (!response.ok){
+                console.error("Error Updating Like Post:")
+            }
+            console.log("Updated Like Post")
+        }catch (error){
+            console.error("Error Updating Like Post:")
+            setError("Error Updating Like For Post. Try Again Later")
+        }
+        setLoading(false)
+    }
+
+    async function handleUnLike(postId) {
+        try{
+            setError('')
+            setLoading(true)
+
+            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({removeUserIdLike: userId})
+            });
+
+            if (!response.ok){
+                console.error("Error Updating Like Post:")
+            }
+            console.log("Updated Like Post")
+        }catch (error){
+            console.error("Error Updating Like Post:")
+            setError("Error Updating Like For Post. Try Again Later")
+        }
+        setLoading(false)
+    }
+
+    async function handleSuperFuel(postId, postUserId) {
+        try{
+            setError('')
+            setLoading(true)
+
+            if(currentUserSF > 0){
+                const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({addUserIdSuperFuel: userId})
+                });
+
+                if (!response.ok){
+                    console.error("Error Updating SuperFuel Post:")
+                }
+
+                const firebaseUID = currentUser.uid;
+
+                const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({removeSuperFuel: -1})
+                });
+
+                if (!userResponse.ok){
+                    console.error("Error Updating User's SuperFuel:")
+                }
+
+                const profileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(postUserId)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({addSuperFuel: +1})
+                });
+
+                if (!profileResponse.ok){
+                    console.error("Error Updating Profile's SuperFuel:")
+                }
+                
+                console.log("Updated SuperFuel Post")
+
+            } else{
+                console.error("Not Enough SuperFuel Points")
+                setError("Not Enough SuperFuel Points.")
+            }
+
+            
+        }catch (error){
+            console.error("Error Updating SuperFuel Post:")
+            setError("Error Updating SuperFuel For Post. Try Again Later")
+        }
+        setLoading(false)
+    }
+
+    async function handleUnSuperFuel(postId, postUserId) {
+        try{
+            setError('')
+            setLoading(true)
+
+            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({removeUserIdSuperFuel: userId})
+            });
+
+            if (!response.ok){
+                console.error("Error Updating SuperFuel Post:")
+            }
+
+            const firebaseUID = currentUser.uid;
+
+            const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({addSuperFuel: +1})
+            });
+
+            if (!userResponse.ok){
+                console.error("Error Updating User's SuperFuel:")
+            }
+
+            const profileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(postUserId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({removeSuperFuel: -1})
+            });
+
+            if (!profileResponse.ok){
+                console.error("Error Updating Profile's SuperFuel:")
+            }
+            console.log("Updated SuperFuel Post")
+        }catch (error){
+            console.error("Error Updating SuperFuel Post:")
+            setError("Error Updating SuperFuel For Post. Try Again Later")
+        }
+        setLoading(false)
+    }
+
     return (
         <>
             <div className='showProfile'>        
@@ -374,8 +545,8 @@ const Profile = () => {
                                     <div className='cardFooter'>
                                         <p>{post?.postData?.description}</p>
                                     </div>
+                                    
                                 </div>
-                                
                         </div>
                     ))}
                 </div>
@@ -397,6 +568,40 @@ const Profile = () => {
 
                                 <div className='modalDesc'>
                                     <p>{selectedPost?.postData?.description}</p>
+                                </div>
+
+                                <div className='selectedpostEngagement'>
+                                    <div className='engagementColumn'>
+                                        {selectedPost?.postData.likes.some((likedUser) => likedUser.userId === userId) ? (
+                                                <>
+                                                    <button className='unlikebtn' disabled={loading} onClick={() => handleUnLike(selectedPost?.postData._id)}><svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 26 26"><path d="M17.869 3.889c-2.096 0-3.887 1.494-4.871 2.524c-.984-1.03-2.771-2.524-4.866-2.524C4.521 3.889 2 6.406 2 10.009c0 3.97 3.131 6.536 6.16 9.018c1.43 1.173 2.91 2.385 4.045 3.729c.191.225.471.355.765.355h.058c.295 0 .574-.131.764-.355c1.137-1.344 2.616-2.557 4.047-3.729C20.867 16.546 24 13.98 24 10.009c0-3.603-2.521-6.12-6.131-6.12"/></svg></button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button className='likebtn' disabled={loading} onClick={() => handleLike(selectedPost?.postData._id)}><svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 26 26"><path d="M17.869 3.889c-2.096 0-3.887 1.494-4.871 2.524c-.984-1.03-2.771-2.524-4.866-2.524C4.521 3.889 2 6.406 2 10.009c0 3.97 3.131 6.536 6.16 9.018c1.43 1.173 2.91 2.385 4.045 3.729c.191.225.471.355.765.355h.058c.295 0 .574-.131.764-.355c1.137-1.344 2.616-2.557 4.047-3.729C20.867 16.546 24 13.98 24 10.009c0-3.603-2.521-6.12-6.131-6.12"/></svg></button>
+                                                </>
+                                        )}
+                                        <h3>{selectedPost?.postData.likes.length} LIKE</h3>
+
+                                    </div>
+
+                                    <div className='engagementColumn'>
+                                        <button className='commentbtn'><svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3 10.4c0-2.24 0-3.36.436-4.216a4 4 0 0 1 1.748-1.748C6.04 4 7.16 4 9.4 4h5.2c2.24 0 3.36 0 4.216.436a4 4 0 0 1 1.748 1.748C21 7.04 21 8.16 21 10.4v1.2c0 2.24 0 3.36-.436 4.216a4 4 0 0 1-1.748 1.748C17.96 18 16.84 18 14.6 18H7.414a1 1 0 0 0-.707.293l-2 2c-.63.63-1.707.184-1.707-.707V13zM9 8a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z" clip-rule="evenodd"/></svg></button>
+                                        <h3>{selectedPost?.postData.comments.length} Comment</h3>
+                                    </div>
+
+                                    <div className='engagementColumn'>
+                                        {selectedPost?.postData.superfuel.some((superFuelUser) => superFuelUser.userId === userId) ? (
+                                                <>
+                                                    <button className='unsuperfuel' disabled={loading} onClick={() => handleUnSuperFuel(selectedPost?.postData._id, selectedPost?.postData.user._id)}><svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 16 16"><path d="M1 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1 2 2v.5a.5.5 0 0 0 1 0V8h-.5a.5.5 0 0 1-.5-.5V4.375a.5.5 0 0 1 .5-.5h1.495c-.011-.476-.053-.894-.201-1.222a.97.97 0 0 0-.394-.458c-.184-.11-.464-.195-.9-.195a.5.5 0 0 1 0-1q.846-.002 1.412.336c.383.228.634.551.794.907c.295.655.294 1.465.294 2.081V7.5a.5.5 0 0 1-.5.5H15v4.5a1.5 1.5 0 0 1-3 0V12a1 1 0 0 0-1-1v4h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1zm2.5 0a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z"/></svg></button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button className='superfuel' disabled={loading} onClick={() => handleSuperFuel(selectedPost?.postData._id, selectedPost?.postData.user._id)}><svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 16 16"><path d="M1 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1 2 2v.5a.5.5 0 0 0 1 0V8h-.5a.5.5 0 0 1-.5-.5V4.375a.5.5 0 0 1 .5-.5h1.495c-.011-.476-.053-.894-.201-1.222a.97.97 0 0 0-.394-.458c-.184-.11-.464-.195-.9-.195a.5.5 0 0 1 0-1q.846-.002 1.412.336c.383.228.634.551.794.907c.295.655.294 1.465.294 2.081V7.5a.5.5 0 0 1-.5.5H15v4.5a1.5 1.5 0 0 1-3 0V12a1 1 0 0 0-1-1v4h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1zm2.5 0a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z"/></svg></button>
+                                                </>
+                                        )}
+                                        <h3>{selectedPost?.postData.superfuel.length} Superfuel</h3>
+                                    </div>
                                 </div>
 
                                 {confirmDeletePost ? (
