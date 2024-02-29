@@ -138,6 +138,12 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
                 userUpdate.lostPoints.push({vehicleId: req.body.lostVRNPoints, userId: req.body.lostUserPoints, vrn: req.body.lostVRN})
             }
         }
+        if(req.body.addSuperFuel){
+            userUpdate.superfuel += 1
+        }
+        if(req.body.removeSuperFuel){
+            userUpdate.superfuel -= 1
+        }
         
         await userUpdate.save();
 

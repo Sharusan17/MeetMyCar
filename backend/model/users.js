@@ -117,6 +117,10 @@ const UserSchema = new mongoose.Schema({
             }
         }
     ],
+    superfuel:{
+        type: Number,
+        default: 10
+    },
 },
     {
         collection: 'Users',
