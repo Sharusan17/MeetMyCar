@@ -300,19 +300,19 @@ const SeePost = () => {
                  });
  
                  if (response.ok){
-                     console.log("Added Comment Data")
+                     console.log("Added Reply Data")
                  } else{
                      const errorData = await response.json()
-                     console.error("Error Updating Comment Data:", error)
+                     console.error("Error Updating Reply Data:", error)
                      throw new Error(errorData.message)
                  }
              }catch (error){
-                 console.error("Error Adding Comment Data:", error)
-                 setCommentError("Failed To Add Comment Data")
+                 console.error("Error Adding Reply Data:", error)
+                 setCommentError("Failed To Add Reply Data")
              }
              setLoading(false)
          }else{
-             setCommentError('Comment Too Short')
+             setCommentError('Reply Too Short')
              return
          }
      }
@@ -591,6 +591,28 @@ const SeePost = () => {
                                                             18:00
                                                         </div>
                                                     </div>
+
+                                                    {postComment.replies?.map((postReply) => (
+                                                        <div key={postReply._id} className='replies'>
+                                                            <div className='commentTop'>
+                                                                <div className='commentUser'>
+                                                                    {postReply.userID?.profilePicture && (
+                                                                        <img className='replyUserImage'
+                                                                            src={`http://localhost:3001/${postReply.userID.profilePicture}`} 
+                                                                            alt="Profile"
+                                                                        />
+                                                                    )}                                
+                                                                    <Link to={`/profile/${postReply.userID?._id}`} className='replyUserName'>{postReply.userID?.username}</Link>
+                                                                </div>
+                                                                <div className='replyText'>
+                                                                    <p>{postReply.replyText}</p>
+                                                                </div>
+                                                                <div className='replyDate'>
+                                                                    18:00
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
 
                                                     <div className='commentBottom'>
                                                         <button className='replybtn' onClick={() => handleSelectComment(postComment._id)}>Reply</button>

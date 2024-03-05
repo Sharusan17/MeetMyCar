@@ -404,6 +404,40 @@
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+.replies{
+    margin: 5px 0;
+    margin-left: 20px;
+    padding: 0;
+}
+
+.replyUserImage{
+    display: flex;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.replyUserName{
+    align-self: center;
+    font-weight: 600;
+    font-size: smaller;
+    text-decoration: none;
+    color: black;
+}
+
+.replyText{
+    font-size: smaller;
+    margin-right: 10px;
+    height: fit-content;
+}
+
+.replyDate{
+    font-size: smaller;
+    margin-left: auto;
+    text-align: right;
+}
+
 .replybtn{
     background: none;
     border: none;
