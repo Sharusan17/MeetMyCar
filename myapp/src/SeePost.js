@@ -284,6 +284,33 @@ const SeePost = () => {
         }
     }
 
+    async function handleDeleteComment(postId, commentId){
+        try{
+            setLoading(true)
+            setCommentError('')
+
+            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({deleteCommentId: commentId})
+            });
+
+            if (response.ok){
+                console.log("Deleted Comment Data")
+            } else{
+                const errorData = await response.json()
+                console.error("Error Deleting Comment Data:", error)
+                throw new Error(errorData.message)
+            }
+        }catch (error){
+            console.error("Error Deleting Comment Data:", error)
+            setCommentError("Failed To Delete Comment")
+        }
+        setLoading(false)
+    }
+
     async function handleaddReply(postId, commentId){
 
         if (replyRef.current.value.length >= 2){
@@ -316,6 +343,33 @@ const SeePost = () => {
              return
          }
      }
+
+     async function handleDeleteReply(postId, commentId, replyId){
+        try{
+            setLoading(true)
+            setCommentError('')
+
+            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({commentId: commentId, deleteReplyId: replyId})
+            });
+
+            if (response.ok){
+                console.log("Deleted Reply Data")
+            } else{
+                const errorData = await response.json()
+                console.error("Error Deleting Reply Data:", error)
+                throw new Error(errorData.message)
+            }
+        }catch (error){
+            console.error("Error Deleting Reply Data:", error)
+            setCommentError("Failed To Delete Reply")
+        }
+        setLoading(false)
+    }
 
     async function handleSuperFuel(postId, postUserId) {
         try{
@@ -609,19 +663,37 @@ const SeePost = () => {
                                                                 </div>
                                                                 <div className='replyDate'>
                                                                     18:00
+                                                                    {postReply.userID._id === userId? (
+                                                                        <>
+                                                                            <button className='deletereplybtn' disabled={loading} onClick={() => handleDeleteReply(selectedPost._id, postComment._id, postReply._id)}> Delete Reply</button>
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                        </>
+                                                                    )}
                                                                 </div>
+
+                                                                
                                                             </div>
                                                         </div>
                                                     ))}
 
                                                     <div className='commentBottom'>
-                                                        <button className='replybtn' onClick={() => handleSelectComment(postComment._id)}>Reply</button>
+                                                        <button className='replybtn' disabled={loading} onClick={() => handleSelectComment(postComment._id)}>Reply</button>
+                                                        {postComment.userID._id === userId? (
+                                                            <>
+                                                                <button className='deletereplybtn' disabled={loading} onClick={() => handleDeleteComment(selectedPost._id, postComment._id)}>Delete</button>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                            </>
+                                                        )}
                                                     </div>
 
                                                     {showReplyBox && selectedComment === postComment._id ?(
                                                         <>
                                                             <input type='text' ref={replyRef} placeholder="Reply" className='commentText' required></input>
-                                                            <button className='btn btn-dark' onClick={() => handleaddReply(selectedPost._id, postComment._id)}>Add Reply</button>
+                                                            <button className='btn btn-dark' disabled={loading} onClick={() => handleaddReply(selectedPost._id, postComment._id)}>Add Reply</button>
                                                         </>
                                                     ) : (
                                                         <>
@@ -634,7 +706,7 @@ const SeePost = () => {
 
                                         <div className='modalCommentButton'>
                                             <input type='text' ref={commentRef} placeholder="Comment" className='commentText' required></input>
-                                            <button className='btn btn-dark' onClick={() => handleaddComment(selectedPost._id)}>Add Comment</button>
+                                            <button className='btn btn-dark' disabled={loading} onClick={() => handleaddComment(selectedPost._id)}>Add Comment</button>
                                         </div>
                                     </>
                                 ) : <p>Loading....</p>}

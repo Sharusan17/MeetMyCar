@@ -400,8 +400,6 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    font-size: 15px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .replies{
@@ -433,19 +431,32 @@
 }
 
 .replyDate{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     font-size: smaller;
     margin-left: auto;
     text-align: right;
 }
 
-.replybtn{
+.replybtn, .deletereplybtn{
     background: none;
     border: none;
+    font-size: 15px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin: 5px 0;
 }
+
 
 .replybtn:hover{
     color: green;
 }
+
+.deletereplybtn:hover{
+    color: red;
+}
+
+
 
 
 

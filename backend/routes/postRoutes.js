@@ -104,11 +104,17 @@ router.put('/edit', upload.single('image'), async (req, res) => {
         if(req.body.commentUser && req.body.commentText){
             postUpdate.comments.push({userID: req.body.commentUser, commentText: req.body.commentText})
         }
+        if(req.body.deleteCommentId){
+            postUpdate.comments.pull({_id: req.body.deleteCommentId})
+        }
         if(req.body.commentId && req.body.replyUser && req.body.replyText){
             const commentIndex = postUpdate.comments.findIndex(comment => comment._id.equals(req.body.commentId))
             postUpdate.comments[commentIndex].replies.push({userID: req.body.replyUser, replyText: req.body.replyText})
         }
-
+        if(req.body.commentId && req.body.deleteReplyId){
+            const commentIndex = postUpdate.comments.findIndex(comment => comment._id.equals(req.body.commentId))
+            postUpdate.comments[commentIndex].replies.pull({_id: req.body.deleteReplyId})
+        }
         if(req.body.addUserIdSuperFuel){
             const userIdSuperFuel = req.body.addUserIdSuperFuel
             if(!postUpdate.superfuel.includes(userIdSuperFuel)){
