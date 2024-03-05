@@ -8,22 +8,24 @@ import './SeePost_css.css'
 const SeePost = () => {
     const {currentUser} = useAuth()
     const [userId, setUserId] = useState('')
-    const [userName, setUserName] = useState('')
-    const [userProfilePic, setUserProfilePic] = useState('')
     const [usersf, setUserSF] = useState('')
 
     const [posts, setPosts] = useState([])
 
     const [selectedPost, setSelectedPost] = useState('')
+    const [selectedComment, setSelectedComment] = useState(null)
     const [menuoptions, setMenuOptions] = useState(false)
     const [confirmDeletePost, setconfirmDeletePost] = useState(false)
 
     const commentRef = useRef()
+    const replyRef = useRef()
     const [openCommentModal, setOpenCommentModal] = useState(false)
+    const [showReplyBox, setShowReplyBox] = useState(false)
 
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
     const [nopost, setNoPost] = useState('')
+    const [commentError, setCommentError] = useState('')
     const [loading, setLoading] = useState('')
 
     useEffect(() => {
@@ -100,8 +102,6 @@ const SeePost = () => {
                 if (response.ok){
                     const data = await response.json()
                     setUserId(data.userData._id)
-                    setUserName(data.userData.username)
-                    setUserProfilePic(data.userData.profilePicture)
                     setUserSF(data.userData.superfuel)
 
                     console.log("Fetched User Details")
@@ -129,17 +129,25 @@ const SeePost = () => {
     }
 
     const handleSelectPost = (post) => {
-        console.log("Selected:", post)
+        console.log("Selected Post:", post)
         setSelectedPost(post)
         setOpenCommentModal(true)
     }
 
-    const handleShowOptions = () =>{
+    const handleSelectComment = (selectedcomment) => {
+        console.log("Selected Comment:", selectedcomment)
+        setSelectedComment(selectedcomment)
+        setShowReplyBox(!showReplyBox)
+    }
+
+    const handleShowOptions = (postId) =>{
+        setSelectedPost(postId)
         setMenuOptions(!menuoptions)
         setconfirmDeletePost(false)
     }
 
-    const handleShowDelete = () => {
+    const handleShowDelete = (postId) => {
+        setSelectedPost(postId)
         setconfirmDeletePost(!confirmDeletePost)
     }
 
@@ -248,15 +256,14 @@ const SeePost = () => {
        if (commentRef.current.value.length >= 2){
             try{
                 setLoading(true)
-                setError('')
+                setCommentError('')
 
                 const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({commentUser: userId, commentUserName: userName, commentUserProfilePic: userProfilePic, 
-                                            commentText: commentRef.current.value})
+                    body: JSON.stringify({commentUser: userId, commentText: commentRef.current.value})
                 });
 
                 if (response.ok){
@@ -268,14 +275,47 @@ const SeePost = () => {
                 }
             }catch (error){
                 console.error("Error Adding Comment Data:", error)
-                setError("Failed To Add Comment Data")
+                setCommentError("Failed To Add Comment Data")
             }
             setLoading(false)
         }else{
-            setError('Comment Too Short')
+            setCommentError('Comment Too Short')
             return
         }
     }
+
+    async function handleaddReply(postId, commentId){
+
+        if (replyRef.current.value.length >= 2){
+             try{
+                 setLoading(true)
+                 setCommentError('')
+ 
+                 const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                     method: 'PUT',
+                     headers: {
+                         'Content-Type': 'application/json'
+                     },
+                     body: JSON.stringify({commentId: commentId, replyUser: userId, replyText: replyRef.current.value})
+                 });
+ 
+                 if (response.ok){
+                     console.log("Added Comment Data")
+                 } else{
+                     const errorData = await response.json()
+                     console.error("Error Updating Comment Data:", error)
+                     throw new Error(errorData.message)
+                 }
+             }catch (error){
+                 console.error("Error Adding Comment Data:", error)
+                 setCommentError("Failed To Add Comment Data")
+             }
+             setLoading(false)
+         }else{
+             setCommentError('Comment Too Short')
+             return
+         }
+     }
 
     async function handleSuperFuel(postId, postUserId) {
         try{
@@ -415,13 +455,13 @@ const SeePost = () => {
                                 {(post.user._id === userId)? (
                                     <>
                                         <div className='postMenuContainer'>
-                                            <button className='postMenu' onClick={handleShowOptions}>
+                                            <button className='postMenu' onClick={() => handleShowOptions(post._id)}>
                                                 <div className='postdot'></div>
                                                 <div className='postdot'></div>
                                                 <div className='postdot'></div>
                                             </button>
 
-                                            {menuoptions && (
+                                            {menuoptions && post._id === selectedPost &&(
                                                 <div className='postOption'>
                                                     <ul>
                                                         <li className='menu-item'>
@@ -430,7 +470,7 @@ const SeePost = () => {
                                                             </Link>
                                                         </li>
                                                         <li className='menu-item'>
-                                                            <Link onClick={handleShowDelete} className='menu-link' id='delete-menu-link'>
+                                                            <Link onClick={() => handleShowDelete(post._id)} className='menu-link' id='delete-menu-link'>
                                                                 Delete Post
                                                             </Link>
                                                         </li>
@@ -446,7 +486,7 @@ const SeePost = () => {
                             </div>
                         </div>
 
-                        {confirmDeletePost && (
+                        {confirmDeletePost && post._id === selectedPost && (
                             <div>
                                 <button className="deletepostbtn" disabled={loading} onClick={() => handleDelete(post._id)}>Confirm Delete</button>
                             </div>
@@ -529,24 +569,43 @@ const SeePost = () => {
                                             <h3>Comments</h3>
                                         </div> 
 
+                                        <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{commentError}</p>
+
                                         <div className='modalCommentBody'>
                                             {selectedPost.comments?.map((postComment) => (
                                                 <div key={postComment._id} className='comments'>
-                                                    <div className='commentUser'>
-                                                        {postComment.commentUserProfilePic && (
-                                                            <img className='commentUserImage'
-                                                                src={`http://localhost:3001/${postComment.commentUserProfilePic}`} 
-                                                                alt="Profile"
-                                                            />
-                                                        )}                                
-                                                        <Link to={`/profile/${postComment.userID}`} className='commentUserName'>{postComment.commentUsername}</Link>
+                                                    <div className='commentTop'>
+                                                        <div className='commentUser'>
+                                                            {postComment.userID?.profilePicture && (
+                                                                <img className='commentUserImage'
+                                                                    src={`http://localhost:3001/${postComment.userID.profilePicture}`} 
+                                                                    alt="Profile"
+                                                                />
+                                                            )}                                
+                                                            <Link to={`/profile/${postComment.userID?._id}`} className='commentUserName'>{postComment.userID?.username}</Link>
+                                                        </div>
+                                                        <div className='commentText'>
+                                                            <p>{postComment.commentText}</p>
+                                                        </div>
+                                                        <div className='commentDate'>
+                                                            18:00
+                                                        </div>
                                                     </div>
-                                                    <div className='commentText'>
-                                                        <p>{postComment.commentText}</p>
+
+                                                    <div className='commentBottom'>
+                                                        <button className='replybtn' onClick={() => handleSelectComment(postComment._id)}>Reply</button>
                                                     </div>
-                                                    <div className='commentDate'>
-                                                        18:00
-                                                    </div>
+
+                                                    {showReplyBox && selectedComment === postComment._id ?(
+                                                        <>
+                                                            <input type='text' ref={replyRef} placeholder="Reply" className='commentText' required></input>
+                                                            <button className='btn btn-dark' onClick={() => handleaddReply(selectedPost._id, postComment._id)}>Add Reply</button>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                        </>
+                                                    )}
+
                                                 </div>
                                             ))}
                                         </div>

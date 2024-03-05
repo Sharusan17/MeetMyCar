@@ -19,16 +19,18 @@ router.get('/view', async (req, res) => {
         let postData;
 
         if(postId){
-            postData = await Post.findOne({_id: postId}).populate('user', 'username profilePicture');
+            postData = await Post.findOne({_id: postId}).populate('user', 'username profilePicture')
+                                                        .populate('comments.userID', 'username profilePicture').populate('comments.replies.userID', 'username profilePicture');
             if (!postData){
                 return res.status(400).json({message: "Post Not Found."})
             }
         }else{
             //sorts the post by updatedAt Date/Time (Newest First)
-            postData = await Post.find().populate('user', 'username profilePicture').sort({updatedAt: -1});
+            postData = await Post.find().populate('user', 'username profilePicture')
+                                        .populate('comments.userID', 'username profilePicture').populate('comments.replies.userID', 'username profilePicture')
+                                        .sort({updatedAt: -1});
         }
-
-
+        
         res.status(200).json({message: "Post Found", postData});
         console.log("Post Found");
     } catch (error){
@@ -99,8 +101,12 @@ router.put('/edit', upload.single('image'), async (req, res) => {
         if(req.body.removeUserIdLike){
             postUpdate.likes.pull({userId: req.body.removeUserIdLike})
         }
-        if(req.body.commentUser && req.body.commentUserName && req.body.commentUserProfilePic && req.body.commentText){
-            postUpdate.comments.push({userID: req.body.commentUser, commentUsername: req.body.commentUserName, commentUserProfilePic: req.body.commentUserProfilePic, commentText: req.body.commentText})
+        if(req.body.commentUser && req.body.commentText){
+            postUpdate.comments.push({userID: req.body.commentUser, commentText: req.body.commentText})
+        }
+        if(req.body.commentId && req.body.replyUser && req.body.replyText){
+            const commentIndex = postUpdate.comments.findIndex(comment => comment._id.equals(req.body.commentId))
+            postUpdate.comments[commentIndex].replies.push({userID: req.body.replyUser, replyText: req.body.replyText})
         }
 
         if(req.body.addUserIdSuperFuel){
