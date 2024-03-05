@@ -50,6 +50,11 @@ const PostSchema = new mongoose.Schema({
             commentText: {
                 type: String
             },
+            createdAt: {
+                type: Date,
+                default: Date.now,
+                required: true
+            },
 
             replies: [
                 {
@@ -59,6 +64,11 @@ const PostSchema = new mongoose.Schema({
                     },
                     replyText: {
                         type: String
+                    },
+                    createdAt: {
+                        type: Date,
+                        default: Date.now,
+                        required: true
                     },
                 }
             ]

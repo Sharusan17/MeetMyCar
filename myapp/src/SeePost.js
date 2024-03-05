@@ -642,7 +642,8 @@ const SeePost = () => {
                                                             <p>{postComment.commentText}</p>
                                                         </div>
                                                         <div className='commentDate'>
-                                                            18:00
+                                                            <div>{formatDate(postComment.createdAt)}</div>
+                                                            <div>{formatTime(postComment.createdAt)}</div>
                                                         </div>
                                                     </div>
 
@@ -662,7 +663,8 @@ const SeePost = () => {
                                                                     <p>{postReply.replyText}</p>
                                                                 </div>
                                                                 <div className='replyDate'>
-                                                                    18:00
+                                                                    <div>{formatDate(postReply.createdAt)}</div>
+                                                                    <div>{formatTime(postReply.createdAt)}</div>
                                                                     {postReply.userID._id === userId? (
                                                                         <>
                                                                             <button className='deletereplybtn' disabled={loading} onClick={() => handleDeleteReply(selectedPost._id, postComment._id, postReply._id)}> Delete Reply</button>

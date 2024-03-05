@@ -384,6 +384,9 @@
 .commentDate{
     margin-left: auto;
     text-align: right;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .modalCommentButton{
@@ -400,6 +403,7 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
+    margin: 5px 0;
 }
 
 .replies{
@@ -434,9 +438,12 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    font-size: smaller;
+    font-size: 10px;
     margin-left: auto;
     text-align: right;
+    padding: 0;
+    font-weight: 550;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .replybtn, .deletereplybtn{
