@@ -43,11 +43,20 @@ const PostSchema = new mongoose.Schema({
     ],
     comments: [
         {
-            user: {
+            _id: false,
+            userID: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'User',
+                ref: 'Users',
             },
-            text: String,
+            commentUsername: {
+                type: String
+            },
+            commentUserProfilePic: {
+                type: String
+            },
+            commentText: {
+                type: String
+            },
         },
     ],
     superfuel:[

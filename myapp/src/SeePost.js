@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 import {Popup} from 'reactjs-popup'
@@ -8,6 +8,8 @@ import './SeePost_css.css'
 const SeePost = () => {
     const {currentUser} = useAuth()
     const [userId, setUserId] = useState('')
+    const [userName, setUserName] = useState('')
+    const [userProfilePic, setUserProfilePic] = useState('')
     const [usersf, setUserSF] = useState('')
 
     const [posts, setPosts] = useState([])
@@ -16,6 +18,7 @@ const SeePost = () => {
     const [menuoptions, setMenuOptions] = useState(false)
     const [confirmDeletePost, setconfirmDeletePost] = useState(false)
 
+    const commentRef = useRef()
     const [openCommentModal, setOpenCommentModal] = useState(false)
 
     const [message, setMessage] = useState('')
@@ -97,6 +100,8 @@ const SeePost = () => {
                 if (response.ok){
                     const data = await response.json()
                     setUserId(data.userData._id)
+                    setUserName(data.userData.username)
+                    setUserProfilePic(data.userData.profilePicture)
                     setUserSF(data.userData.superfuel)
 
                     console.log("Fetched User Details")
@@ -236,6 +241,40 @@ const SeePost = () => {
             setError("Error Updating Like For Post. Try Again Later")
         }
         setLoading(false)
+    }
+
+    async function handleaddComment(postId){
+
+       if (commentRef.current.value.length >= 2){
+            try{
+                setLoading(true)
+                setError('')
+
+                const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({commentUser: userId, commentUserName: userName, commentUserProfilePic: userProfilePic, 
+                                            commentText: commentRef.current.value})
+                });
+
+                if (response.ok){
+                    console.log("Added Comment Data")
+                } else{
+                    const errorData = await response.json()
+                    console.error("Error Updating Comment Data:", error)
+                    throw new Error(errorData.message)
+                }
+            }catch (error){
+                console.error("Error Adding Comment Data:", error)
+                setError("Failed To Add Comment Data")
+            }
+            setLoading(false)
+        }else{
+            setError('Comment Too Short')
+            return
+        }
     }
 
     async function handleSuperFuel(postId, postUserId) {
@@ -482,7 +521,7 @@ const SeePost = () => {
                             
                         </div>
 
-                        <Popup open={openCommentModal} closeOnDocumentClick onClose={() => setOpenCommentModal(false)} className='Popup'>
+                        <Popup open={openCommentModal} closeOnDocumentClick={false} onClose={() => setOpenCommentModal(false)} className='Popup'>
                             <div className='Modal'>
                                 {selectedPost ? (
                                     <>
@@ -492,18 +531,18 @@ const SeePost = () => {
 
                                         <div className='modalCommentBody'>
                                             {selectedPost.comments?.map((postComment) => (
-                                                <div key={post._id} className='comments'>
+                                                <div key={postComment._id} className='comments'>
                                                     <div className='commentUser'>
-                                                        {postComment.user.profilePicture && (
+                                                        {postComment.commentUserProfilePic && (
                                                             <img className='commentUserImage'
-                                                                src={`http://localhost:3001/${postComment.user.profilePicture}`} 
+                                                                src={`http://localhost:3001/${postComment.commentUserProfilePic}`} 
                                                                 alt="Profile"
                                                             />
                                                         )}                                
-                                                        <Link to={`/profile/${postComment.user._id}`} className='commentUserName'>{postComment.user.username}</Link>
+                                                        <Link to={`/profile/${postComment.userID}`} className='commentUserName'>{postComment.commentUsername}</Link>
                                                     </div>
                                                     <div className='commentText'>
-                                                        <p>{postComment.comment}</p>
+                                                        <p>{postComment.commentText}</p>
                                                     </div>
                                                     <div className='commentDate'>
                                                         18:00
@@ -513,7 +552,8 @@ const SeePost = () => {
                                         </div>
 
                                         <div className='modalCommentButton'>
-
+                                            <input type='text' ref={commentRef} placeholder="Comment" className='commentText' required></input>
+                                            <button className='btn btn-dark' onClick={() => handleaddComment(selectedPost._id)}>Add Comment</button>
                                         </div>
                                     </>
                                 ) : <p>Loading....</p>}

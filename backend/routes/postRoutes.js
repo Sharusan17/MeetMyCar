@@ -99,6 +99,10 @@ router.put('/edit', upload.single('image'), async (req, res) => {
         if(req.body.removeUserIdLike){
             postUpdate.likes.pull({userId: req.body.removeUserIdLike})
         }
+        if(req.body.commentUser && req.body.commentUserName && req.body.commentUserProfilePic && req.body.commentText){
+            postUpdate.comments.push({userID: req.body.commentUser, commentUsername: req.body.commentUserName, commentUserProfilePic: req.body.commentUserProfilePic, commentText: req.body.commentText})
+        }
+
         if(req.body.addUserIdSuperFuel){
             const userIdSuperFuel = req.body.addUserIdSuperFuel
             if(!postUpdate.superfuel.includes(userIdSuperFuel)){
