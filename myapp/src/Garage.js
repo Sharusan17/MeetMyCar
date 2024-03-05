@@ -424,45 +424,41 @@ const Garage = () => {
 
                 <Popup open={openWinModal} closeOnDocumentClick onClose={() => setOpenWinModal(false)} className='Popup'>
                     <div className='FollowModal'>
-                        <>
-                            <div className='modalFollowHeader'>
-                                <div>
-                                    <h3>Wins</h3>
-                                </div>
-                            </div> 
-
-                            <div className='line'></div>
-
-                            <div className='modalFollowData'>
-                                {profileWins.map((profileWin, index) => (
-                                    <div key={index} >
-                                        <p>{profileWin.vrn}</p>
-                                    </div>
-                                ))}
+                        <div className='modalFollowHeader'>
+                            <div>
+                                <h3>Wins</h3>
                             </div>
-                        </>
+                        </div> 
+
+                        <div className='line'></div>
+
+                        <div className='modalFollowData'>
+                            {profileWins.map((profileWin, index) => (
+                                <div key={index} >
+                                    <p>{profileWin.vrn}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </Popup>
 
                 <Popup open={openLostModal} closeOnDocumentClick onClose={() => setOpenLostModal(false)} className='Popup'>
                     <div className='FollowModal'>
-                        <>
-                            <div className='modalFollowHeader'>
-                                <div>
-                                    <h3>Losts</h3>
-                                </div>
-                            </div> 
-
-                            <div className='line'></div>
-
-                            <div className='modalFollowData'>
-                                {profileLosts.map((profileLost, index) => (
-                                    <div key={index} >
-                                        <p>{profileLost.vrn}</p>
-                                    </div>
-                                ))}
+                        <div className='modalFollowHeader'>
+                            <div>
+                                <h3>Losts</h3>
                             </div>
-                        </>
+                        </div> 
+
+                        <div className='line'></div>
+
+                        <div className='modalFollowData'>
+                            {profileLosts.map((profileLost, index) => (
+                                <div key={index} >
+                                    <p>{profileLost.vrn}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </Popup>      
             </div>

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from './AuthContext'
+import {Popup} from 'reactjs-popup'
 
 import './SeePost_css.css'
 
@@ -11,8 +12,11 @@ const SeePost = () => {
 
     const [posts, setPosts] = useState([])
 
+    const [selectedPost, setSelectedPost] = useState('')
     const [menuoptions, setMenuOptions] = useState(false)
     const [confirmDeletePost, setconfirmDeletePost] = useState(false)
+
+    const [openCommentModal, setOpenCommentModal] = useState(false)
 
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
@@ -59,7 +63,7 @@ const SeePost = () => {
                     }))
 
                     setPosts(vehiclePost)
-                    console.log("Fetched Post Details")
+                    console.log("Fetched Post Details", vehiclePost)
 
                     if(!vehiclePost || vehiclePost.length === 0){
                         setNoPost("No car posts? Looks like the traffic jam is over. Be the first on the road!")
@@ -117,6 +121,12 @@ const SeePost = () => {
     const formatTime = (timestamps) => {
         const time = new Date(timestamps);
         return time.toLocaleTimeString()
+    }
+
+    const handleSelectPost = (post) => {
+        console.log("Selected:", post)
+        setSelectedPost(post)
+        setOpenCommentModal(true)
     }
 
     const handleShowOptions = () =>{
@@ -453,7 +463,7 @@ const SeePost = () => {
                             </div>
 
                             <div className='engagementColumn'>
-                                <button className='commentbtn'><svg xmlns="http://www.w3.org/2000/svg" width="1.7em" height="1.7em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3 10.4c0-2.24 0-3.36.436-4.216a4 4 0 0 1 1.748-1.748C6.04 4 7.16 4 9.4 4h5.2c2.24 0 3.36 0 4.216.436a4 4 0 0 1 1.748 1.748C21 7.04 21 8.16 21 10.4v1.2c0 2.24 0 3.36-.436 4.216a4 4 0 0 1-1.748 1.748C17.96 18 16.84 18 14.6 18H7.414a1 1 0 0 0-.707.293l-2 2c-.63.63-1.707.184-1.707-.707V13zM9 8a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z" clip-rule="evenodd"/></svg></button>
+                                <button className='commentbtn' onClick={() => handleSelectPost(post)}><svg xmlns="http://www.w3.org/2000/svg" width="1.7em" height="1.7em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3 10.4c0-2.24 0-3.36.436-4.216a4 4 0 0 1 1.748-1.748C6.04 4 7.16 4 9.4 4h5.2c2.24 0 3.36 0 4.216.436a4 4 0 0 1 1.748 1.748C21 7.04 21 8.16 21 10.4v1.2c0 2.24 0 3.36-.436 4.216a4 4 0 0 1-1.748 1.748C17.96 18 16.84 18 14.6 18H7.414a1 1 0 0 0-.707.293l-2 2c-.63.63-1.707.184-1.707-.707V13zM9 8a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z" clip-rule="evenodd"/></svg></button>
                                 <h3>{post.comments.length} Comment</h3>
                             </div>
 
@@ -471,7 +481,44 @@ const SeePost = () => {
                             </div>
                             
                         </div>
-                        
+
+                        <Popup open={openCommentModal} closeOnDocumentClick onClose={() => setOpenCommentModal(false)} className='Popup'>
+                            <div className='Modal'>
+                                {selectedPost ? (
+                                    <>
+                                        <div className='modalCommentHeader'>
+                                            <h3>Comments</h3>
+                                        </div> 
+
+                                        <div className='modalCommentBody'>
+                                            {selectedPost.comments?.map((postComment) => (
+                                                <div key={post._id} className='comments'>
+                                                    <div className='commentUser'>
+                                                        {postComment.user.profilePicture && (
+                                                            <img className='commentUserImage'
+                                                                src={`http://localhost:3001/${postComment.user.profilePicture}`} 
+                                                                alt="Profile"
+                                                            />
+                                                        )}                                
+                                                        <Link to={`/profile/${postComment.user._id}`} className='commentUserName'>{postComment.user.username}</Link>
+                                                    </div>
+                                                    <div className='commentText'>
+                                                        <p>{postComment.comment}</p>
+                                                    </div>
+                                                    <div className='commentDate'>
+                                                        18:00
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className='modalCommentButton'>
+
+                                        </div>
+                                    </>
+                                ) : <p>Loading....</p>}
+                            </div>
+                        </Popup> 
                     </div>
                 ))}
             </div>    
