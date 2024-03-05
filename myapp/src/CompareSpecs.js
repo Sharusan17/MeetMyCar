@@ -458,7 +458,13 @@ const CompareSpecs = () => {
                                 </div>
                             </div>
 
-                            <Popup open={openModal} closeOnDocumentClick onClose={() => setOpenModal(false)} className='Popsup'>
+                            <Popup open={openModal} 
+                                    closeOnDocumentClick onClose={() => setOpenModal(false)} className='Popsup'
+                                    overlayStyle={{
+                                        background: 'rgba(0, 0, 0, 0.1)', 
+                                        transition: 'background 0.5s ease-in-out',
+                                    }}
+                            >
                                 <div className='Modal'>
                                     <div className='compareBanner'>
                                         {vehicle1Points > vehicle2Points ? (

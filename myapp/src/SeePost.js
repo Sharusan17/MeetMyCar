@@ -615,8 +615,20 @@ const SeePost = () => {
                             
                         </div>
 
-                        <Popup open={openCommentModal} closeOnDocumentClick={false} onClose={() => setOpenCommentModal(false)} className='Popup'>
+                        <Popup open={openCommentModal}
+                                overlayStyle={{
+                                    background: 'rgba(0, 0, 0, 0.05)', 
+                                    transition: 'background 0.5s ease-in-out',
+                                }}
+                                closeOnDocumentClick={false}
+                                onClose={() => setOpenCommentModal(false)} className='Popup'
+                        >
+
                             <div className='Modal'>
+                                <button className='closeButton' onClick={() => setOpenCommentModal(false)}>
+                                    <span>&times;</span>
+                                </button>
+                            
                                 {selectedPost ? (
                                     <>
                                         <div className='modalCommentHeader'>

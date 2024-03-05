@@ -337,6 +337,24 @@
     fill: rgb(38,38,38)
 }
 
+.closeButton{
+    background: none;
+    border: none;
+    color: #6a6969;
+    display: flex;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.closeButton span{
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.closeButton:hover{
+    color: #000;
+}
+
 .modalCommentBody{
     display: flex;
     flex-direction: column;

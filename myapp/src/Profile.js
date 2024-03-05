@@ -551,7 +551,13 @@ const Profile = () => {
                     ))}
                 </div>
 
-                <Popup open={openModal} closeOnDocumentClick onClose={() => setOpenModal(false)} className='Popup'>
+                <Popup open={openModal} 
+                        closeOnDocumentClick onClose={() => setOpenModal(false)} className='Popup'
+                        overlayStyle={{
+                            background: 'rgba(0, 0, 0, 0.2)', 
+                            transition: 'background 0.5s ease-in-out',
+                        }}
+                >
                     <div className='Modal'>
                         {selectedPost ? (
                             <>
