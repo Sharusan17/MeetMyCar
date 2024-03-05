@@ -37,7 +37,7 @@ const PostSchema = new mongoose.Schema({
             _id: false,
             userId: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'User',
+                ref: 'Users',
             }
         }
     ],
@@ -79,7 +79,7 @@ const PostSchema = new mongoose.Schema({
             _id: false,
             userId: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'User',
+                ref: 'Users',
             }
         }
     ],
