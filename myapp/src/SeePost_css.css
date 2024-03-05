@@ -342,8 +342,9 @@
     border: none;
     color: #6a6969;
     display: flex;
+    margin: 0;
     margin-left: auto;
-    margin-right: 0;
+    padding: 0;
 }
 
 .closeButton span{

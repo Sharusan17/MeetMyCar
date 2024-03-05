@@ -76,14 +76,34 @@
 }
 
 .Modal{
-    width: max-content;
+    width: fit-content;
     background: white;
     border: 1px solid gray;
     border-radius: 15px;
-    padding: 20px;
+    padding: 15px;
     z-index: 2;
     max-height: 95vh;
     overflow-y: auto;
+    scroll-behavior: smooth;
+    scroll-snap-stop: always;
+    scrollbar-width: thin;
+    scrollbar-face-color: #dcd9d9;
+    scrollbar-track-color: white;
+}
+
+::-webkit-scrollbar{
+    width: 10px;
+    margin: 5px 0;
+    scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: #dcd9d9;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: white;
 }
 
 .modalHeader{
