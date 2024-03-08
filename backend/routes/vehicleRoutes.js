@@ -3,7 +3,8 @@ const Vehicle = require('../model/vehicles');
 const router = express.Router();
 
 const multer = require('multer');
-const upload = multer({dest: 'uploads/'})
+const storage = multer.memoryStorage();
+const upload = multer({storage: storage});
 
 router.use(express.json());
 
@@ -89,8 +90,9 @@ router.put('/edit', upload.single('image'), async (req, res) => {
         if(req.body.vrn){
             vehicleUpdate.vrn = req.body.vrn;
         }
-        if(req.file){
-            vehicleUpdate.image = req.file.path;
+        if (req.file){
+            const uploadResult = await req.uploadAWS(req.file);
+            vehicleUpdate.image = uploadResult.Location;
         }
         if(req.body.vehicleInfo){
             vehicleUpdate.vehicleInfo = req.body.vehicleInfo;

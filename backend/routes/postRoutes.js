@@ -3,7 +3,8 @@ const Post = require('../model/posts');
 const router = express.Router();
 
 const multer = require('multer');
-const upload = multer({dest: 'uploads/'})
+const storage = multer.memoryStorage();
+const upload = multer({storage: storage});
 
 router.use(express.json());
 
@@ -46,9 +47,10 @@ router.post('/add', upload.single('image'), async (req, res) => {
         const newPost = new Post(req.body);
 
         if (req.file){
-            newPost.image = req.file.path;
+            const uploadResult = await req.uploadAWS(req.file);
+            newPost.image = uploadResult.Location;
         }
-        
+
         if(req.body.vehicleId && req.body.vrn){
             const vehicleId = req.body.vehicleId;
             newPost.vehicles = ({vehicleId: vehicleId, vrn: req.body.vrn});
@@ -82,8 +84,9 @@ router.put('/edit', upload.single('image'), async (req, res) => {
         if(req.body.title){
             postUpdate.title = req.body.title;
         }
-        if(req.file){
-            postUpdate.image = req.file.path;
+        if (req.file){
+            const uploadResult = await req.uploadAWS(req.file);
+            postUpdate.image = uploadResult.Location;
         }
         if(req.body.description){
             postUpdate.description = req.body.description;

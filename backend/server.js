@@ -15,7 +15,6 @@ connectDB();
 
 const app = express();
 app.use(cors());
-app.use('/uploads', express.static('uploads'));
 
 app.use((req, res, next) => {
     req.s3 = connectAWS.s3;
