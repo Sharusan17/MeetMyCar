@@ -1,9 +1,11 @@
 const express = require('express');
 const User = require('../model/users');
 const router = express.Router();
+const awsConnect = require('../awsConn')
 
 const multer = require('multer');
-const upload = multer({dest: 'uploads/'})
+const storage = multer.memoryStorage()
+const upload = multer({storage: storage})
 
 router.use(express.json());
 
@@ -54,7 +56,8 @@ router.post('/register', upload.single('profilePicture'), async (req, res) => {
         const newUser = new User(req.body);
 
         if (req.file){
-            newUser.profilePicture = req.file.path;
+            const uploadResult = await awsConnect.uploadAWS(req.file)
+            newUser.profilePicture = uploadResult.Location;
         }
 
         await newUser.save();
@@ -91,7 +94,8 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
             userUpdate.email = req.body.email;
         }
         if(req.file){
-            userUpdate.profilePicture = req.file.path;
+            const uploadResult = await awsConnect.uploadAWS(req.file)
+            userUpdate.profilePicture = uploadResult.Location;
         }
         if(req.body.followersId && req.body.followersname){
             const followerId = req.body.followersId;
