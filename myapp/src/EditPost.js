@@ -188,7 +188,7 @@ const EditPost = () => {
 
                             {profilePicture && (
                                 <img className='showUserImage'
-                                    src={`http://localhost:3001/${profilePicture}`} 
+                                    src={profilePicture}
                                     alt="Profile"
                                 />
                             )}

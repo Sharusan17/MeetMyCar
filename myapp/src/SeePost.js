@@ -494,7 +494,7 @@ const SeePost = () => {
                             <div className='postUserDetails'>
                                 {post.user?.profilePicture && (
                                     <img className='postUserImage'
-                                        src={`http://localhost:3001/${post.user.profilePicture}`} 
+                                        src={post.user.profilePicture}
                                         alt="Profile"
                                     />
                                 )}                                
@@ -644,7 +644,7 @@ const SeePost = () => {
                                                         <div className='commentUser'>
                                                             {postComment.userID?.profilePicture && (
                                                                 <img className='commentUserImage'
-                                                                    src={`http://localhost:3001/${postComment.userID.profilePicture}`} 
+                                                                    src={postComment.userID.profilePicture}
                                                                     alt="Profile"
                                                                 />
                                                             )}                                
@@ -665,7 +665,7 @@ const SeePost = () => {
                                                                 <div className='commentUser'>
                                                                     {postReply.userID?.profilePicture && (
                                                                         <img className='replyUserImage'
-                                                                            src={`http://localhost:3001/${postReply.userID.profilePicture}`} 
+                                                                            src={postReply.userID.profilePicture}
                                                                             alt="Profile"
                                                                         />
                                                                     )}                                

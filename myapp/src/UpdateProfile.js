@@ -242,7 +242,7 @@ const UpdateProfile = () => {
 
                     {profilePicture && (
                         <img 
-                            src={`http://localhost:3001/${profilePicture}`} 
+                            src={profilePicture} 
                             alt="Profile"
                             style={{ width: '100px', height: '100px' }} // Adjust styling as needed
                         />

@@ -400,7 +400,7 @@ const CompareSpecs = () => {
                         <div className='vehicleUserRow'>
                             {currentUserProfile && (
                                 <img className='vehicleUserProfile'
-                                    src={`http://localhost:3001/${currentUserProfile}`} 
+                                    src={currentUserProfile} 
                                     alt="Profile"
                                 />
                             )}
@@ -420,7 +420,7 @@ const CompareSpecs = () => {
                         <div className='vehicleUserRow'>
                             {currentUserProfile && (
                                 <img className='vehicleUserProfile'
-                                    src={`http://localhost:3001/${profileUserProfile}`} 
+                                    src={profileUserProfile}
                                     alt="Profile"
                                 />
                             )}

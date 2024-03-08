@@ -67,7 +67,7 @@ const ToolBar = () => {
                 <Link to={`/profile/${userId}`} className='user-item-link'>
                   {profilePicture && (
                           <img 
-                              src={`http://localhost:3001/${profilePicture}`} 
+                              src={profilePicture} 
                               alt="Profile"
                               style={{ width: '40px', height: '40px', borderRadius: '50%'}} 
                           />
