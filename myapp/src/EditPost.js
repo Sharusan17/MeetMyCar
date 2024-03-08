@@ -204,7 +204,7 @@ const EditPost = () => {
                     <div className='add-post-content'>
                         <input type='text' ref={titleRef} defaultValue={title} className='add_postTitle' ></input>
                         <input type='file' ref={imageRef} defaultValue={image} placeholder='Insert Image' className='add_postImageBtn' onChange={handleImageInput} ></input> 
-                        <img src={imageChange ? image :`http://localhost:3001/${image}`} className='add_postImage'></img>
+                        <img src={imageChange ? image : image} className='add_postImage'></img>
 
                         <div className='add_postFooter'>
                             <select className='add_postVRN' onChange={handleSelectVehicle} value={selectVehicle?.vehicleId} required>

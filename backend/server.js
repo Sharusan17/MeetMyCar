@@ -16,15 +16,15 @@ connectDB();
 const app = express();
 app.use(cors());
 
+app.get("/", (req, res) => {
+    res.send("Backend Server")
+})
+
 app.use((req, res, next) => {
     req.s3 = connectAWS.s3;
     req.s3_BUCKET = connectAWS.S3_BUCKET;
     req.uploadAWS = connectAWS.uploadAWS;
     next();
-})
-
-app.get("/", (req, res) => {
-    res.send("Backend Server")
 })
 
 app.use('/vehicleAPI', vehicleAPIRoutes);

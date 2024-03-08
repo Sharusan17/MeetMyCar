@@ -548,7 +548,7 @@ const SeePost = () => {
                         
                         <div className='post-content'>
                             <h2 className='postTitle'>{post.title}</h2> 
-                            <img src={`http://localhost:3001/${post.image}`} alt={post.title} className='postImage'/>
+                            <img src={post.image} alt={post.title} className='postImage'/>
 
                             <div className='postSpecs'>
                                 <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,red 0% ${((post.vehicle_Data?.vehicleData.vehicleInfo.Performance.MaxSpeed.Mph/350)*100)}%,white ${0}% 100%)`}}>

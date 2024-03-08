@@ -533,7 +533,7 @@ const Profile = () => {
                         <div key={index}  className='postCard' onClick={() => handleSelectCard(post)}>
 
                                 <div className='cardPostImage'>
-                                    <img src={`http://localhost:3001/${post?.postData?.image}`} alt={post?.postData?.title}/> 
+                                    <img src={post?.postData?.image} alt={post?.postData?.title}/> 
                                 </div>
 
                                 <div className='cardContent'>
@@ -569,7 +569,7 @@ const Profile = () => {
                                 </div> 
 
                                 <div className='modalImage'>
-                                    <img src={`http://localhost:3001/${selectedPost?.postData?.image}`} alt={selectedPost?.postData?.title}/> 
+                                    <img src={selectedPost?.postData?.image} alt={selectedPost?.postData?.title}/> 
                                 </div>
 
                                 <div className='modalDesc'>
