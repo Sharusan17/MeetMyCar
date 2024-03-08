@@ -61,7 +61,9 @@ function App() {
                 <Route path="/reauthenticate"
                   element={
                     <PrivateRoute>
-                      <Reauthenticate/>
+                      <Home_Layout>
+                        <Reauthenticate/>
+                      </Home_Layout>
                     </PrivateRoute>
                   }
                 />
