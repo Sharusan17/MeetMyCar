@@ -111,7 +111,7 @@
     .toolbar:hover{
         margin-right: 5px;
         width: 180px;
-        border-right: 2px solid black;
+        border-right: 2px solid lightgray;
     }
     
     .toolbar:hover .link-text, .toolbar:hover .user-link-text{
