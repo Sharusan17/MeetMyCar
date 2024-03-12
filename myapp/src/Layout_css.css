@@ -10,3 +10,10 @@
     overflow-y: scroll;
     scroll-behavior: smooth;
 }
+
+@media only screen and (max-width: 600px) {
+    .content{
+        padding: 15px;
+        margin: 0;
+    }
+}

@@ -524,7 +524,7 @@ const SeePost = () => {
                                                             </Link>
                                                         </li>
                                                         <li className='menu-item'>
-                                                            <Link onClick={() => handleShowDelete(post._id)} className='menu-link' id='delete-menu-link'>
+                                                            <Link onClick={() => handleShowDelete(post._id)} className='menu-link ' id='delete-menu-link'>
                                                                 Delete Post
                                                             </Link>
                                                         </li>
@@ -542,7 +542,7 @@ const SeePost = () => {
 
                         {confirmDeletePost && post._id === selectedPost && (
                             <div>
-                                <button className="deletepostbtn" disabled={loading} onClick={() => handleDelete(post._id)}>Confirm Delete</button>
+                                <button className="btn btn-dark" id='deletepostbtn' disabled={loading} onClick={() => handleDelete(post._id)}>Confirm Delete</button>
                             </div>
                         )}
                         
@@ -706,8 +706,10 @@ const SeePost = () => {
 
                                                     {showReplyBox && selectedComment === postComment._id ?(
                                                         <>
-                                                            <input type='text' ref={replyRef} placeholder="Reply" className='commentText' required></input>
-                                                            <button className='btn btn-dark' disabled={loading} onClick={() => handleaddReply(selectedPost._id, postComment._id)}>Add Reply</button>
+                                                            <div className='modalCommentButton'>
+                                                                <input type='text' ref={replyRef} placeholder="Reply..." className='commentText' required></input>
+                                                                <button className='btn btn-dark' id='commentBtn' disabled={loading} onClick={() => handleaddReply(selectedPost._id, postComment._id)}>Add Reply</button>
+                                                            </div>
                                                         </>
                                                     ) : (
                                                         <>
@@ -719,8 +721,8 @@ const SeePost = () => {
                                         </div>
 
                                         <div className='modalCommentButton'>
-                                            <input type='text' ref={commentRef} placeholder="Comment" className='commentText' required></input>
-                                            <button className='btn btn-dark' disabled={loading} onClick={() => handleaddComment(selectedPost._id)}>Add Comment</button>
+                                            <input type='text' ref={commentRef} placeholder="Comment..." className='commentText' required></input>
+                                            <button className='btn btn-dark' id='commentBtn' disabled={loading} onClick={() => handleaddComment(selectedPost._id)}>Add Comment</button>
                                         </div>
                                     </>
                                 ) : <p>Loading....</p>}
