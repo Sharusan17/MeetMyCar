@@ -118,6 +118,16 @@ function App() {
                   }
                 />
 
+                <Route path="/profile/username/:userName"
+                  element={
+                    <PrivateRoute>
+                      <Layout>
+                        <Profile/>
+                      </Layout>
+                    </PrivateRoute>
+                  }
+                />
+
                 <Route path="/garage/:userid"
                   element={
                     <PrivateRoute>

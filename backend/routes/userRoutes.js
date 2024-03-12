@@ -17,8 +17,9 @@ router.get('/details', async (req, res) => {
     try{       
         const userId = req.query.userfb;
         const userid = req.query.userid;
+        const queryusername = req.query.username;
 
-        let query = userid ? {_id: userid} : {user_fbId: userId}
+        let query = userid ? {_id: userid} : userId ? {user_fbId: userId} : {username: queryusername};
         
         // console.log(userId);
 

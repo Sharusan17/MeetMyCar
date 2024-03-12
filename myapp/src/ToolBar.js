@@ -42,7 +42,6 @@ const ToolBar = () => {
         }
     }
     fetchUserData();
-    // eslint-disable-next-line
 }, [currentUser.uid]);
 
   const handleLogOut = () =>{

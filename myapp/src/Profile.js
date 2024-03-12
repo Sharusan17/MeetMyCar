@@ -7,7 +7,7 @@ import './Profile_css.css'
 
 const Profile = () => {
     const {currentUser} = useAuth()
-    const {userid} = useParams()
+    const {userid, userName} = useParams()
 
     const [currentUserId, setCurrentUserId] = useState('')
     const [currentUserName, setCurrentUserName] = useState('')
@@ -39,8 +39,18 @@ const Profile = () => {
         async function fetchProfileData(){
             try{
                 setError('')
+
+                let query
+
+                if (userid){
+                    query = `userid=${encodeURIComponent(userid)}`
+                } else{
+                    query = `username=${encodeURIComponent(userName)}`
+                }
+
+                console.log(query)
     
-                const response = await fetch(`http://localhost:3001/users/details?userid=${encodeURIComponent(userid)}`, {
+                const response = await fetch(`http://localhost:3001/users/details?${query}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
