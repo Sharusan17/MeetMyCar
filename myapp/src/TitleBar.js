@@ -51,7 +51,7 @@ const handleSearchUser = () => {
     <div className='titlebar'>
         <div className='titlebar_buttons'>
             <form onSubmit={handleSearchUser}>
-              <input type="search" placeholder="Search..." ref={searchUserName}/>
+              <input type="search" placeholder="Search..." ref={searchUserName} required/>
               <button type="submit">🔍</button>
             </form>
         </div>
