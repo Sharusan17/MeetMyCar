@@ -521,13 +521,23 @@ const Profile = () => {
                             <p onClick={() => setOpenFollowingModal(true)}> <span>{following.length}</span> Following</p>
                         </div>
 
-                        {showfollowbtn ? (
-                                <></>
-                            ) : (
-                                <>
-                                    <Link to={`/garage/${userid}`} className="btn btn-dark" id='checkbtn'> Check Vehicle</Link>
-                                </>
+                        {currentUserId === userId ? (
+                            <>
+                                <Link to={`/garage/${userid}`} className="btn btn-dark" id='checkbtn'> Check Vehicle</Link>
+                            </>
+                        ) : (
+                            <>
+                                {showfollowbtn ? (
+                                    <></>
+                                ) : (
+                                    <>
+                                        <Link to={`/garage/${userid}`} className="btn btn-dark" id='checkbtn'> Check Vehicle</Link>
+                                    </>
+                            )}
+                            </>
                         )}
+
+                        
                         
                     </div>
                     
@@ -620,21 +630,29 @@ const Profile = () => {
                                     </div>
                                 </div>
 
-                                {confirmDeletePost ? (
-                                        <>
-                                            <div className='buttonContainer'>
-                                                <button disabled={loading}  className="btn btn-outline-dark" type="submit"  onClick={() => handleEdit(selectedPost.postData._id)}>Edit Post</button>
-                                                <button disabled={loading}  className="btn btn-outline-danger" variant="danger" onClick={() => handleDelete(selectedPost.postData?._id)}>Confirm Delete</button>
-                                            </div>
-                                        </>
-                                    ) :(
-                                        <>
-                                            <div className='buttonContainer'>
-                                                <button disabled={loading}  className="btn btn-outline-dark" type="submit"  onClick={() => handleEdit(selectedPost.postData._id)}>Edit Post</button>
-                                                <button disabled={loading}  className="btn btn-outline-dark" type="submit"  onClick={() => handleDelete(selectedPost.postData?._id)}>Delete Post</button>
-                                            </div>
-                                        </>
+                                {currentUserId === userId ? (
+                                    <>
+                                        {confirmDeletePost ? (
+                                                <>
+                                                    <div className='buttonContainer'>
+                                                        <button disabled={loading}  className="btn btn-outline-dark" type="submit"  onClick={() => handleEdit(selectedPost.postData._id)}>Edit Post</button>
+                                                        <button disabled={loading}  className="btn btn-outline-danger" variant="danger" onClick={() => handleDelete(selectedPost.postData?._id)}>Confirm Delete</button>
+                                                    </div>
+                                                </>
+                                            ) :(
+                                                <>
+                                                    <div className='buttonContainer'>
+                                                        <button disabled={loading}  className="btn btn-outline-dark" type="submit"  onClick={() => handleEdit(selectedPost.postData._id)}>Edit Post</button>
+                                                        <button disabled={loading}  className="btn btn-outline-dark" type="submit"  onClick={() => handleDelete(selectedPost.postData?._id)}>Delete Post</button>
+                                                    </div>
+                                                </>
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                    </>
                                 )}
+
                             </>
                         ) : <p>Loading....</p>}
                     </div>

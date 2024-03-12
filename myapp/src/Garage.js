@@ -8,6 +8,9 @@ import './Garage_css.css'
 const Garage = () => {
     const {userid} = useParams()
 
+    const[currentUserId, setCurrentUserId] = useState('')
+    const[profileUserId, setProfileUserId] = useState('')
+
     const [profileWins, setProfileWins] = useState([])
     const [profileLosts, setProfileLosts] = useState([])
 
@@ -26,23 +29,11 @@ const Garage = () => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        async function fetchUserData(){
+        async function fetchGarageUserData(){
             try{
                 setError('')
-
-                const firebaseUID = currentUser.uid;
     
-                let userQuery
-
-                if(userid){
-                    userQuery = `userid=${encodeURIComponent(userid)}`
-                } else{
-                    userQuery = `userfb=${encodeURIComponent(firebaseUID)}`
-                }
-
-                console.log(userQuery)
-    
-                const response = await fetch(`http://localhost:3001/users/details?${userQuery}`, {
+                const response = await fetch(`http://localhost:3001/users/details?userid=${encodeURIComponent(userid)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -51,6 +42,8 @@ const Garage = () => {
     
                 if (response.ok){
                     const data = await response.json()
+
+                    setProfileUserId(data.userData._id)
 
                     const vehicleData = await Promise.all(data.userData.vehicles.map(async (vehicle) => {
                         if(vehicle?.vehicleId){
@@ -89,8 +82,41 @@ const Garage = () => {
                 setError("Error Fetching User. Try Again Later")
             }
         }
-        fetchUserData();
+        fetchGarageUserData();
     }, [currentUser.uid]);
+
+    useEffect(() => {
+        async function fetchCurrentUserData(){
+            try{
+                setError('')
+                const firebaseUID = currentUser.uid;
+
+                const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
+                    method: 'GET',
+                    headers: {
+                        'accept': 'application/json',
+                    },
+                });
+
+                if (response.ok){
+                    const data = await response.json()
+
+                    setCurrentUserId(data.userData._id)
+
+                    console.log("Fetched Current User Details")
+                    return data
+                } else{
+                    const errorData = await response.json()
+                    setError("Failed To Fetch Current User Data")
+                    throw new Error(errorData.message)
+                }
+            }catch (error){
+                console.error("Error Fetching Current User Data:", error)
+                setError("Failed To Fetch Current User Data")
+            }
+        }
+        fetchCurrentUserData();
+    }, [currentUser.uid]); 
 
     const handleSelectCard = (vehicle) => {
         console.log("Selected:", vehicle)
@@ -159,7 +185,12 @@ const Garage = () => {
                             <p onClick={() => setOpenLostModal(true)}> <span>{profileLosts.length}</span> Losts</p>
                         </div>
 
-                        <Link to="/registervehicle" className="btn btn-dark" id='checkbtn'> Add Vehicle</Link>  
+                        {currentUserId === profileUserId ? (
+                            <Link to="/registervehicle" className="btn btn-dark" id='checkbtn'> Add Vehicle</Link>  
+                        ) : (
+                            <>
+                            </>
+                        )}
                     </div>
                    
                 </header>   
@@ -414,15 +445,24 @@ const Garage = () => {
                                     }
                                 </div>
 
-                                {confirmDeleteVehicle ? (
-                                        <>
-                                            <button disabled={loading}  className="btn btn-outline-danger w-100 mt-1" variant="danger" onClick={() => handleDelete(selectedVehicle.vehicleData?._id)}>Confirm Delete</button>
-                                        </>
-                                    ) :(
-                                        <>
-                                            <button disabled={loading}  className="btn btn-outline-dark w-100 mt-1" type="submit"  onClick={() => handleDelete(selectedVehicle.vehicleData?._id)}>Delete Vehicle</button>
-                                        </>
+                                {currentUserId === profileUserId ?(
+                                    <>
+
+                                        {confirmDeleteVehicle ? (
+                                            <>
+                                                <button disabled={loading}  className="btn btn-outline-danger w-100 mt-1" variant="danger" onClick={() => handleDelete(selectedVehicle.vehicleData?._id)}>Confirm Delete</button>
+                                            </>
+                                        ) :(
+                                            <>
+                                                <button disabled={loading}  className="btn btn-outline-dark w-100 mt-1" type="submit"  onClick={() => handleDelete(selectedVehicle.vehicleData?._id)}>Delete Vehicle</button>
+                                            </>
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                    </>
                                 )}
+                                    
                             </>
                         ) : <p>Loading....</p>}
                     </div>
