@@ -1,7 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react'
-import {Form, Button} from 'react-bootstrap'
+import {Form} from 'react-bootstrap'
 import { useAuth } from './AuthContext'
+import {Popup} from 'reactjs-popup'
 import {Link, useNavigate} from 'react-router-dom'
+
+import './UpdateProfile_css.css'
 
 const UpdateProfile = () => {
 
@@ -10,7 +13,6 @@ const UpdateProfile = () => {
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
     const profilePictureRef = useRef()
-    const vehiclesRef = useRef()
 
     const [userId, setUserId] = useState('')
     const [firstname, setfirstName] = useState('')
@@ -23,7 +25,7 @@ const UpdateProfile = () => {
 
     const [emailChanging, setemailChanging] = useState(false)
     const [confirmDeleteUser, setconfirmDeleteUser] = useState(false)
-
+    const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
@@ -54,10 +56,7 @@ const UpdateProfile = () => {
                     setprofilePicture(data.userData.profilePicture)
                     setVehicles(data.userData.vehicles)
 
-                    // console.log(`User: FirstName ${firstname} LastName: ${lastname}  UserName: ${username}
-                    //              Profile Picture: ${profilePicture} Vehicles: ${vehicles}`)   
-
-                    console.log("Fetched User Details")
+                    console.log("Fetched User Details:", data)
                     return data
                 } else{
                     const errorData = await response.json()
@@ -70,7 +69,6 @@ const UpdateProfile = () => {
             }
         }
         fetchUserData();
-        // eslint-disable-next-line
     }, [currentUser.uid]); 
 
     const updateUser = async () => {
@@ -82,7 +80,6 @@ const UpdateProfile = () => {
         }
 
         formData.append('email', emailRef.current.value)
-        formData.append('vehicles', vehiclesRef.current.value.split(','))
 
         try{
             // console.log("Updated Email: ", updatedEmail)
@@ -174,6 +171,7 @@ const UpdateProfile = () => {
 
         if (!confirmDeleteUser){
             setconfirmDeleteUser(true)
+            setOpenDeleteModal(true)
             return
         }
 
@@ -202,81 +200,108 @@ const UpdateProfile = () => {
         }
     }
 
-    const handleEmailChange= () =>{
+    function handleImageInput(e){
+        setprofilePicture(URL.createObjectURL(e.target.files[0]))
+    }
+
+    const handleEmailChange = () =>{
         setemailChanging(true)
     }
     
-
+    const handleCloseDelete = () => {
+        setOpenDeleteModal(false)
+        setconfirmDeleteUser(false)
+    }   
+    
   return (
-      <>
-            <body>
-                <h3 className="text mb-2">{firstname} {lastname}</h3>
-                <h4 className="text mb-4">Update Profile</h4>
-                <form onSubmit={handleSubmit}>
+        <div>
+            <header className='updateHeader'>
+                <h1 id="login_text">
+                    Update Profile
+                    <p id="slogan_text">Amend Your Details</p>
+                </h1>
+                <h3 className='updateName'>{firstname} {lastname}</h3>
+            </header>
 
-                <Form.Group id="username">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control type="text" ref={usernameRef}  defaultValue={username} disabled/>
-                    </Form.Group>   
-                    
-                    <Form.Group id="email">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" ref={emailRef}  defaultValue={currentUser.email} onChange={handleEmailChange} required/>
-                    </Form.Group>            
-                    
-                    <Form.Group id="password">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" ref={passwordRef} placeholder={emailChanging ? 'Cannot Be Updated While Email Updating' : 'Leave Blank to keep the same'} disabled={emailChanging}/>
-                    </Form.Group>
+            <form className='updateForm' onSubmit={handleSubmit}>
 
-                    <Form.Group id="passwordConfirmation">
-                        <Form.Label>Password Confirmation</Form.Label>
-                        <Form.Control type="password" ref={passwordConfirmRef} placeholder={emailChanging ? 'Cannot Be Updated While Email Updating' : 'Leave Blank to keep the same'} disabled={emailChanging} />
-                    </Form.Group>
+                <Form.Group className='formBox' id="username">
+                    <Form.Label className='formLabel'>Username</Form.Label>
+                    <Form.Control className='formInput' type="text" ref={usernameRef}  defaultValue={username} disabled/>
+                </Form.Group>   
+                
+                <Form.Group className='formBox' id="email">
+                    <Form.Label className='formLabel'>Email</Form.Label>
+                    <Form.Control className='formInput' type="email" ref={emailRef}  defaultValue={currentUser.email} onChange={handleEmailChange} required/>
+                </Form.Group>            
+                
+                <Form.Group className='formBox' id="password">
+                    <Form.Label className='formLabel'>Password</Form.Label>
+                    <Form.Control className='formInput' type="password" ref={passwordRef} placeholder={emailChanging ? 'Cannot Be Updated While Email Updating' : 'Leave Blank to keep the same'} disabled={emailChanging}/>
+                </Form.Group>
 
-                    <Form.Group id="profilePicture">
-                        <Form.Label>Profile Picture</Form.Label>
-                        <Form.Control type="file" ref={profilePictureRef} defaultValue={profilePicture} accept="image/*"/>
-                    </Form.Group>
+                <Form.Group className='formBox' id="passwordConfirmation">
+                    <Form.Label className='formLabel'>Password Confirmation</Form.Label>
+                    <Form.Control className='formInput' type="password" ref={passwordConfirmRef} placeholder={emailChanging ? 'Cannot Be Updated While Email Updating' : 'Leave Blank to keep the same'} disabled={emailChanging} />
+                </Form.Group>
 
-
+                <Form.Group className='formBox' id="profilePicture">
+                    <Form.Label className='formLabel'>Profile Picture</Form.Label>
                     {profilePicture && (
-                        <img 
+                        <img
                             src={profilePicture} 
                             alt="Profile"
-                            style={{ width: '100px', height: '100px' }} // Adjust styling as needed
+                            className='profileImg'
                         />
                     )}
+                    <Form.Control className='formInput' type="file" ref={profilePictureRef} placeholder='Insert Image' defaultValue={profilePicture} onChange={handleImageInput}  accept="image/*"/>
+                </Form.Group>
 
-                    <Form.Group id="vehicles">
-                        <Form.Label>Look At Your Vehicles</Form.Label>
-                        <Form.Control type="array" ref={vehiclesRef} defaultValue={vehicles} placeholder=''  />
-                    </Form.Group>
+               
 
-                    <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{error}</p>
+                <Form.Group className='formBox' id="vehicles">
+                    <Form.Label className='formLabel'>Look At Your Vehicles</Form.Label>
+                    <select className='formVehicle'>
+                        <option value="" disabled>VRN</option>
+                        {vehicles.map(vehicle => ( 
+                            <option key={vehicle.vehicleId} value={vehicle.vehicleId}> {vehicle.vrn} </option>
+                        ))}
+                    </select>
+                </Form.Group>
 
-                    <Button disabled={loading} className="w-100 mt-2" type="submit">Update</Button>
+                <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{error}</p>
 
-                    {confirmDeleteUser ? (
-                        <>
-                            <p>Are you sure you want to delete <strong>{usernameRef.current.value}</strong> account?</p>
-                            <Button disabled={loading} className="w-100 mt-2" variant="danger" onClick={handleDelete}>Confirm Delete</Button>
-                        </>
-                    ) :(
-                        <>
-                            <Button disabled={loading} className="w-100 mt-2" type="submit"  onClick={handleDelete}>Delete Account</Button>
-                        </>
-                    )}
+                <button disabled={loading} className="btn btn-dark w-100 mt-2" type="submit">Update</button>
+                
 
-                </form>
+                {confirmDeleteUser ? (
+                    <>
+                        <Popup open={openDeleteModal} closeOnDocumentClick onClose={() => handleCloseDelete()} className='Popup'>
+                            <div className='UpdateModal'>
+                                <>
+                                    <p className='deleteheading'>Confirm deletion of <strong>{usernameRef.current.value}</strong>'s account? </p>
+                                    <div className='deletelst'>
+                                        <button disabled={loading} className="btn btn-outline-danger w-100 delete" variant="danger" onClick={handleDelete}>Confirm Delete</button>
+                                        <p id='deletemsg'>This action is irreversible.</p>      
+                                    </div>
+                                </>
+                            </div>
+                        </Popup>
+                    </>
+                ) :(
+                    <>
+                        <button disabled={loading} className="btn btn-outline-dark w-100 mt-2" variant="danger" type="submit"  onClick={handleDelete}>Delete Account</button>
+                    </>
+                )}
 
-            </body>
+            </form>
 
-            
-        <div className="w-100 text-center mt-2">
-            <Link to="/setting">  Go Back Home</Link>
+
+                
+            <div className="cancelMsg">
+                <Link to="/setting" className="cancelMsg">  Go Back Home</Link>
+            </div>
         </div>
-      </>
   )
 }
 
