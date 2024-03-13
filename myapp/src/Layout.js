@@ -11,7 +11,7 @@ const Layout = ({children}) => {
   return (
     <div className='layout'>
         <ToolBar/>
-        <TitleBar />
+        <TitleBar/>
         <div className='content'>
             {children}
         </div>

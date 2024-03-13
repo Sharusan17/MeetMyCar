@@ -10,7 +10,7 @@ const TitleBar = () => {
   const [userid, setuserId] = useState('')
   const searchUserName = useRef()
 
-  const navigate= useNavigate()
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function fetchUserData(){
@@ -54,11 +54,8 @@ const handleSearchUser = () => {
               <input type="search" placeholder="Search..." ref={searchUserName} required/>
               <button type="submit">🔍</button>
             </form>
+            <button onClick={() => navigate(`/profile/${userid}`)}>🙍‍♂️</button>        
         </div>
-        <div className='titlebar_buttons'>
-          <button onClick={() => navigate(`/profile/${userid}`)}>🙍‍♂️</button>        
-        </div>
-
     </div>
   )
 }
