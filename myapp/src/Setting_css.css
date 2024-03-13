@@ -84,3 +84,39 @@
     text-align: justify;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
+
+@media only screen and (max-width: 600px) {
+    .userSetting{
+        margin: 0;
+        padding: 0;
+    }
+
+    .settingUserName{
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .Card_Setting{
+        margin-top: 0;
+        margin-bottom: 25px;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    .settingCard{
+        width: 200px;
+        height: 220px;
+    }
+      
+    .cardSettingImage img{
+        min-height: 220px;
+    }
+
+    .cardSettingContent{
+        padding-left: 15px;
+    }
+    
+    .settingFooter{
+        margin: 0 25px;
+        font-size: smaller;
+    }
+}
