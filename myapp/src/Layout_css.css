@@ -8,13 +8,13 @@
     flex-grow: 1;
     flex-direction: column;
     margin: 80px 60px 0 160px;
-    overflow-y: scroll;
+    overflow-y: auto;
     scroll-behavior: smooth;
 }
 
 @media only screen and (max-width: 600px) {
     .content{
-        padding: 15px;
-        margin: 0;
+        padding: 0 10px;
+        margin: 40px 0;
     }
 }

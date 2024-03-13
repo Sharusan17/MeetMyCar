@@ -588,8 +588,8 @@ const Profile = () => {
                                     </div>
                                 </div> 
 
-                                <div className='modalImage'>
-                                    <img src={selectedPost?.postData?.image} alt={selectedPost?.postData?.title}/> 
+                                <div className='modalPostImage'>
+                                    <img className='modalPostImage' src={selectedPost?.postData?.image} alt={selectedPost?.postData?.title}/> 
                                 </div>
 
                                 <div className='modalDesc'>
