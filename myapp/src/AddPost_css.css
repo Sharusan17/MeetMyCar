@@ -21,7 +21,6 @@
     font-family:'Courier New', Courier, monospace;
 }
 
-
 .addHeading{
     display: flex;
     justify-content: space-between;
@@ -156,8 +155,48 @@
     box-shadow: 2px 2px 5px 1px rgb(122, 122, 122);
 }
 
-
-
-
-
-
+@media only screen and (max-width: 600px) {
+    .addPost {
+        margin: 5px 2.5px;
+        width: 100%;
+    }
+    
+    .addPost_text{
+        font-size: 30px;
+    }
+    
+    .showUserDetails{
+        padding: 5px;
+        margin-left: 20px;
+    }
+    
+    .showTimeStamp{
+        font-size: 15px;
+    }
+    
+    .add_postTitle{
+        font-size: 17px;
+        margin-bottom: 10px;
+    }
+    
+    .add_postImageBtn{
+        padding: 8px;
+        margin-bottom: 10px;
+    }
+    
+    .add_postImage {
+        width: 475px;
+        height: 375px;
+    }
+    
+    .add_postVRN{
+        font-size: 15px;
+        width: 25%;
+    }
+    
+    .addpostbtn{
+        width: 90%;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+    }
+}
