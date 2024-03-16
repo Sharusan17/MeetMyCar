@@ -48,3 +48,9 @@
 @keyframes blink-caret {
     50% { border-color: transparent; }
 }
+
+@media only screen and (max-width: 600px) {
+    .Banner{
+        display: none;
+    }
+}
