@@ -692,24 +692,33 @@ const Profile = () => {
                 <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
 
-                {posts.length === 0 ? (
+                {userId ?(
                     <>
-                        {currentUserId === userId ? (
+                        {posts.length === 0 ? (
+                        <>
+                            {currentUserId === userId ? (
+                                <>
+                                    <p className="w-100 text-center mt-3 mb-1" id="success_Msg">No Posts! Share Your Experiences To The World.</p>
+                                    <Link to={`/addpost`} className="btn btn-dark" id='addPostbtn'> Add Post</Link>
+                                </>
+                            ): (
+                                <>
+                                    <p className="w-100 text-center mt-3 mb-1" id="success_Msg">No Posts! Tell Your Friend To Share Their Experiences.</p>
+                                </>
+                            )}
+                        </>
+                        ):(
                             <>
-                                <p className="w-100 text-center mt-3 mb-1" id="success_Msg">No Posts! Share Your Experiences To The World.</p>
-                                <Link to={`/addpost`} className="btn btn-dark" id='addPostbtn'> Add Post</Link>
-                            </>
-                        ): (
-                            <>
-                                <p className="w-100 text-center mt-3 mb-1" id="success_Msg">No Posts! Tell Your Friend To Share Their Experiences.</p>
                             </>
                         )}
                     </>
                 ):(
                     <>
+                        <p className="w-100 text-center mt-3 mb-1" id="error_Msg">User Not Found</p>
                     </>
                 )}
 
+                
                 <div className='Card_Post'>
                     {posts.map((post, index) => (
                         <div key={index}  className='postCard' onClick={() => handleSelectCard(post)}>

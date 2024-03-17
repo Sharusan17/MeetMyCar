@@ -42,6 +42,15 @@ input{
   background: #e2e2e2;
 }
 
+#searchbtn:hover{
+  background-color: rgb(46, 45, 45);
+}
+
+#searchbtn:hover svg{
+  fill: white;
+}
+
+
 
 @media only screen and (max-width: 600px) {
   .titlebar {

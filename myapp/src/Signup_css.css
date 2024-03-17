@@ -83,8 +83,7 @@ header{
 }
 
 input:hover{
-    box-shadow: 2px 2px 5px 1px rgb(122, 122, 122);
-    border-color: rgb(243, 60, 62);
+    box-shadow: 1px 1px 1px 1px rgb(122, 122, 122);
     transition: border-color 0.5s ease-in;
 }
 
