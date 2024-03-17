@@ -72,6 +72,14 @@
     color: black;
 }
 
+#addPostbtn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    width: 100px;
+}
+
 .Card_Post{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -224,6 +232,20 @@
     font-weight: 600;
 }
 
+#commentProfileModal{
+    width: 400px;
+}
+
+#commentProfileText{
+    width: 80%;
+}
+
+#commentProfileBtn{
+    font-size: 12px;
+    width: 120px;
+    height: 30px;
+    padding: 2px 5px;
+}
 
 @media only screen and (max-width: 600px) {
     .showProfile{

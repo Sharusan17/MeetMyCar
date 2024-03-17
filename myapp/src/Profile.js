@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 import {Popup} from 'reactjs-popup'
@@ -25,13 +25,20 @@ const Profile = () => {
     const [posts, setPost] = useState([])
     const [showfollowbtn, setFollowbtn] = useState(true)
     const [selectedPost, setselectedPost] = useState('')
+    const [selectedComment, setSelectedComment] = useState(null)
     const [openModal, setOpenModal] = useState(false)
     const [openFollowerModal, setOpenFollowerModal] = useState(false)
     const [openFollowingModal, setOpenFollowingModal] = useState(false)
     const [confirmDeletePost, setconfirmDeletePost] = useState(false)
 
+    const commentRef = useRef()
+    const replyRef = useRef()
+    const [openCommentModal, setOpenCommentModal] = useState(false)
+    const [showReplyBox, setShowReplyBox] = useState(false)
+
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
+    const [commentError, setCommentError] = useState('')
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
@@ -140,11 +147,31 @@ const Profile = () => {
         fetchCurrentUserData();
     }, [currentUser.uid]); 
 
+    const formatDate = (timestamps) => {
+        const date = new Date(timestamps);
+        return date.toLocaleDateString()
+    }
+    const formatTime = (timestamps) => {
+        const time = new Date(timestamps);
+        return time.toLocaleTimeString()
+    }
+
     const handleSelectCard = (post) => {
         console.log("Selected:", post)
         setselectedPost(post)
         setOpenModal(true)
         setconfirmDeletePost(false)
+    }
+
+    const handleSelectCardComment = (selectedPost) => {
+        console.log("Selected CommentPost:", selectedPost)
+        setOpenCommentModal(true)
+    }
+
+    const handleSelectComment = (selectedcomment) => {
+        console.log("Selected Comment:", selectedcomment)
+        setSelectedComment(selectedcomment)
+        setShowReplyBox(!showReplyBox)
     }
 
     const handleEdit = (postId) => {
@@ -378,6 +405,124 @@ const Profile = () => {
         setLoading(false)
     }
 
+    async function handleaddComment(postId){
+        if (commentRef.current.value.length >= 2){
+            try{
+                setLoading(true)
+                setCommentError('')
+
+                const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({commentUser: userId, commentText: commentRef.current.value})
+                });
+
+                if (response.ok){
+                    console.log("Added Comment Data")
+                } else{
+                    const errorData = await response.json()
+                    console.error("Error Updating Comment Data:", error)
+                    throw new Error(errorData.message)
+                }
+            }catch (error){
+                console.error("Error Adding Comment Data:", error)
+                setCommentError("Failed To Add Comment Data")
+            }
+            setLoading(false)
+        }else{
+            setCommentError('Comment Too Short')
+            return
+        }
+    }
+
+    async function handleDeleteComment(postId, commentId){
+        try{
+            setLoading(true)
+            setCommentError('')
+
+            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({deleteCommentId: commentId})
+            });
+
+            if (response.ok){
+                console.log("Deleted Comment Data")
+            } else{
+                const errorData = await response.json()
+                console.error("Error Deleting Comment Data:", error)
+                throw new Error(errorData.message)
+            }
+        }catch (error){
+            console.error("Error Deleting Comment Data:", error)
+            setCommentError("Failed To Delete Comment")
+        }
+        setLoading(false)
+    }
+ 
+    async function handleaddReply(postId, commentId){
+        if (replyRef.current.value.length >= 2){
+            try{
+                setLoading(true)
+                setCommentError('')
+
+                const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({commentId: commentId, replyUser: userId, replyText: replyRef.current.value})
+                });
+
+                if (response.ok){
+                    console.log("Added Reply Data")
+                } else{
+                    const errorData = await response.json()
+                    console.error("Error Updating Reply Data:", error)
+                    throw new Error(errorData.message)
+                }
+            }catch (error){
+                console.error("Error Adding Reply Data:", error)
+                setCommentError("Failed To Add Reply Data")
+            }
+            setLoading(false)
+        }else{
+            setCommentError('Reply Too Short')
+            return
+        }
+    }
+
+    async function handleDeleteReply(postId, commentId, replyId){
+        try{
+            setLoading(true)
+            setCommentError('')
+
+            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({commentId: commentId, deleteReplyId: replyId})
+            });
+
+            if (response.ok){
+                console.log("Deleted Reply Data")
+            } else{
+                const errorData = await response.json()
+                console.error("Error Deleting Reply Data:", error)
+                throw new Error(errorData.message)
+            }
+        }catch (error){
+            console.error("Error Deleting Reply Data:", error)
+            setCommentError("Failed To Delete Reply")
+        }
+        setLoading(false)
+    }
+
     async function handleSuperFuel(postId, postUserId) {
         try{
             setError('')
@@ -547,11 +692,27 @@ const Profile = () => {
                 <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
 
+                {posts.length === 0 ? (
+                    <>
+                        {currentUserId === userId ? (
+                            <>
+                                <p className="w-100 text-center mt-3 mb-1" id="success_Msg">No Posts! Share Your Experiences To The World.</p>
+                                <Link to={`/addpost`} className="btn btn-dark" id='addPostbtn'> Add Post</Link>
+                            </>
+                        ): (
+                            <>
+                                <p className="w-100 text-center mt-3 mb-1" id="success_Msg">No Posts! Tell Your Friend To Share Their Experiences.</p>
+                            </>
+                        )}
+                    </>
+                ):(
+                    <>
+                    </>
+                )}
 
                 <div className='Card_Post'>
                     {posts.map((post, index) => (
                         <div key={index}  className='postCard' onClick={() => handleSelectCard(post)}>
-
                                 <div className='cardPostImage'>
                                     <img src={post?.postData?.image} alt={post?.postData?.title}/> 
                                 </div>
@@ -572,13 +733,18 @@ const Profile = () => {
                 </div>
 
                 <Popup open={openModal} 
-                        closeOnDocumentClick onClose={() => setOpenModal(false)} className='Popup'
-                        overlayStyle={{
-                            background: 'rgba(0, 0, 0, 0.2)', 
+                        verlayStyle={{
+                            background: 'rgba(0, 0, 0, 0.05)', 
                             transition: 'background 0.5s ease-in-out',
                         }}
+                        closeOnDocumentClick={false}
+                        onClose={() => setOpenModal(false)} className='Popup'
                 >
                     <div className='Modal'>
+                        <button className='closeButton' onClick={() => setOpenModal(false)}>
+                            <span>&times;</span>
+                        </button>
+
                         {selectedPost ? (
                             <>
                                 <div className='modalHeader'>
@@ -612,7 +778,7 @@ const Profile = () => {
                                     </div>
 
                                     <div className='engagementColumn'>
-                                        <button className='commentbtn'><svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3 10.4c0-2.24 0-3.36.436-4.216a4 4 0 0 1 1.748-1.748C6.04 4 7.16 4 9.4 4h5.2c2.24 0 3.36 0 4.216.436a4 4 0 0 1 1.748 1.748C21 7.04 21 8.16 21 10.4v1.2c0 2.24 0 3.36-.436 4.216a4 4 0 0 1-1.748 1.748C17.96 18 16.84 18 14.6 18H7.414a1 1 0 0 0-.707.293l-2 2c-.63.63-1.707.184-1.707-.707V13zM9 8a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z" clip-rule="evenodd"/></svg></button>
+                                        <button className='commentbtn' onClick={() => handleSelectCardComment(selectedPost)}><svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3 10.4c0-2.24 0-3.36.436-4.216a4 4 0 0 1 1.748-1.748C6.04 4 7.16 4 9.4 4h5.2c2.24 0 3.36 0 4.216.436a4 4 0 0 1 1.748 1.748C21 7.04 21 8.16 21 10.4v1.2c0 2.24 0 3.36-.436 4.216a4 4 0 0 1-1.748 1.748C17.96 18 16.84 18 14.6 18H7.414a1 1 0 0 0-.707.293l-2 2c-.63.63-1.707.184-1.707-.707V13zM9 8a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z" clip-rule="evenodd"/></svg></button>
                                         <h3>{selectedPost?.postData.comments.length} Comment</h3>
                                     </div>
 
@@ -700,7 +866,121 @@ const Profile = () => {
                             </div>
                         </>
                     </div>
-                </Popup>  
+                </Popup>
+
+                <Popup open={openCommentModal}
+                        overlayStyle={{
+                            background: 'rgba(0, 0, 0, 0.05)', 
+                            transition: 'background 0.5s ease-in-out',
+                        }}
+                        closeOnDocumentClick={false}
+                        onClose={() => setOpenCommentModal(false)} className='Popup'
+                >
+
+                    <div className='Modal' id='commentProfileModal'>
+                        <button className='closeButton' onClick={() => setOpenCommentModal(false)}>
+                            <span>&times;</span>
+                        </button>
+                    
+                        {selectedPost ? (
+                            <>
+                                <div className='modalCommentHeader'>
+                                    <h3>Comments</h3>
+                                </div> 
+
+                                <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{commentError}</p>
+
+                                <div className='modalCommentBody'>
+                                    {selectedPost.postData.comments?.map((postComment) => (
+                                        <div key={postComment._id} className='comments'>
+                                            <div className='commentTop'>
+                                                <div className='commentUser'>
+                                                    {postComment.userID?.profilePicture && (
+                                                        <img className='commentUserImage'
+                                                            src={postComment.userID.profilePicture}
+                                                            alt="Profile"
+                                                        />
+                                                    )}                                
+                                                    <Link to={`/profile/${postComment.userID?._id}`} className='commentUserName'>{postComment.userID?.username}</Link>
+                                                </div>
+                                                <div className='commentText'>
+                                                    <p>{postComment.commentText}</p>
+                                                </div>
+                                                <div className='commentDate'>
+                                                    <div>{formatDate(postComment.createdAt)}</div>
+                                                    <div>{formatTime(postComment.createdAt)}</div>
+                                                </div>
+                                            </div>
+
+                                            {postComment.replies?.map((postReply) => (
+                                                <div key={postReply._id} className='replies'>
+                                                    <div className='commentTop'>
+                                                        <div className='commentUser'>
+                                                            {postReply.userID?.profilePicture && (
+                                                                <img className='replyUserImage'
+                                                                    src={postReply.userID.profilePicture}
+                                                                    alt="Profile"
+                                                                />
+                                                            )}                                
+                                                            <Link to={`/profile/${postReply.userID?._id}`} className='replyUserName'>{postReply.userID?.username}</Link>
+                                                        </div>
+                                                        <div className='replyText'>
+                                                            <p>{postReply.replyText}</p>
+                                                        </div>
+                                                        <div className='replyDate'>
+                                                            <div>{formatDate(postReply.createdAt)}</div>
+                                                            <div>{formatTime(postReply.createdAt)}</div>
+                                                            {postReply.userID._id === userId? (
+                                                                <>
+                                                                    <button className='deletereplybtn' disabled={loading} onClick={() => handleDeleteReply(selectedPost.postData._id, postComment._id, postReply._id)}> Delete Reply</button>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                </>
+                                                            )}
+                                                        </div>
+
+                                                        
+                                                    </div>
+                                                </div>
+                                            ))}
+
+                                            <div className='commentBottom'>
+                                                <button className='replybtn' disabled={loading} onClick={() => handleSelectComment(postComment._id)}>Reply</button>
+                                                {postComment.userID._id === userId? (
+                                                    <>
+                                                        <button className='deletereplybtn' disabled={loading} onClick={() => handleDeleteComment(selectedPost.postData._id, postComment._id)}>Delete</button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                    </>
+                                                )}
+                                            </div>
+
+                                            {showReplyBox && selectedComment === postComment._id ?(
+                                                <>
+                                                    <div className='modalCommentButton'>
+                                                        <input type='text' ref={replyRef} placeholder="Reply..." className='commentText' id='commentProfileText' required></input>
+                                                        <button className='btn btn-dark' id='commentProfileBtn' disabled={loading} onClick={() => handleaddReply(selectedPost.postData._id, postComment._id)}>Add Reply</button>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <>
+                                                </>
+                                            )}
+
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className='modalCommentButton'>
+                                    <input type='text' ref={commentRef} placeholder="Comment..." className='commentText' id='commentProfileText' required></input>
+                                    <button className='btn btn-dark' id='commentProfileBtn' disabled={loading} onClick={() => handleaddComment(selectedPost.postData._id)}>Add Comment</button>
+                                </div>
+                            </>
+                        ) : <p>Loading....</p>}
+                    </div>
+                </Popup>   
             </div>
         </>
     )
