@@ -35,7 +35,7 @@ const connection = async () => {
         app.use('/vehicles', vehicleRoutes);
         
         
-        const PORT = 3001;
+        const PORT = process.env.PORT;
         app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
     } catch (error){
         console.error("Cannot Connect To Database:", error);
