@@ -42,6 +42,16 @@ router.post('/add', upload.single('image'), async (req, res) => {
     try{       
         const newVehicle = new Vehicle(req.body);
 
+        //Download The VehicleImg Into AWS
+        if (req.body.image){
+            const imageResponse= await fetch(req.body.image);
+            const imageData = await imageResponse.arrayBuffer();
+            const uploadImage = await req.uploadAWS({ buffer: Buffer.from(imageData), originalname: `${req.body.vrn}_image.jpg`, mimetype: 'image/jpeg' });
+    
+            newVehicle.image = uploadImage.Location;
+        }
+        
+
         //Parses The VehicleInfo Into Nested Objects
         if (req.body.vehicleInfo){
             newVehicle.vehicleInfo = JSON.parse(req.body.vehicleInfo)
