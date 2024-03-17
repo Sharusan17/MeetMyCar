@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-//add this to env file
-const uri = ('mongodb+srv://dbuser:LBZQYTKWo6bIACLG@meetmycardb.lq0dlcf.mongodb.net/MMC?retryWrites=true&w=majority');
+const uri = process.env.MONGO_DB_URI;
 
 const connectionParams = {
   useNewUrlParser:true,

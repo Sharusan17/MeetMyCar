@@ -1,13 +1,13 @@
 const AWS = require('aws-sdk');
 
 AWS.config.update({
-    accessKeyId: 'AKIAU6GDVIHWBC3MMTGY',
-    secretAccessKey: '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',
-    region: 'eu-west-2',
+    accessKeyId: process.env.AWS_ACCESS,
+    secretAccessKey: process.env.AWS_SECRET,
+    region: process.env.AWS_REGION,
 });
 
 const s3 = new AWS.S3();
-const S3_BUCKET = 'meetmycartest'
+const S3_BUCKET = process.env.AWS_BUCKET;
 
 const uploadAWS = async (file) => {
     try{

@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+dotenv.config();
 
 const {connectDB} = require('./conn')
 const connectAWS = require('./awsConn')
@@ -9,8 +10,6 @@ const vehicleAPIRoutes = require('./routes/vehicleAPIRoutes');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
-
-dotenv.config();
 
 const app = express();
 app.use(cors());
