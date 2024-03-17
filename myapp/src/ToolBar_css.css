@@ -17,6 +17,8 @@
 }
 
 .toolbar:hover .logo svg{
+    margin-left: 0;
+    margin-right: 0;
     transform:scale(-1,1);
 }
 
@@ -32,6 +34,9 @@
 }
 
 .toolbar-item{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 30px;
     margin-left: 0;
     margin-right: 0;
@@ -52,19 +57,24 @@
 .item-link{
     display: flex;
     align-items: center;
+    justify-content: center;
     height: 80px;
     color: black;
+    font-weight: 600;
     text-decoration: none;
     filter: grayscale(100%) opacity(0.7);
     transition: filter 200ms ease;
+    gap: 10px;
 }
 
 .user-item-link{
     display: flex;
     align-items: center;
+    justify-content: center;
     height: 80px;
     color: black;
     text-decoration: none;
+    gap: 10px;
 }
 
 .item-link:hover{
@@ -82,8 +92,8 @@
 }
 
 .item-link svg{
-    min-width: 32px;
-    margin: 0 24px;
+    width: 35px;
+    margin: 0 15px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -113,6 +123,7 @@
         height: 100vh;
         top:0
     }
+
     .toolbar:hover{
         margin-right: 5px;
         width: 180px;
@@ -124,7 +135,6 @@
     }
 
     .user-link-text{
-        margin-right: 15px;
         font-weight: bold;
     }
 
