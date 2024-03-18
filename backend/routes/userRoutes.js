@@ -41,6 +41,23 @@ router.get('/details', async (req, res) => {
     }
 });
 
+//GET All User Data
+router.get('/details/all', async (req, res) => {
+    try{       
+        const allUserData = await User.find({});
+
+        if(!allUserData){
+            return res.status(400).json({message: "No Users found."})
+        }
+
+        res.status(200).json({message: "All User Details", allUserData});
+        console.log("All User Details Found");
+    } catch (error){
+        console.error('All User Details Not Found:', error);
+        res.status(500).json({message:" Error Finding All User Details", detail: error.message});
+    }
+});
+
 //POST User Data
 router.post('/register', upload.single('profilePicture'), async (req, res) => {
     console.log(req.body);

@@ -3,7 +3,7 @@
 }
 
 .profileHeader{
-    margin-bottom: 50px;
+    margin-bottom: 30px;
 }
 
 .userRow{
@@ -78,6 +78,47 @@
     justify-content: center;
     margin: 20px auto;
     width: 100px;
+}
+
+.userRecommendation{
+    padding: 0;
+    margin-top: 0;
+    margin: 15px 50px ;
+}
+
+.userRow{
+    display: inline-flex;
+}
+
+.userCard{
+    margin-left: 10px;
+    width: 120px;
+    border: 1px solid #CCCCCC;
+    border-radius: 10px;
+    background-color: #FFFFFF;
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.userCardHeading{
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.userCardImage{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+#userCardFollow{
+    width: 100%;
 }
 
 .Card_Post{

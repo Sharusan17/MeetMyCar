@@ -22,6 +22,7 @@ const Profile = () => {
     const [followers, setProfileFollowers] = useState([])
     const [following, setProfileFollowing] = useState([])
 
+    const [allUser, setAllUser] = useState([])
     const [posts, setPost] = useState([])
     const [showfollowbtn, setFollowbtn] = useState(true)
     const [selectedPost, setselectedPost] = useState('')
@@ -146,6 +147,44 @@ const Profile = () => {
         }
         fetchCurrentUserData();
     }, [currentUser.uid]); 
+
+    useEffect(() => {
+        async function fetchAllUserData(){
+            try{
+                setError('')
+
+                const response = await fetch(`http://localhost:3001/users/details/all`, {
+                    method: 'GET',
+                    headers: {
+                        'accept': 'application/json',
+                    },
+                });
+
+                if (response.ok){
+                    const data = await response.json()
+
+                    const checkuserFollowing = data.allUserData.filter((users) => currentUserFollowing.some((followingUser) => followingUser.followeringId !== users._id &&
+                                                                currentUserFollowing.some((friend) => friend.following.some((friendFollowing) => friendFollowing.followeringId === users._id))))
+                    console.log('Check', checkuserFollowing)   
+
+                    setAllUser(checkuserFollowing)
+
+
+                    console.log("Fetched All User Details")
+                    return data
+                } else{
+                    const errorData = await response.json()
+                    setError("Failed To Fetch All User Data")
+                    throw new Error(errorData.message)
+                }
+            }catch (error){
+                console.error("Error Fetching All User Data:", error)
+                setError("Failed To Fetch All User Data")
+            }
+        }
+        fetchAllUserData();
+    }, [currentUserFollowing]); 
+
 
     const formatDate = (timestamps) => {
         const date = new Date(timestamps);
@@ -285,7 +324,7 @@ const Profile = () => {
                 throw new Error(errorData.message)  
             }
 
-            const Followersresponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userid)}`, {
+            const Followersresponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -333,7 +372,7 @@ const Profile = () => {
                 throw new Error(errorData.message)  
             }
 
-            const Followersresponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userid)}`, {
+            const Followersresponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -685,9 +724,29 @@ const Profile = () => {
                         
                         
                     </div>
-                    
-                </header>   
-                
+
+  
+                </header>
+
+                <div className='userRecommendation'>
+                    <h5>People You May Know</h5>
+                    {allUser.map((users, index) => (
+                        <div key={index}  className='userRow'>
+                            <div className='userCard'>
+                                <p className='userCardHeading'>{users.username}</p>
+                                {profilePicture && (
+                                    <img className='userCardImage'
+                                        src={users.profilePicture} 
+                                        alt="Profile"
+                                    />
+                                )}
+                                <button className='btn btn-outline-dark' id='userCardFollow'>Follow</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>   
+
+                <div className='line'></div>
 
                 <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
