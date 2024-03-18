@@ -21,6 +21,7 @@ const Profile = () => {
     const [profileSF, setProfileSF] = useState('')
     const [followers, setProfileFollowers] = useState([])
     const [following, setProfileFollowing] = useState([])
+    const [openUserRecommend, setOpenUserRecommend] = useState(false)
 
     const [allUser, setAllUser] = useState([])
     const [posts, setPost] = useState([])
@@ -163,12 +164,17 @@ const Profile = () => {
                 if (response.ok){
                     const data = await response.json()
 
-                    const checkuserFollowing = data.allUserData.filter((users) => currentUserFollowing.some((followingUser) => followingUser.followeringId !== users._id &&
-                                                                currentUserFollowing.some((friend) => friend.following.some((friendFollowing) => friendFollowing.followeringId === users._id))))
-                    console.log('Check', checkuserFollowing)   
-
-                    setAllUser(checkuserFollowing)
-
+                    if (currentUserFollowing){
+                        const findMutualFriends = data.allUserData.filter((user) => user.following.some(userFollowings => currentUserFollowing.some(myFollowings => userFollowings.followeringId === myFollowings.followeringId)))
+                        const filteredMutualFriends = findMutualFriends.filter(user => !currentUserFollowing.some(myFollowings => user._id === myFollowings.followeringId));
+                        const mutualFriends = filteredMutualFriends.filter(user => user._id !== userId);
+                        console.log('Check Mutual Friends', mutualFriends)   
+    
+                        setAllUser(mutualFriends)
+                        setOpenUserRecommend(true)
+                    } else{
+                        setOpenUserRecommend(false)
+                    }
 
                     console.log("Fetched All User Details")
                     return data
@@ -728,25 +734,32 @@ const Profile = () => {
   
                 </header>
 
-                <div className='userRecommendation'>
-                    <h5>People You May Know</h5>
-                    {allUser.map((users, index) => (
-                        <div key={index}  className='userRow'>
-                            <div className='userCard'>
-                                <p className='userCardHeading'>{users.username}</p>
-                                {profilePicture && (
-                                    <img className='userCardImage'
-                                        src={users.profilePicture} 
-                                        alt="Profile"
-                                    />
-                                )}
-                                <button className='btn btn-outline-dark' id='userCardFollow'>Follow</button>
+                {openUserRecommend && currentUserId === userId ? (
+                    <>
+                    <div className='userRecommendation'>
+                        <h5>Drivers You May Know</h5>
+                        {allUser.map((users, index) => (
+                            <div key={index}  className='userRow'>
+                                <div className='userCard'>
+                                    <p className='userCardHeading'>{users.username}</p>
+                                    {profilePicture && (
+                                        <img className='userCardImage'
+                                            src={users.profilePicture} 
+                                            alt="Profile"
+                                        />
+                                    )}
+                                    <button className='btn btn-outline-dark' id='userCardFollow'>Follow</button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>   
+                        ))}
+                    </div> 
+                    <div className='line'></div>
+                    </>
+                ) : (
+                    <>
+                    </>
+                )}  
 
-                <div className='line'></div>
 
                 <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
