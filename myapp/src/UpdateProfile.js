@@ -225,6 +225,8 @@ const UpdateProfile = () => {
 
             <form className='updateForm' onSubmit={handleSubmit}>
 
+                <p className="w-100 text-center mt-0 mb-0" id="error_Msg">{error}</p>
+
                 <Form.Group className='formBox' id="username">
                     <Form.Label className='formLabel'>Username</Form.Label>
                     <Form.Control className='formInput' type="text" ref={usernameRef}  defaultValue={username} disabled/>
@@ -269,8 +271,6 @@ const UpdateProfile = () => {
                     </select>
                 </Form.Group>
 
-                <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{error}</p>
-
                 <button disabled={loading} className="btn btn-dark w-100 mt-2" type="submit">Update</button>
                 
 
@@ -281,7 +281,10 @@ const UpdateProfile = () => {
                                 <>
                                     <p className='deleteheading'>Confirm deletion of <strong>{usernameRef.current.value}</strong>'s account? </p>
                                     <div className='deletelst'>
-                                        <button disabled={loading} className="btn btn-outline-danger w-100 delete" variant="danger" onClick={handleDelete}>Confirm Delete</button>
+                                        <div className='deletebtn'>
+                                            <button disabled={loading} className="btn btn-dark w-100" variant="cancel" onClick={() => handleCloseDelete()}>Cancel</button>
+                                            <button disabled={loading} className="btn btn-danger w-100" variant="danger" onClick={handleDelete}>Delete</button>
+                                        </div>
                                         <p id='deletemsg'>This action is irreversible.</p>      
                                     </div>
                                 </>

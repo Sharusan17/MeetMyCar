@@ -75,6 +75,14 @@
     margin-bottom: 0;
 }
 
+.deletebtn{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 15px;
+}
+
 #deletemsg{
     margin: 5px;
     font-size: 15px;
