@@ -318,6 +318,11 @@
     fill: rgb(38,38,38)
 }
 
+.CommentBox{
+    margin: 0;
+    padding: 30px;
+}
+
 .closeButton{
     background: none;
     border: none;
@@ -337,6 +342,10 @@
     color: #000;
 }
 
+.modalCommentHeader{
+    text-align: center;
+}
+
 .modalCommentBody{
     display: flex;
     flex-direction: column;
@@ -345,8 +354,8 @@
 }
 
 .comments{
-    margin: 5px 0;
-    padding: 0;
+    margin: 0;
+    padding: 5px 0;
 }
 
 .commentTop{
@@ -366,7 +375,8 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-right: 15px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .commentUserName{
@@ -377,7 +387,8 @@
 }
 
 .commentText{
-    margin-right: 10px;
+    margin: 10px;
+    width: 80%;
     height: fit-content;
 }
 
@@ -390,8 +401,7 @@
 }
 
 .modalCommentButton{
-    padding-top: 15px;
-    margin: 10px auto;
+    margin: 0 auto;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -403,11 +413,11 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    margin: 5px 0;
+    margin: 0;
 }
 
 .replies{
-    margin: 5px 0;
+    margin: 0;
     margin-left: 20px;
     padding: 0;
 }
@@ -417,7 +427,8 @@
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    margin-right: 15px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .replyUserName{
@@ -451,7 +462,7 @@
     border: none;
     font-size: 15px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    margin: 5px 0;
+    margin-bottom: 7px;
 }
 
 
@@ -520,12 +531,8 @@
         font-size: 10px;
     }
 
-    .Modal{
-        height: 80vh;
-    }
-
     .modalCommentButton{
-        width: max-content;
+        width: 100%;
     }
     
     #commentBtn{

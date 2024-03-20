@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from './AuthContext'
-import {Popup} from 'reactjs-popup'
 
 import './SeePost_css.css'
 
@@ -16,11 +15,12 @@ const SeePost = () => {
     const [selectedComment, setSelectedComment] = useState(null)
     const [menuoptions, setMenuOptions] = useState(false)
     const [confirmDeletePost, setconfirmDeletePost] = useState(false)
+    const [deletePostMsg, setDeletePostMsg] = useState(false)
 
     const commentRef = useRef()
     const replyRef = useRef()
-    const [openCommentModal, setOpenCommentModal] = useState(false)
-    const [showReplyBox, setShowReplyBox] = useState(false)
+    const [commentBox, showCommentBox] = useState(false)
+    const [replyBox, showReplyBox] = useState(false)
 
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
@@ -131,13 +131,13 @@ const SeePost = () => {
     const handleSelectPost = (post) => {
         console.log("Selected Post:", post)
         setSelectedPost(post)
-        setOpenCommentModal(true)
+        showCommentBox(!commentBox)
     }
 
     const handleSelectComment = (selectedcomment) => {
         console.log("Selected Comment:", selectedcomment)
         setSelectedComment(selectedcomment)
-        setShowReplyBox(!showReplyBox)
+        showReplyBox(!replyBox)
     }
 
     const handleShowOptions = (postId) =>{
@@ -191,7 +191,7 @@ const SeePost = () => {
             }
             
             console.log("Deleted Post")
-            setMessage("Post Deleted")
+            setDeletePostMsg(true)
             setTimeout(() => {
                 window.location.reload(false);
             }, 2000)
@@ -489,6 +489,14 @@ const SeePost = () => {
                     <div key={post._id}  className='post'>
                         <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{error}</p>
                         <p className="w-100 text-center mt-2 mb-0" id="success_Msg">{message}</p>
+                        {deletePostMsg && post._id === selectedPost ? (
+                            <>
+                                <p className="w-100 text-center mt-2 mb-0" id="success_Msg">Post Deleted!</p>
+                            </>
+                        ) : (
+                            <>
+                            </>
+                        )}
 
                         <div className='postHead'>
                             <div className='postUserDetails'>
@@ -580,6 +588,117 @@ const SeePost = () => {
                             </div> 
                         </div> 
 
+                        {commentBox && post._id === selectedPost._id? (
+                            <>
+                                <div className='CommentBox'>
+                                    <button className='closeButton' onClick={() => showCommentBox(false)}>
+                                        <span>&times;</span>
+                                    </button>
+                                
+                                    {selectedPost ? (
+                                        <>
+                                            <div className='modalCommentHeader'>
+                                                <h3>Comments</h3>
+                                            </div> 
+
+                                            <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{commentError}</p>
+
+                                            <div className='modalCommentBody'>
+                                                {selectedPost.comments?.map((postComment) => (
+                                                    <div key={postComment._id} className='comments'>
+                                                        <div className='commentTop'>
+                                                            <div className='commentUser'>
+                                                                {postComment.userID?.profilePicture && (
+                                                                    <img className='commentUserImage'
+                                                                        src={postComment.userID.profilePicture}
+                                                                        alt="Profile"
+                                                                    />
+                                                                )}                                
+                                                                <Link to={`/profile/${postComment.userID?._id}`} className='commentUserName'>{postComment.userID?.username}</Link>
+                                                            </div>
+                                                            <div className='commentText'>
+                                                                <p>{postComment.commentText}</p>
+                                                            </div>
+                                                            <div className='commentDate'>
+                                                                <div>{formatDate(postComment.createdAt)}</div>
+                                                                <div>{formatTime(postComment.createdAt)}</div>
+                                                            </div>
+                                                        </div>
+
+                                                        {postComment.replies?.map((postReply) => (
+                                                            <div key={postReply._id} className='replies'>
+                                                                <div className='commentTop'>
+                                                                    <div className='commentUser'>
+                                                                        {postReply.userID?.profilePicture && (
+                                                                            <img className='replyUserImage'
+                                                                                src={postReply.userID.profilePicture}
+                                                                                alt="Profile"
+                                                                            />
+                                                                        )}                                
+                                                                        <Link to={`/profile/${postReply.userID?._id}`} className='replyUserName'>{postReply.userID?.username}</Link>
+                                                                    </div>
+                                                                    <div className='replyText'>
+                                                                        <p>{postReply.replyText}</p>
+                                                                    </div>
+                                                                    <div className='replyDate'>
+                                                                        <div>{formatDate(postReply.createdAt)}</div>
+                                                                        <div>{formatTime(postReply.createdAt)}</div>
+                                                                        {postReply.userID._id === userId? (
+                                                                            <>
+                                                                                <button className='deletereplybtn' disabled={loading} onClick={() => handleDeleteReply(selectedPost._id, postComment._id, postReply._id)}> Delete Reply</button>
+                                                                            </>
+                                                                        ) : (
+                                                                            <>
+                                                                            </>
+                                                                        )}
+                                                                    </div>
+
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        ))}
+
+                                                        <div className='commentBottom'>
+                                                            <button className='replybtn' disabled={loading} onClick={() => handleSelectComment(postComment._id)}>Reply</button>
+                                                            {postComment.userID._id === userId? (
+                                                                <>
+                                                                    <button className='deletereplybtn' disabled={loading} onClick={() => handleDeleteComment(selectedPost._id, postComment._id)}>Delete</button>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                </>
+                                                            )}
+                                                        </div>
+
+                                                        {replyBox && selectedComment === postComment._id ?(
+                                                            <>
+                                                                <div className='modalCommentButton'>
+                                                                    <input type='text' ref={replyRef} placeholder="Reply..." className='commentText' required></input>
+                                                                    <button className='btn btn-dark' id='commentBtn' disabled={loading} onClick={() => handleaddReply(selectedPost._id, postComment._id)}>Add Reply</button>
+                                                                </div>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                            </>
+                                                        )}
+
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <div className='modalCommentButton'>
+                                                <input type='text' ref={commentRef} placeholder="Comment..." className='commentText' required></input>
+                                                <button className='btn btn-dark' id='commentBtn' disabled={loading} onClick={() => handleaddComment(selectedPost._id)}>Add Comment</button>
+                                            </div>
+                                        </>
+                                    ) : <p>Loading....</p>}
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                            </>
+                        )}
+
                         <div className='postEngagement'>
                             <div className='engagementColumn'>
                                 {post.likes.some((likedUser) => likedUser.userId === userId) ? (
@@ -612,122 +731,7 @@ const SeePost = () => {
                                 )}
                                 <h3>{post.superfuel.length} Superfuel</h3>
                             </div>
-                            
                         </div>
-
-                        <Popup open={openCommentModal}
-                                overlayStyle={{
-                                    background: 'rgba(0, 0, 0, 0.05)', 
-                                    transition: 'background 0.5s ease-in-out',
-                                }}
-                                closeOnDocumentClick={false}
-                                onClose={() => setOpenCommentModal(false)} className='Popup'
-                        >
-
-                            <div className='Modal'>
-                                <button className='closeButton' onClick={() => setOpenCommentModal(false)}>
-                                    <span>&times;</span>
-                                </button>
-                            
-                                {selectedPost ? (
-                                    <>
-                                        <div className='modalCommentHeader'>
-                                            <h3>Comments</h3>
-                                        </div> 
-
-                                        <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{commentError}</p>
-
-                                        <div className='modalCommentBody'>
-                                            {selectedPost.comments?.map((postComment) => (
-                                                <div key={postComment._id} className='comments'>
-                                                    <div className='commentTop'>
-                                                        <div className='commentUser'>
-                                                            {postComment.userID?.profilePicture && (
-                                                                <img className='commentUserImage'
-                                                                    src={postComment.userID.profilePicture}
-                                                                    alt="Profile"
-                                                                />
-                                                            )}                                
-                                                            <Link to={`/profile/${postComment.userID?._id}`} className='commentUserName'>{postComment.userID?.username}</Link>
-                                                        </div>
-                                                        <div className='commentText'>
-                                                            <p>{postComment.commentText}</p>
-                                                        </div>
-                                                        <div className='commentDate'>
-                                                            <div>{formatDate(postComment.createdAt)}</div>
-                                                            <div>{formatTime(postComment.createdAt)}</div>
-                                                        </div>
-                                                    </div>
-
-                                                    {postComment.replies?.map((postReply) => (
-                                                        <div key={postReply._id} className='replies'>
-                                                            <div className='commentTop'>
-                                                                <div className='commentUser'>
-                                                                    {postReply.userID?.profilePicture && (
-                                                                        <img className='replyUserImage'
-                                                                            src={postReply.userID.profilePicture}
-                                                                            alt="Profile"
-                                                                        />
-                                                                    )}                                
-                                                                    <Link to={`/profile/${postReply.userID?._id}`} className='replyUserName'>{postReply.userID?.username}</Link>
-                                                                </div>
-                                                                <div className='replyText'>
-                                                                    <p>{postReply.replyText}</p>
-                                                                </div>
-                                                                <div className='replyDate'>
-                                                                    <div>{formatDate(postReply.createdAt)}</div>
-                                                                    <div>{formatTime(postReply.createdAt)}</div>
-                                                                    {postReply.userID._id === userId? (
-                                                                        <>
-                                                                            <button className='deletereplybtn' disabled={loading} onClick={() => handleDeleteReply(selectedPost._id, postComment._id, postReply._id)}> Delete Reply</button>
-                                                                        </>
-                                                                    ) : (
-                                                                        <>
-                                                                        </>
-                                                                    )}
-                                                                </div>
-
-                                                                
-                                                            </div>
-                                                        </div>
-                                                    ))}
-
-                                                    <div className='commentBottom'>
-                                                        <button className='replybtn' disabled={loading} onClick={() => handleSelectComment(postComment._id)}>Reply</button>
-                                                        {postComment.userID._id === userId? (
-                                                            <>
-                                                                <button className='deletereplybtn' disabled={loading} onClick={() => handleDeleteComment(selectedPost._id, postComment._id)}>Delete</button>
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                            </>
-                                                        )}
-                                                    </div>
-
-                                                    {showReplyBox && selectedComment === postComment._id ?(
-                                                        <>
-                                                            <div className='modalCommentButton'>
-                                                                <input type='text' ref={replyRef} placeholder="Reply..." className='commentText' required></input>
-                                                                <button className='btn btn-dark' id='commentBtn' disabled={loading} onClick={() => handleaddReply(selectedPost._id, postComment._id)}>Add Reply</button>
-                                                            </div>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                        </>
-                                                    )}
-
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        <div className='modalCommentButton'>
-                                            <input type='text' ref={commentRef} placeholder="Comment..." className='commentText' required></input>
-                                            <button className='btn btn-dark' id='commentBtn' disabled={loading} onClick={() => handleaddComment(selectedPost._id)}>Add Comment</button>
-                                        </div>
-                                    </>
-                                ) : <p>Loading....</p>}
-                            </div>
-                        </Popup> 
                     </div>
                 ))}
             </div> 
