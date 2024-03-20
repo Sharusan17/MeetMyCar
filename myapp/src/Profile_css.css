@@ -370,6 +370,51 @@
         font-size: 12px;
     }
 
+    .userRecommendation{
+        margin: 10px 30px ;
+    }
+    
+    .userHeader{
+        margin: 5px 0;
+    }
+
+    .userHeader h5{
+        font-size: 17px;
+    }
+    
+    .drop-down-btn{
+        width: 25px;
+        height: 25px;   
+    }
+    
+    
+    .userCard{
+        width: 90px;
+        padding: 10px 15px;
+
+    }
+    
+    .userCardHeading{
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    .userCardImage{
+        width: 60px;
+        height: 60px;
+        margin-bottom: 10px;
+    }
+    
+    #userCardFollow{
+        font-size: 12px;
+        text-align: center;
+    }
+    
+    #userCardUnFollow{
+        font-size: 10px;
+        text-align: center;
+    }
+
     .Card_Post{
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
