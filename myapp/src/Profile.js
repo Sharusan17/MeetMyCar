@@ -32,6 +32,8 @@ const Profile = () => {
     const [openFollowerModal, setOpenFollowerModal] = useState(false)
     const [openFollowingModal, setOpenFollowingModal] = useState(false)
     const [confirmDeletePost, setconfirmDeletePost] = useState(false)
+    const [dropdown, setDropDown] = useState(true)
+    const [followBtnCard, showFollowBtnCard] = useState(true)
 
     const commentRef = useRef()
     const replyRef = useRef()
@@ -306,7 +308,7 @@ const Profile = () => {
         fetchCurrentUserFollowing()
     }, [currentUserFollowing, userId])
 
-    async function handleFollow(){
+    async function handleFollow(userIDFollow){
 
         setLoading(true)
         setError('')
@@ -320,7 +322,7 @@ const Profile = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({followeringId: userId, followeringName: username})
+                body: JSON.stringify({followeringId: userIDFollow, followeringName: username})
             });
 
             if (!response.ok){
@@ -330,7 +332,7 @@ const Profile = () => {
                 throw new Error(errorData.message)  
             }
 
-            const Followersresponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userId)}`, {
+            const Followersresponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userIDFollow)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -354,7 +356,7 @@ const Profile = () => {
         }
     }
 
-    async function handleUnfollow(){
+    async function handleUnfollow(userIDFollow){
 
         setLoading(true)
         setError('')
@@ -368,7 +370,7 @@ const Profile = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({followingtoRemove: userId})
+                body: JSON.stringify({followingtoRemove: userIDFollow})
             });
 
             if (!response.ok){
@@ -378,7 +380,7 @@ const Profile = () => {
                 throw new Error(errorData.message)  
             }
 
-            const Followersresponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userId)}`, {
+            const Followersresponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userIDFollow)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -692,19 +694,26 @@ const Profile = () => {
                             <p className='showUserName'>{username}</p>
                         </div>
 
-                        {showfollowbtn ? (
-                                <>
-                                    <button className='btn btn-dark' id='followbtn' onClick={() => handleFollow()}> Follow</button>
-                                </>
-                            ) : (
-                                <>
-                                    <button className='btn btn-dark' id='followbtn' onClick={() => handleUnfollow()}> Unfollow</button>
-                                </>
+                        {currentUserId === userId ? (
+                            <>
+                            </>
+                        ) : (
+                            <>
+                                {showfollowbtn ? (
+                                    <>
+                                        <button className='btn btn-dark' id='followbtn' onClick={() => handleFollow(userId)}> Follow</button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button className='btn btn-dark' id='followbtn' onClick={() => handleUnfollow(userId)}> Unfollow</button>
+                                    </>
+                                )}
+                            </>
                         )}
                     </div>
 
                     <div className='showUserData'>
-                        <p className='superFuelData'><span>{profileSF} Super Fuel</span> <svg xmlns="http://www.w3.org/2000/svg" width="1.6em" height="1.6em" viewBox="0 0 24 24"><path fill="currentColor" d="M18 10a1 1 0 0 1-1-1a1 1 0 0 1 1-1a1 1 0 0 1 1 1a1 1 0 0 1-1 1m-6 0H6V5h6m7.77 2.23l.01-.01l-3.72-3.72L15 4.56l2.11 2.11C16.17 7 15.5 7.93 15.5 9a2.5 2.5 0 0 0 2.5 2.5c.36 0 .69-.08 1-.21v7.21a1 1 0 0 1-1 1a1 1 0 0 1-1-1V14a2 2 0 0 0-2-2h-1V5a2 2 0 0 0-2-2H6c-1.11 0-2 .89-2 2v16h10v-7.5h1.5v5A2.5 2.5 0 0 0 18 21a2.5 2.5 0 0 0 2.5-2.5V9c0-.69-.28-1.32-.73-1.77"/></svg></p>
+                        <p className='superFuelData'><span>{profileSF} Super Fuel</span> <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24"><path fill="currentColor" d="M18 10a1 1 0 0 1-1-1a1 1 0 0 1 1-1a1 1 0 0 1 1 1a1 1 0 0 1-1 1m-6 0H6V5h6m7.77 2.23l.01-.01l-3.72-3.72L15 4.56l2.11 2.11C16.17 7 15.5 7.93 15.5 9a2.5 2.5 0 0 0 2.5 2.5c.36 0 .69-.08 1-.21v7.21a1 1 0 0 1-1 1a1 1 0 0 1-1-1V14a2 2 0 0 0-2-2h-1V5a2 2 0 0 0-2-2H6c-1.11 0-2 .89-2 2v16h10v-7.5h1.5v5A2.5 2.5 0 0 0 18 21a2.5 2.5 0 0 0 2.5-2.5V9c0-.69-.28-1.32-.73-1.77"/></svg></p>
                         <div className='showUserDataNum'>
                             <p> <span>{posts.length}</span> Posts</p>
                             <p onClick={() => setOpenFollowerModal(true)}> <span>{followers.length}</span> Followers</p>
@@ -726,32 +735,54 @@ const Profile = () => {
                             )}
                             </>
                         )}
-
-                        
                         
                     </div>
 
-  
                 </header>
 
-                {openUserRecommend && currentUserId === userId ? (
+                {openUserRecommend && currentUserId === userId  && allUser.length > 0? (
                     <>
                     <div className='userRecommendation'>
-                        <h5>Drivers You May Know</h5>
-                        {allUser.map((users, index) => (
-                            <div key={index}  className='userRow'>
-                                <div className='userCard'>
-                                    <p className='userCardHeading'>{users.username}</p>
-                                    {profilePicture && (
-                                        <img className='userCardImage'
-                                            src={users.profilePicture} 
-                                            alt="Profile"
-                                        />
-                                    )}
-                                    <button className='btn btn-outline-dark' id='userCardFollow'>Follow</button>
+                        {dropdown ? (
+                            <>
+                                <div className='userHeader'>
+                                    <h5>Drivers You May Know</h5>
+                                    <button className='drop-down-btn' onClick={() => setDropDown(!dropdown)}><svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24"><path fill="black" fill-rule="evenodd" d="M11.512 8.43a.75.75 0 0 1 .976 0l7 6a.75.75 0 1 1-.976 1.14L12 9.987l-6.512 5.581a.75.75 0 1 1-.976-1.138z" clip-rule="evenodd"/></svg></button>
                                 </div>
-                            </div>
-                        ))}
+
+                                {allUser.map((users, index) => (
+                                    <div key={index}  className='userRow'>
+                                        <div className='userCard'>
+                                            <Link to={`/profile/${users._id}`} className='userLink'>
+                                                <p className='userCardHeading'>{users.username}</p>
+                                                {profilePicture && (
+                                                    <img className='userCardImage'
+                                                        src={users.profilePicture} 
+                                                        alt="Profile"
+                                                    />
+                                                )}
+                                            </Link>
+                                            {followBtnCard ? (
+                                                <>
+                                                    <button className='btn btn-outline-dark' id='userCardFollow' onClick={() => handleFollow(users._id) && showFollowBtnCard(false)}>Follow</button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button className='btn btn-outline-dark' id='userCardUnFollow' onClick={() => handleUnfollow(users._id) && showFollowBtnCard(true)}>Unfollow</button>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </>
+                        ) : (
+                            <>
+                                <div className='userHeader'>
+                                    <h5>Drivers You May Know</h5>
+                                    <button className='drop-down-btn' onClick={() => setDropDown(!dropdown)}><svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24"><path fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" d="m7 10l5 5l5-5"/></svg></button>
+                                </div>
+                            </>
+                        )}
                     </div> 
                     <div className='line'></div>
                     </>
