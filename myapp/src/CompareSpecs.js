@@ -454,7 +454,7 @@ const CompareSpecs = () => {
                                 </div>
 
                                 <div className="vehicle2Race" style={{ transform: `translateX(${currentV2Position}px)` }}>
-                                <img src={selectedProfileVehicle?.vehicleData?.image}></img>
+                                    <img src={selectedProfileVehicle?.vehicleData?.image}></img>
                                 </div>
                             </div>
 
