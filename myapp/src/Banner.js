@@ -7,12 +7,14 @@ const Banner = ({imageSrc}) => {
   const [text, setText] = useState('')
 
   useEffect(() => {
-    const sentence = "- 👋 Join the MMC family and rev up your passion - we're eager to welcome you on board "
+    const sentence = "  👋 Join the MMC family and rev up your passion - we're eager to welcome you on board"
     let index = 0
     const timeoutId = setInterval(() => {
       setText((text) => text + sentence.charAt(index))
       index++
-      if (index === sentence.length) clearInterval(timeoutId)
+      if (index === sentence.length){
+        clearInterval(timeoutId)
+      }
     } ,75)
 
     return () => clearInterval(timeoutId)
