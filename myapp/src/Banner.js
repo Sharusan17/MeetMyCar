@@ -22,7 +22,7 @@ const Banner = ({imageSrc}) => {
     <>
       <div className='Banner'>
           <div className='Title'>
-            <h1>MeetMyCar <span>Car Social Media</span> </h1>
+            <h1>MeetMyCar <span>Made For Enthusiasts | Driven By Enthusiasts</span> </h1>
           </div>
           <img className='image' src={imageSrc || defaultPicSrc} alt='Vehicle'></img>
           <div className='Footer'>
