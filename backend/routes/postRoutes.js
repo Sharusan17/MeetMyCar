@@ -126,7 +126,7 @@ router.put('/edit', upload.single('image'), async (req, res) => {
         
         await postUpdate.save();
   
-        res.status(201).json({message: "Post Updated", post: postUpdate});
+        res.status(200).json({message: "Post Updated", post: postUpdate});
         console.log("Post Updated");
     } catch (error){
         console.error('Error Updating Post:', error);

@@ -115,7 +115,7 @@ router.put('/edit', upload.single('image'), async (req, res) => {
 
         await vehicleUpdate.save();
   
-        res.status(201).json({message: "Vehicle Updated", vehicle: vehicleUpdate});
+        res.status(200).json({message: "Vehicle Updated", vehicle: vehicleUpdate});
         console.log("Vehicle Updated");
     } catch (error){
         console.error('Error Updating Vehicle:', error);

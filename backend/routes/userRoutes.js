@@ -164,7 +164,7 @@ router.put('/update', upload.single('profilePicture'), async (req, res) => {
         
         await userUpdate.save();
 
-        res.status(201).json({message: "User Updated", user: userUpdate});
+        res.status(200).json({message: "User Updated", user: userUpdate});
         console.log("User Updated");
     } catch (error){
         console.error('Error updating user:', error);
