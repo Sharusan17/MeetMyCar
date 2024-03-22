@@ -41,7 +41,7 @@ const EditPost = () => {
             try{
                 const firebaseUID = currentUser.uid;
     
-                const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -72,7 +72,7 @@ const EditPost = () => {
     useEffect(() => {
         async function fetchPostData(){
             try{
-                const response = await fetch(`http://localhost:3001/posts/view?postId=${encodeURIComponent(postId)}`, {
+                const response = await fetch(`http://localhost:3001/posts?postId=${encodeURIComponent(postId)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',

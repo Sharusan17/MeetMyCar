@@ -33,7 +33,7 @@ const SeePost = () => {
             try{
                 setError('')
                 setMessage('')
-                const response = await fetch(`http://localhost:3001/posts/view`, {
+                const response = await fetch(`http://localhost:3001/posts`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -45,7 +45,7 @@ const SeePost = () => {
 
                     const vehiclePost = await Promise.all(data.postData.map(async (post) => {
                         if(post.vehicles?.vehicleId){
-                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles/view?vehicleId=${encodeURIComponent(post.vehicles.vehicleId)}`, {
+                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles?vehicleId=${encodeURIComponent(post.vehicles.vehicleId)}`, {
                                 method: 'GET',
                                 headers: {
                                     'accept': 'application/json',
@@ -92,7 +92,7 @@ const SeePost = () => {
             try{
                 setError('')
                 const firebaseUID = currentUser.uid;
-                const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',

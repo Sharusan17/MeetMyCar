@@ -58,7 +58,7 @@ const CompareSpecs = () => {
                 setError('')
                 const firebaseUID = currentUser.uid;
     
-                const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -74,7 +74,7 @@ const CompareSpecs = () => {
 
                     const vehicleData = await Promise.all(data.userData.vehicles.map(async (vehicle) => {
                         if(vehicle?.vehicleId){
-                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles/view?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
+                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
                                 method: 'GET',
                                 headers: {
                                     'accept': 'application/json',
@@ -115,7 +115,7 @@ const CompareSpecs = () => {
             try{
                 setError('')
     
-                const response = await fetch(`http://localhost:3001/users/details?userid=${encodeURIComponent(userid)}`, {
+                const response = await fetch(`http://localhost:3001/users?userid=${encodeURIComponent(userid)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -131,7 +131,7 @@ const CompareSpecs = () => {
 
                     const vehicleData = await Promise.all(data.userData.vehicles.map(async (vehicle) => {
                         if(vehicle?.vehicleId){
-                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles/view?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
+                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
                                 method: 'GET',
                                 headers: {
                                     'accept': 'application/json',

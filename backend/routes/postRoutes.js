@@ -8,12 +8,8 @@ const upload = multer({storage: storage});
 
 router.use(express.json());
 
-router.get("/", (req, res) => {
-    res.send("Posts")
-})
-
 //Get Post Data
-router.get('/view', async (req, res) => {
+router.get('/', async (req, res) => {
     console.log(req.body);
     try{
         const postId = req.query.postId;

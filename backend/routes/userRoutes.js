@@ -8,12 +8,8 @@ const upload = multer({storage: storage});
 
 router.use(express.json());
 
-router.get("/", (req, res) => {
-    res.send("Users")
-})
-
 //GET User Data
-router.get('/details', async (req, res) => {
+router.get('/', async (req, res) => {
     try{       
         const userId = req.query.userfb;
         const userid = req.query.userid;
@@ -42,7 +38,7 @@ router.get('/details', async (req, res) => {
 });
 
 //GET All User Data
-router.get('/details/all', async (req, res) => {
+router.get('/all', async (req, res) => {
     try{       
         const allUserData = await User.find({});
 

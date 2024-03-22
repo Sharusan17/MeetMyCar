@@ -61,7 +61,7 @@ const Profile = () => {
 
                 console.log(query)
     
-                const response = await fetch(`http://localhost:3001/users/details?${query}`, {
+                const response = await fetch(`http://localhost:3001/users?${query}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -80,7 +80,7 @@ const Profile = () => {
 
                     const postData = await Promise.all(data.userData.posts.map(async (post) => {
                         if(post?.postId){
-                            const PostReponse = await fetch(`http://localhost:3001/posts/view?postId=${encodeURIComponent(post.postId)}`, {
+                            const PostReponse = await fetch(`http://localhost:3001/posts?postId=${encodeURIComponent(post.postId)}`, {
                                 method: 'GET',
                                 headers: {
                                     'accept': 'application/json',
@@ -121,7 +121,7 @@ const Profile = () => {
                 setError('')
                 const firebaseUID = currentUser.uid;
 
-                const response = await fetch(`http://localhost:3001/users/details?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -156,7 +156,7 @@ const Profile = () => {
             try{
                 setError('')
 
-                const response = await fetch(`http://localhost:3001/users/details/all`, {
+                const response = await fetch(`http://localhost:3001/users/all`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
