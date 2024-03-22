@@ -4,7 +4,6 @@ import { useAuth } from './AuthContext'
 import {Popup} from 'reactjs-popup'
 
 import './Garage_css.css'
-import LoadingScreen from './Loading'
 
 const Garage = () => {
     const {userid} = useParams()
@@ -28,12 +27,10 @@ const Garage = () => {
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-    const [loadingScreen, setLoadingScreen] = useState(false)
 
     useEffect(() => {
         async function fetchGarageUserData(){
             try{
-                setLoadingScreen(true)
                 setError('')
     
                 const response = await fetch(`http://localhost:3001/users?userid=${encodeURIComponent(userid)}`, {
@@ -75,7 +72,6 @@ const Garage = () => {
                     setProfileLosts(data.userData.lostPoints)
     
                     console.log("Fetched User Details")
-                    setLoadingScreen(false)
                     return data
                 } else{
                     const errorData = await response.json()
@@ -175,7 +171,6 @@ const Garage = () => {
 
     return (
         <>
-            {loadingScreen && <LoadingScreen />}
             <div className='showGarage'>        
                 <header className='garageHeader'>
                     <h1 id="login_text">

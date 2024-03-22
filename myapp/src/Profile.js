@@ -4,7 +4,6 @@ import { useAuth } from './AuthContext'
 import {Popup} from 'reactjs-popup'
 
 import './Profile_css.css'
-import LoadingScreen from './Loading'
 
 const Profile = () => {
     const {currentUser} = useAuth()
@@ -45,13 +44,11 @@ const Profile = () => {
     const [error, setError] = useState('')
     const [commentError, setCommentError] = useState('')
     const [loading, setLoading] = useState(false)
-    const [loadingScreen, setLoadingScreen] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
         async function fetchProfileData(){
             try{
-                setLoadingScreen(true)
                 setError('')
 
                 let query
@@ -105,7 +102,6 @@ const Profile = () => {
                     setPost(postWithData)
     
                     console.log("Fetched User Details")
-                    setLoadingScreen(false)
                     return data
                 } else{
                     const errorData = await response.json()
@@ -686,7 +682,6 @@ const Profile = () => {
 
     return (
         <>
-            {loadingScreen && <LoadingScreen />}
             <div className='showProfile'>        
                 <header className='profileHeader'>
                     <div className='showUserDetails'>

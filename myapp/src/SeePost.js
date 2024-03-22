@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
 import './SeePost_css.css'
-import LoadingScreen from './Loading'
 
 const SeePost = () => {
     const {currentUser} = useAuth()
@@ -28,12 +27,10 @@ const SeePost = () => {
     const [nopost, setNoPost] = useState('')
     const [commentError, setCommentError] = useState('')
     const [loading, setLoading] = useState('')
-    const [loadingScreen, setLoadingScreen] = useState(false)
 
     useEffect(() => {
         async function fetchPostData(){
             try{
-                setLoadingScreen(true)
                 setError('')
                 setMessage('')
                 const response = await fetch(`http://localhost:3001/posts`, {
@@ -81,9 +78,8 @@ const SeePost = () => {
                     const errorData = await response.json()
                     throw new Error(errorData.message)
                 }
-                setLoadingScreen(false)
+
             } catch (error){
-                setLoadingScreen(false)
                 console.error("Error Fetching Post Data:", error)
                 setError("Error Fetching Post. Try Again Later")
             }
@@ -486,7 +482,6 @@ const SeePost = () => {
 
     return (
         <>
-            {loadingScreen && <LoadingScreen />}
             <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{nopost}</p>
 
             <div className="postList">
