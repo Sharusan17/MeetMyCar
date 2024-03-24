@@ -25,6 +25,7 @@ const Profile = () => {
 
     const [allUser, setAllUser] = useState([])
     const [posts, setPost] = useState([])
+    const [refreshData, setRefreshData] = useState(false)
     const [showfollowbtn, setFollowbtn] = useState(true)
     const [selectedPost, setselectedPost] = useState('')
     const [selectedComment, setSelectedComment] = useState(null)
@@ -113,7 +114,7 @@ const Profile = () => {
             }
         }
         fetchProfileData()
-    }, [currentUser.uid, userid])
+    }, [currentUser.uid, userid, refreshData])
 
     useEffect(() => {
         async function fetchCurrentUserData(){
@@ -307,9 +308,9 @@ const Profile = () => {
             }
         }
         fetchCurrentUserFollowing()
-    }, [currentUserFollowing, userId])
+    }, [currentUserFollowing, userId, refreshData])
 
-    async function handleFollow(userIDFollow){
+    async function handleFollow(userIDFollow, userNameFollow){
 
         setLoading(true)
         setError('')
@@ -323,7 +324,7 @@ const Profile = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({followeringId: userIDFollow, followeringName: username})
+                body: JSON.stringify({followeringId: userIDFollow, followeringName: userNameFollow})
             });
 
             if (!response.ok){
@@ -347,6 +348,8 @@ const Profile = () => {
                 console.error("Error Updating User Followers:", error)
                 throw new Error(errorData.message)  
             }
+
+            setRefreshData(!refreshData)
             setFollowbtn(false)
 
         }catch (error){
@@ -395,6 +398,8 @@ const Profile = () => {
                 console.error("Error Updating User Followers:", error)
                 throw new Error(errorData.message)  
             }
+
+            setRefreshData(!refreshData)
             setFollowbtn(true)
 
         }catch (error){
@@ -421,6 +426,7 @@ const Profile = () => {
             if (!response.ok){
                 console.error("Error Updating Like Post:")
             }
+
             console.log("Updated Like Post")
         }catch (error){
             console.error("Error Updating Like Post:")
@@ -702,11 +708,11 @@ const Profile = () => {
                             <>
                                 {showfollowbtn ? (
                                     <>
-                                        <button className='btn btn-dark' id='followbtn' onClick={() => handleFollow(userId)}> Follow</button>
+                                        <button className='btn btn-dark' id='followbtn' onClick={() => handleFollow(userId, username)}> Follow</button>
                                     </>
                                 ) : (
                                     <>
-                                        <button className='btn btn-dark' id='followbtn' onClick={() => handleUnfollow(userId)}> Unfollow</button>
+                                        <button className='btn btn-dark' id='followbtn' onClick={() => handleUnfollow(userId, username)}> Unfollow</button>
                                     </>
                                 )}
                             </>
@@ -765,11 +771,11 @@ const Profile = () => {
                                             </Link>
                                             {followBtnCard ? (
                                                 <>
-                                                    <button className='btn btn-outline-dark' id='userCardFollow' onClick={() => handleFollow(users._id) && showFollowBtnCard(false)}>Follow</button>
+                                                    <button className='btn btn-outline-dark' id='userCardFollow' onClick={() => handleFollow(users._id, users.username) && showFollowBtnCard(false)}>Follow</button>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <button className='btn btn-outline-dark' id='userCardUnFollow' onClick={() => handleUnfollow(users._id) && showFollowBtnCard(true)}>Unfollow</button>
+                                                    <button className='btn btn-outline-dark' id='userCardUnFollow' onClick={() => handleUnfollow(users._id, users.username) && showFollowBtnCard(true)}>Unfollow</button>
                                                 </>
                                             )}
                                         </div>
