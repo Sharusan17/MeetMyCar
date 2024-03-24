@@ -7,16 +7,25 @@ const Banner = ({imageSrc}) => {
   const [text, setText] = useState('')
 
   useEffect(() => {
-    const sentence = "  👋 Join the MMC family and rev up your passion - we're eager to welcome you on board"
+    const sentences = ["  👋 Join the MMC family and rev up your passion - we're eager to welcome you on board",
+                      "  🏎️ Connect, drive and meet with fellow car enthusiasts across the globe - it's time to make your mark"]
+    let sentenceIndex = 0
     let index = 0
     const timeoutId = setInterval(() => {
-      setText((text) => text + sentence.charAt(index))
+      setText((text) => text + sentences[sentenceIndex].charAt(index))
       index++
-      if (index === sentence.length){
-        clearInterval(timeoutId)
+      if (index === sentences[sentenceIndex].length){
+        setTimeout(() => {
+          setText('')
+          sentenceIndex++
+          if (sentenceIndex === sentences.length) {
+            sentenceIndex = 0
+          }
+          index=0
+        }, 3000)
       }
     } ,75)
-
+    
     return () => clearInterval(timeoutId)
   }, [])
 
