@@ -10,6 +10,7 @@ const SeePost = () => {
     const [usersf, setUserSF] = useState('')
 
     const [posts, setPosts] = useState([])
+    const [refreshData, setRefreshData] = useState(false)
 
     const [selectedPost, setSelectedPost] = useState('')
     const [selectedComment, setSelectedComment] = useState(null)
@@ -85,7 +86,7 @@ const SeePost = () => {
             }
         }
         fetchPostData();
-    }, []);
+    }, [refreshData]);
 
     useEffect(() => {
         async function fetchUserData(){
@@ -219,6 +220,8 @@ const SeePost = () => {
             if (!response.ok){
                 console.error("Error Updating Like Post:")
             }
+
+            setRefreshData(!refreshData)
             console.log("Updated Like Post")
         }catch (error){
             console.error("Error Updating Like Post:")
@@ -243,6 +246,8 @@ const SeePost = () => {
             if (!response.ok){
                 console.error("Error Updating Like Post:")
             }
+
+            setRefreshData(!refreshData)
             console.log("Updated Like Post")
         }catch (error){
             console.error("Error Updating Like Post:")
@@ -266,13 +271,14 @@ const SeePost = () => {
                     body: JSON.stringify({commentUser: userId, commentText: commentRef.current.value})
                 });
 
-                if (response.ok){
-                    console.log("Added Comment Data")
-                } else{
+                if (!response.ok){
                     const errorData = await response.json()
                     console.error("Error Updating Comment Data:", error)
                     throw new Error(errorData.message)
                 }
+
+                setRefreshData(!refreshData)
+                console.log("Added Comment Data")
             }catch (error){
                 console.error("Error Adding Comment Data:", error)
                 setCommentError("Failed To Add Comment Data")
@@ -297,13 +303,14 @@ const SeePost = () => {
                 body: JSON.stringify({deleteCommentId: commentId})
             });
 
-            if (response.ok){
-                console.log("Deleted Comment Data")
-            } else{
+            if (!response.ok){
                 const errorData = await response.json()
                 console.error("Error Deleting Comment Data:", error)
                 throw new Error(errorData.message)
             }
+
+            setRefreshData(!refreshData)
+            console.log("Deleted Comment Data")
         }catch (error){
             console.error("Error Deleting Comment Data:", error)
             setCommentError("Failed To Delete Comment")
@@ -326,13 +333,14 @@ const SeePost = () => {
                      body: JSON.stringify({commentId: commentId, replyUser: userId, replyText: replyRef.current.value})
                  });
  
-                 if (response.ok){
-                     console.log("Added Reply Data")
-                 } else{
-                     const errorData = await response.json()
-                     console.error("Error Updating Reply Data:", error)
-                     throw new Error(errorData.message)
+                 if (!response.ok){
+                    const errorData = await response.json()
+                    console.error("Error Updating Reply Data:", error)
+                    throw new Error(errorData.message)
                  }
+
+                 setRefreshData(!refreshData)
+                 console.log("Added Reply Data")
              }catch (error){
                  console.error("Error Adding Reply Data:", error)
                  setCommentError("Failed To Add Reply Data")
@@ -357,13 +365,14 @@ const SeePost = () => {
                 body: JSON.stringify({commentId: commentId, deleteReplyId: replyId})
             });
 
-            if (response.ok){
-                console.log("Deleted Reply Data")
-            } else{
+            if (!response.ok){
                 const errorData = await response.json()
                 console.error("Error Deleting Reply Data:", error)
                 throw new Error(errorData.message)
             }
+
+            setRefreshData(!refreshData)
+            console.log("Deleted Reply Data")
         }catch (error){
             console.error("Error Deleting Reply Data:", error)
             setCommentError("Failed To Delete Reply")
@@ -415,6 +424,7 @@ const SeePost = () => {
                     console.error("Error Updating Profile's SuperFuel:")
                 }
                 
+                setRefreshData(!refreshData)
                 console.log("Updated SuperFuel Post")
 
             } else{
@@ -472,6 +482,8 @@ const SeePost = () => {
             if (!profileResponse.ok){
                 console.error("Error Updating Profile's SuperFuel:")
             }
+
+            setRefreshData(!refreshData)
             console.log("Updated SuperFuel Post")
         }catch (error){
             console.error("Error Updating SuperFuel Post:")
