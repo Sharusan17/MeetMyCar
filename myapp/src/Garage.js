@@ -65,7 +65,7 @@ const Garage = () => {
                         }
                     }))
 
-                    const vehicleWithData = vehicleData.filter(vehicle => vehicle !== null)
+                    const vehicleWithData = vehicleData.filter(vehicle => vehicle !== null).reverse()
                     setVehicle(vehicleWithData)
 
                     setProfileWins(data.userData.winPoints)

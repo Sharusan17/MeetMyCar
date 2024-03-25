@@ -99,7 +99,7 @@ const Profile = () => {
                         }
                     }))
 
-                    const postWithData = postData.filter(post => post !== null)
+                    const postWithData = postData.filter(post => post !== null).reverse()
                     setPost(postWithData)
     
                     console.log("Fetched User Details")
