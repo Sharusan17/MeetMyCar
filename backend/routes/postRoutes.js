@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
             //sorts the post by updatedAt Date/Time (Newest First)
             postData = await Post.find().populate('user', 'username profilePicture')
                                         .populate('comments.userID', 'username profilePicture').populate('comments.replies.userID', 'username profilePicture')
-                                        .sort({updatedAt: -1});
+                                        .sort({createdAt: -1});
         }
         
         res.status(200).json({message: "Post Found", postData});

@@ -523,8 +523,8 @@ const SeePost = () => {
 
                             
                             <div className='postTimeStamp'>
-                                <p>{formatDate(post.updatedAt)}</p>
-                                <p>{formatTime(post.updatedAt)}</p>
+                                <p>{formatDate(post.createdAt)}</p>
+                                <p>{formatTime(post.createdAt)}</p>
 
                                 {(post.user._id === userId)? (
                                     <>
