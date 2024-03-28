@@ -137,6 +137,7 @@ const Signup = () => {
                 </Form.Group>
 
                 <Form.Group id="profilePicture">
+                    <Form.Label>Profile Picture</Form.Label>
                     <Form.Control type="file"placeholder='Profile Picture' ref={profilePictureRef} accept="image/*" />
                 </Form.Group>
 

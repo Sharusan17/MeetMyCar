@@ -82,6 +82,12 @@ header{
     margin-bottom: 10px;
 }
 
+#profilePicture label{
+    margin: 0;
+    margin-bottom: 5px;
+    padding: 0;
+}
+
 input:hover{
     box-shadow: 1px 1px 1px 1px rgb(122, 122, 122);
     transition: border-color 0.5s ease-in;
