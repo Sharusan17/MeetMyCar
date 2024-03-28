@@ -1,13 +1,14 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 
+
 const app = firebase.initializeApp({
-    apiKey: "AIzaSyDLtAYA6ACkBZbGf1zV4mZniKZp0zMtjcs",
-    authDomain: "meetmycar-bfa6b.firebaseapp.com",
-    projectId: "meetmycar-bfa6b",
-    storageBucket: "meetmycar-bfa6b.appspot.com",
-    messagingSenderId: "671944782564",
-    appId: "1:671944782564:web:45127b75a322edce15f2f1"
+    apiKey: process.env.REACT_APP_FB_API_KEY,
+    authDomain: process.env.REACT_APP_FB_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FB_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FB_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FB_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FB_APP_ID
 })
 
 export const auth = app.auth()
