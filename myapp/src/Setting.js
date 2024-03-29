@@ -19,8 +19,10 @@ const Setting = () => {
 
   useEffect(() => {
     async function fetchUserData(){
+        // fetches current user data, and stores the data (id, name and profilePic) into useState, to be used throughout the page.
         try{
             setError('')
+            // fetches the user data with firebase ID
             const firebaseUID = currentUser.uid;
 
             const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
@@ -33,6 +35,7 @@ const Setting = () => {
             if (response.ok){
                 const data = await response.json()
 
+                // updates user's data states
                 setuserId(data.userData._id)
                 setuserName(data.userData.username)
                 setprofilePicture(data.userData.profilePicture)
@@ -52,6 +55,7 @@ const Setting = () => {
     fetchUserData();
 }, [currentUser.uid]);
 
+  // handles logout
   async function handleLogOut(){
     setError('')
 
@@ -84,8 +88,11 @@ const Setting = () => {
 
         <p>{error}</p>
 
+        {/* Each card has title, image and desc */}
+
         <div className='Card_Setting'>
           <div className='settingCard'>
+            {/* Link To User's Profile */}
             <Link to={`/profile/${userId}`}>
               <div className='cardSettingImage'>
                   <img src={profilePicture} alt={username}/> 
@@ -124,6 +131,7 @@ const Setting = () => {
           </div>
 
           <div className='settingCard'>
+            {/* Link To User's Garage */}
             <Link to={`/garage/${userId}`}>
               <div className='cardSettingImage'>
                   <img src={garagePic} alt="garage"/> 
@@ -143,6 +151,7 @@ const Setting = () => {
           </div>
 
           <div className='settingCard'>
+            {/* Link To Creator's (me) Profile */}
             <Link to={`http://localhost:3000/profile/65ca0522f846d28f065b115d`}>
               <div className='cardSettingImage'>
                   <img src={profilePicture} alt={username}/> 
@@ -162,6 +171,7 @@ const Setting = () => {
           </div>
         </div>
 
+        {/* About Section */}
         <footer className='settingFooter'>
           <h1>About MeetMyCar...</h1>
           <p>Hey you! Yes, you <strong>{username}</strong>. Did you know MeetMyCar is a social media, made for you petrol-head/car enthusiasts, made by a car enthusiast. I wanted to join the bridge between sharing images of our modified and beautiful vehicles and sharing our specification.</p>
@@ -170,6 +180,7 @@ const Setting = () => {
           <p>Also, keep a lookout for potential new updates 👀 coming soon...</p>
         </footer>
 
+        {/* Logout Button */}
         <div className="w-100 text-center">
           <button className='btn btn-dark' onClick={handleLogOut}> Log Out </button>
         </div>

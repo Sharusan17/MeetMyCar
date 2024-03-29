@@ -22,10 +22,11 @@ const Signup = () => {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
-
+    // handles signup submission
     async function handleSubmit(e){
         e.preventDefault()
         
+        // validates the form's field has the correct length and not empty
         if (firstNameRef.current.value.length < 2){
              return setError("Firstname Minimum Length (2)")
         }
@@ -49,7 +50,8 @@ const Signup = () => {
         if (passwordRef.current.value.length < 6 && passwordConfirmRef.current.value.length < 6 ){
             return setError("Password Really Short")
         }
-
+  
+        // using useRef, it will capture the current value for each field and stores into FormData
         const formData = new FormData();
         formData.append('firstname', firstNameRef.current.value)
         formData.append('lastname', lastNameRef.current.value)
@@ -59,12 +61,14 @@ const Signup = () => {
 
         try{
             setError('')
+            // sends email verification when signed up
             const {user} = await signup(emailRef.current.value, passwordRef.current.value)
             await user.sendEmailVerification();
 
             const firebaseUID = user.uid;
             formData.append('user_fbId', firebaseUID)
 
+            // adds the user's formData into the Users database
             const response = await fetch('http://localhost:3001/users/register', {
                 method: 'POST',
                 body: formData,
@@ -72,6 +76,7 @@ const Signup = () => {
 
             if (response.ok){
                 const data = await response.json()
+                // successful signups navigates to verify page, to verify email
                 console.log("Created User Account Successful")
                 navigate("/verify")
                 return data
@@ -84,6 +89,7 @@ const Signup = () => {
                 }
             }
         }catch (error){
+            // displays error message, depending on type of error
             console.error("Error Signing Up:", error)
             if (error.code === 'auth/email-already-in-use'){
                 setError("Email Already In Use")
@@ -108,6 +114,7 @@ const Signup = () => {
                 </h1>
             </header>
 
+            {/* Signup Form Fields */}
             <form onSubmit={handleSubmit} className='signUpForm'>
 
                 <div className='name_row'>
@@ -136,6 +143,7 @@ const Signup = () => {
                     <Form.Control type="password" placeholder='Password Confirmation'ref={passwordConfirmRef} required />
                 </Form.Group>
 
+                {/* Profile Picture Label and Input Field */}
                 <Form.Group id="profilePicture">
                     <Form.Label>Profile Picture</Form.Label>
                     <Form.Control type="file"placeholder='Profile Picture' ref={profilePictureRef} accept="image/*" />
@@ -148,7 +156,7 @@ const Signup = () => {
                 <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
             </form>
 
-            
+            {/* Alternative Flow For Registered Users*/}
             <div id="loginpage" className="w-100 text-center mt-2">
                 Already have an account? <Link to="/login" id='loginlink'> Login Here</Link>
             </div>

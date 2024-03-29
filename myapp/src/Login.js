@@ -16,15 +16,18 @@ const Login = () => {
     const navigate = useNavigate()
 
 
+    // handles login submission
     async function handleSubmit(e){
         e.preventDefault()
 
         try{
             setError('')
             setLoading(true)
+            // checks correct login details, and navigates to homepage
             await login(emailRef.current.value, passwordRef.current.value)
             navigate("/")
         }catch(error){
+            // displays error message, depending on type of error
             console.error("Error Logging In:", error)
             if(error.code === "auth/too-many-requests"){
                 setError(
@@ -54,6 +57,7 @@ const Login = () => {
                     </h1>
                 </header>
 
+                {/* Login Form */}
                 <form onSubmit={handleSubmit} className='loginForm'>
                     
                     <Form.Group id="email">

@@ -14,12 +14,14 @@ const Reauthenticate = () => {
     const navigate = useNavigate()
 
 
+    // handles reauthenticate submission
     async function handleReauthenticate(e){
         e.preventDefault()
 
         try{
             setError('')
             setLoading(true)
+            // validate the password the user enters, with the given email and navigate to update profile after successful attempt
             await login(currentUser.email, passwordRef.current.value)
             navigate("/update-profile")
         }catch(error){
@@ -40,6 +42,7 @@ const Reauthenticate = () => {
                     </h1>
                 </header>
 
+                {/* Reauthenticate Form */}
                 <form className='loginForm'>
 
                     <h2 className='reauthenticateEmail'>{currentUser.email}</h2>
