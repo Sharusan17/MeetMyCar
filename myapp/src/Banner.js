@@ -6,7 +6,7 @@ const Banner = ({imageSrc}) => {
 
   const [text, setText] = useState('')
 
-  // Effect through each sentence, letter by letter, and loops to show a typing effect
+  // Goes through each sentence, letter by letter, and loops to show a typing effect
   useEffect(() => {
     // Array of sentences to display
     const sentences = ["  👋 Join the MMC family and rev up your passion - we're eager to welcome you on board",
