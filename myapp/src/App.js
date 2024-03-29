@@ -1,3 +1,5 @@
+// import all components 
+
 import {AuthProvider} from "./AuthContext";
 
 import Layout from "./Layout";
@@ -26,11 +28,11 @@ import PrivateRoute from "./PrivateRoute";
 function App() {
   return (
           <BrowserRouter>
-            <AuthProvider>
+            <AuthProvider> {/* Provide authentication context */}
               <Routes>
                 <Route path="/" 
                   element={
-                    <PrivateRoute>
+                    <PrivateRoute> {/*Ensures User is logged in */}
                       <Layout>
                         <SeePost />
                       </Layout>
@@ -108,6 +110,7 @@ function App() {
                   }
                 />
 
+                {/* Profile Account with userId*/}
                 <Route path="/profile/:userid"
                   element={
                     <PrivateRoute>
@@ -118,6 +121,7 @@ function App() {
                   }
                 />
 
+                {/* Profile Account with username*/}
                 <Route path="/profile/username/:userName"
                   element={
                     <PrivateRoute>

@@ -11,6 +11,8 @@ export function AuthProvider ({children}) {
     const [currentUser, setCurrentUser] = useState()
     const [loading, setLoading] = useState(true)
 
+    //using firebase's method to create user, login and update account details
+
     function signup(email, password){
       return auth.createUserWithEmailAndPassword(email, password)
     }
@@ -39,6 +41,7 @@ export function AuthProvider ({children}) {
       return currentUser.delete()
     }
 
+    // Sets current user and loading state on authentication state change
     useEffect(() => {
       const unsubscribe = auth.onAuthStateChanged(user =>{
         setCurrentUser(user)
@@ -49,7 +52,7 @@ export function AuthProvider ({children}) {
     }, [])
 
    
-
+    // Values exported to be used through out the application
     const value  = {
         currentUser,
         signup,
