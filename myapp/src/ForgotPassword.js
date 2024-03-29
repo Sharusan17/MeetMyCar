@@ -14,17 +14,17 @@ const ForgotPassword = () => {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
-
-
+    // handles form submission 
     async function handleSubmit(e){
         e.preventDefault()
-
+        // sends a password reset using firebase to the current email address
         try{
             setMessage('')
             setError('')
             setLoading(true)
             await passwordReset(emailRef.current.value)
             setMessage("Check your inbox for further instruction")     
+            // after the password reset email has been sent, it will navigate back to login page
             setTimeout(() => {
                 navigate("/login")
             }, 2000) 
