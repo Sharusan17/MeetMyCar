@@ -1,3 +1,4 @@
+/* Styles for the main container of the add post component */
 .addPost {
     position: relative;
     top: 0;
@@ -21,12 +22,14 @@
     font-family:'Courier New', Courier, monospace;
 }
 
+/* Styles for the header section containing user details and date/time */
 .addHeading{
     display: flex;
     justify-content: space-between;
     width: 100%;
 }
 
+/* Styles for user details */
 .showUserDetails{
     display: flex;
     align-items: center;
@@ -35,6 +38,7 @@
     margin-left: 30px;
 }
 
+/* Styles for user image */
 .showUserImage{
     width: 40px;
     height: 40px;
@@ -47,6 +51,7 @@
     margin-top: 15px;
 }
 
+/* Styles for date/time */
 .showTimeStamp{
     font-family: 'Courier New', Courier, monospace;
     font-weight: 600;
@@ -103,7 +108,6 @@
     box-shadow: 4px 5px 5px 4px #CCCCCC;
 }
 
-
 .add_postFooter{
     display: flex;
     flex-direction: column;
@@ -111,6 +115,7 @@
     margin-right: 10px;
 }
 
+/* Styles for the vehicle selection */
 .add_postVRN{
     align-self: flex-end;
     margin-bottom: 10px;
@@ -155,6 +160,7 @@
     box-shadow: 2px 2px 5px 1px rgb(122, 122, 122);
 }
 
+/* Media query for smaller screens (mobile) */
 @media only screen and (max-width: 600px) {
     .addPost {
         margin: 5px 2.5px;

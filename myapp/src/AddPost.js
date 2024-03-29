@@ -1,3 +1,4 @@
+// import hooks
 import React, {useState, useEffect, useRef} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthContext'
@@ -30,7 +31,9 @@ const AddPost = () => {
 
     useEffect(() => {
         async function fetchUserData(){
+            // fetches current user data, and stores the data (id, name, profilePic and vehicle) into useState, to be used throughout the page.
             try{
+                // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
     
                 const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
@@ -43,6 +46,7 @@ const AddPost = () => {
                 if (response.ok){
                     const data = await response.json()
 
+                    // updates user's data states
                     setuserId(data.userData._id)
                     setuserName(data.userData.username)
                     setprofilePicture(data.userData.profilePicture)
@@ -61,9 +65,11 @@ const AddPost = () => {
         fetchUserData();
     }, [currentUser.uid]);
 
+    // handles form submission
     async function handleAddPost(e){
         e.preventDefault()
 
+        // validates the form's field has the correct length and not empty
        if (titleRef.current.value.length < 2 ){
             return setError("Title Too Short")
        }
@@ -81,6 +87,7 @@ const AddPost = () => {
        }
 
 
+       // using useRef, it will capture the current value for each field and stores into FormData
        const formData = new FormData();
        formData.append('user', userId);
        formData.append('title', titleRef.current.value);
@@ -92,6 +99,7 @@ const AddPost = () => {
        console.log(selectVehicle)
 
         try{
+            // adds the formData into the Posts database
             setError('')
             setLoading(true) 
 
@@ -110,11 +118,13 @@ const AddPost = () => {
 
             console.log(data.newPost._id)
 
+            // fetches the user data with firebase ID
             const firebaseUID = currentUser.uid;
 
             const Post_formData = new FormData();
             Post_formData.append('postId', data.newPost._id);
 
+            // adds the post to the user's account and database
             const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 body: Post_formData,
@@ -125,6 +135,7 @@ const AddPost = () => {
                 throw new Error(errorData.message)
             } 
 
+            // adds a superfuel point for every post added to the user's account
             const userSFResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
@@ -137,6 +148,7 @@ const AddPost = () => {
                 console.error("Error Updating User's SuperFuel:")
             }
 
+            // successful form submission, and navigates back to home page to see post
             console.log("Add Post Successful")
             navigate("/")
 
@@ -148,16 +160,19 @@ const AddPost = () => {
         setLoading(false) 
     }
 
+    // fetches the image input, and sets to the setImage state which can be shown on the form for the user
     function handleImageInput(e){
         setImage(URL.createObjectURL(e.target.files[0]))
     }
 
+    // using the vehicle options, user will select the vehicle the post is related to
     function handleSelectVehicle(e){
         const vehicle_Id= e.target.value;
         const selectVehicle = vehicle.find(v => v.vehicleId === vehicle_Id)
         setselectedVehicle(selectVehicle);
     };
 
+    // shows the current time and date to the user
     useEffect(() => {
         const currentDateTime = () => {
             const currentDate = new Date()
@@ -176,6 +191,7 @@ const AddPost = () => {
                 <h2 className="addPost_text">Add <span>Post</span></h2>
                 <form onSubmit={handleAddPost}>
                     <div className='addHeading'>
+                        {/* User Details */}
                         <div className='showUserDetails'>
 
                             {profilePicture && (
@@ -193,12 +209,14 @@ const AddPost = () => {
                         </div>
                     </div>
 
+                    {/* Form Fields */}
                     <div className='add-post-content'>
                         <input type='text' ref={titleRef} placeholder='Title...' className='add_postTitle' required></input>
                         <input type='file' ref={imageRef}  placeholder='Insert Image' className='add_postImageBtn' onChange={handleImageInput} required></input> 
                         <img src={image} alt='Post' className='add_postImage'></img>
 
                         <div className='add_postFooter'>
+                            {/* Shows all user vehicles for selection */}
                             <select className='add_postVRN' onChange={handleSelectVehicle} value={selectVehicle.vehicleId} required>
                                 <option value="" disabled>VRN</option>
                                 {vehicle.map(vehicle => ( 
