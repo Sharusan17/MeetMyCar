@@ -33,9 +33,11 @@ const UpdateProfile = () => {
 
     useEffect(() => {
         async function fetchUserData(){
+            // fetches current user data after every updates to user, and stores the data into useState, to be used throughout the page.
             await updateUser()
             try{
                 setError('')
+                // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
                 // console.log(firebaseUID)
 
@@ -49,6 +51,7 @@ const UpdateProfile = () => {
                 if (response.ok){
                     const data = await response.json()
 
+                    // updates user's data states
                     setUserId(data.userData._id)
                     setfirstName(data.userData.firstname)
                     setlastName(data.userData.lastname)
@@ -71,6 +74,7 @@ const UpdateProfile = () => {
         fetchUserData();
     }, [currentUser.uid]); 
 
+    // handles updates to user account
     const updateUser = async () => {
 
         const formData = new FormData();
@@ -88,6 +92,7 @@ const UpdateProfile = () => {
             const firebaseUID = currentUser.uid;
             // console.log(firebaseUID)
 
+            // amends user's data into database
             const response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 body: formData,
@@ -109,9 +114,11 @@ const UpdateProfile = () => {
         }
     }
 
+    // handles update user submission
     async function handleSubmit(e){
         e.preventDefault()
 
+        // validates password meets requirement
         if(passwordRef.current.value.length){
             if (passwordRef.current.value !== passwordConfirmRef.current.value){
                 return setError("Password do not match")
@@ -125,6 +132,7 @@ const UpdateProfile = () => {
         setLoading(true)
         setError('')
 
+        // checks if any of the field has been changed
         if (emailRef.current.value !== currentUser.email){
             try{
                 await toupdate.push(updateEmail(emailRef.current.value))
@@ -146,6 +154,7 @@ const UpdateProfile = () => {
             toupdate.push(updateUser())
         }
 
+        // adds all changes to a list and updates all changes
         Promise.all(toupdate).then(() => {
             navigate('/setting')
         }).catch( (error) => {
@@ -166,9 +175,11 @@ const UpdateProfile = () => {
         })
     }
 
+    // handle delete user's account
     async function handleDelete(e){
         e.preventDefault()
 
+        // opens delete confirmation
         if (!confirmDeleteUser){
             setconfirmDeleteUser(true)
             setOpenDeleteModal(true)
@@ -179,12 +190,14 @@ const UpdateProfile = () => {
         setError('')
 
         try{
+            // sends delete request to database to remove account
             const response = await fetch(`http://localhost:3001/users/delete?userfb=${encodeURIComponent(userId)}`, {
                 method: 'DELETE',
             });
 
             if (response.ok){
                 console.log("Deleted User")
+                // deletes account in firebase database
                 deleteUser()
             } else{
                 const errorData = await response.json()
@@ -200,14 +213,17 @@ const UpdateProfile = () => {
         }
     }
 
+    // handle image input, and display new inserted image
     function handleImageInput(e){
         setprofilePicture(URL.createObjectURL(e.target.files[0]))
     }
 
+    // handle email change
     const handleEmailChange = () =>{
         setemailChanging(true)
     }
     
+    // handle delete modal
     const handleCloseDelete = () => {
         setOpenDeleteModal(false)
         setconfirmDeleteUser(false)
@@ -223,6 +239,7 @@ const UpdateProfile = () => {
                 <h3 className='updateName'>{firstname} {lastname}</h3>
             </header>
 
+            {/* Update Form */}
             <form className='updateForm' onSubmit={handleSubmit}>
 
                 <p className="w-100 text-center mt-0 mb-0" id="error_Msg">{error}</p>
@@ -239,16 +256,19 @@ const UpdateProfile = () => {
                 
                 <Form.Group className='formBox' id="password">
                     <Form.Label className='formLabel'>Password</Form.Label>
+                    {/* check if email is being changed and display message depending on situation */}
                     <Form.Control className='formInput' type="password" ref={passwordRef} placeholder={emailChanging ? 'Cannot Be Updated While Email Updating' : 'Leave Blank to keep the same'} disabled={emailChanging}/>
                 </Form.Group>
 
                 <Form.Group className='formBox' id="passwordConfirmation">
                     <Form.Label className='formLabel'>Password Confirmation</Form.Label>
+                    {/* check if email is being changed and display message depending on situation */}
                     <Form.Control className='formInput' type="password" ref={passwordConfirmRef} placeholder={emailChanging ? 'Cannot Be Updated While Email Updating' : 'Leave Blank to keep the same'} disabled={emailChanging} />
                 </Form.Group>
 
                 <Form.Group className='formBox' id="profilePicture">
                     <Form.Label className='formLabel'>Profile Picture</Form.Label>
+                    {/* display profile pic */}
                     {profilePicture && (
                         <img
                             src={profilePicture} 
@@ -263,6 +283,7 @@ const UpdateProfile = () => {
 
                 <Form.Group className='formBox' id="vehicles">
                     <Form.Label className='formLabel'>Look At Your Vehicles</Form.Label>
+                    {/* shows all user's vehicle */}
                     <select className='formVehicle'>
                         <option value="" disabled>VRN</option>
                         {vehicles.map(vehicle => ( 
@@ -273,7 +294,7 @@ const UpdateProfile = () => {
 
                 <button disabled={loading} className="btn btn-dark w-100 mt-2" type="submit">Update</button>
                 
-
+            {/* modal for confirm delete */}
                 {confirmDeleteUser ? (
                     <>
                         <Popup open={openDeleteModal} closeOnDocumentClick onClose={() => handleCloseDelete()} className='Popup'>
@@ -299,8 +320,7 @@ const UpdateProfile = () => {
 
             </form>
 
-
-                
+            {/* Alternative flow for user's doesnt want to make changes */}    
             <div className="cancelMsg">
                 <Link to="/setting" className="cancelMsg">  Go Back Home</Link>
             </div>
