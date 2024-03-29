@@ -1,7 +1,10 @@
+/* Styles for the parent container of the Banner and forms */
 .banner-layout {
     display: flex;
     height: 100vh;
 }
+
+/* Styles for the forms container */
 .forms {
     flex: 1;
     display: grid;
@@ -9,7 +12,7 @@
     align-items: center;
 }
 
-
+/* Media query for screens with a maximum width of 600px (mobile)*/
 @media only screen and (max-width: 600px) {
     .forms{
         padding: 0;

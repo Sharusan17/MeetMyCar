@@ -1,9 +1,11 @@
+/* Styles for the parent container of the main layout */
 .layout {
     display: flex;
     height: 100vh;
     background-color: rgb(247, 247, 247);
 }
 
+/* Styles for the content container */
 .content {
     flex-grow: 1;
     flex-direction: column;
@@ -11,6 +13,7 @@
     overflow-y: scroll;
 }
 
+/* Media query for screens with a maximum width of 600px (mobile)*/
 @media only screen and (max-width: 600px) {
     .content{
         padding: 0 10px;
