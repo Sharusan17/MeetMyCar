@@ -1,3 +1,4 @@
+// import hooks
 import React, {useState, useEffect, useRef} from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from './AuthContext'
@@ -38,7 +39,9 @@ const EditPost = () => {
 
     useEffect(() => {
         async function fetchUserData(){
+            // fetches current user data, and stores the data (id, name, profilePic and vehicle) into useState, to be used throughout the page.
             try{
+                // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
     
                 const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
@@ -51,6 +54,7 @@ const EditPost = () => {
                 if (response.ok){
                     const data = await response.json()
 
+                    // updates user's data states
                     setuserId(data.userData._id)
                     setuserName(data.userData.username)
                     setprofilePicture(data.userData.profilePicture)
@@ -71,6 +75,7 @@ const EditPost = () => {
 
     useEffect(() => {
         async function fetchPostData(){
+            // fetches the post data, and stores the data (title, img, desc and vehicle) into useState, to be used throughout the page.
             try{
                 const response = await fetch(`http://localhost:3001/posts?postId=${encodeURIComponent(postId)}`, {
                     method: 'GET',
@@ -82,6 +87,7 @@ const EditPost = () => {
                 if (response.ok){
                     const data = await response.json()
 
+                    // updates post's data states
                     setTitle(data.postData.title)
                     setImage(data.postData.image)
                     setDesc(data.postData.description)
@@ -101,6 +107,7 @@ const EditPost = () => {
         fetchPostData();
     }, []);
 
+    // shows the current time and date to the user
     useEffect(() => {
         const currentDateTime = () => {
             const currentDate = new Date()
@@ -113,10 +120,11 @@ const EditPost = () => {
         return () => clearInterval(intervalId)
     }, [])
 
-
+    // handles form submission
     async function handleUpdatePost(e){
         e.preventDefault()
 
+        // validates the form's field has the correct length and not empty
        if (titleRef.current.value.length < 2 ){
             return setError("Title Too Short")
        }
@@ -130,7 +138,10 @@ const EditPost = () => {
        }
 
 
+       // check if the field is not the same as previous
        if ((titleRef.current.value !== title) || (imageChange === true ) || (descRef.current.value !== desc) || (selectVehicle.vrn !== oldSelectedVehicle.vrn)) {
+            
+        // using useRef, it will capture the current value for each field and stores into FormData
             const formData = new FormData();
             formData.append('title', titleRef.current.value);
             formData.append('image', imageRef.current.files[0])
@@ -139,6 +150,7 @@ const EditPost = () => {
             formData.append('vrn', selectVehicle.vrn)
 
             try{
+                // updates the post with it's postId using the formData
                 setLoading(true)
                 setError('')
 
@@ -148,6 +160,7 @@ const EditPost = () => {
                 });
 
                 if (response.ok){
+                    // successful form submission, and navigates back to home page to see post
                     console.log("Updated Post Data")
                     navigate('/')
                 } else{
@@ -162,17 +175,20 @@ const EditPost = () => {
             }
             setLoading(false)
         }else{
+            // if no changes in form, shows an error message
             setError('No Changes To Post Data')
             return
         }
     }
 
+    // using the vehicle options, user will select the vehicle the post is related to
     function handleSelectVehicle(e){
         const vehicle_Id= e.target.value;
         const selectVehicle = vehicle.find(v => v.vehicleId === vehicle_Id)
         setSelectedVehicle(selectVehicle);
     };
 
+    // fetches the image input, and sets to the setImage state which can be shown on the form for the user
     function handleImageInput(e){
         setImage(URL.createObjectURL(e.target.files[0]))
         setImageChange(true)
@@ -184,6 +200,7 @@ const EditPost = () => {
                 <h2 className="addPost_text">Edit <span>Post</span></h2>
                 <form onSubmit={handleUpdatePost}>
                     <div className='addHeading'>
+                        {/* User Details */}
                         <div className='showUserDetails'>
 
                             {profilePicture && (
@@ -201,12 +218,14 @@ const EditPost = () => {
                         </div>
                     </div>
 
+                    {/* Form Fields */}
                     <div className='add-post-content'>
                         <input type='text' ref={titleRef} defaultValue={title} className='add_postTitle' ></input>
                         <input type='file' ref={imageRef} defaultValue={image} placeholder='Insert Image' className='add_postImageBtn' onChange={handleImageInput} ></input> 
                         <img src={imageChange ? image : image} className='add_postImage'></img>
 
                         <div className='add_postFooter'>
+                            {/* Shows all user vehicles for selection */}
                             <select className='add_postVRN' onChange={handleSelectVehicle} value={selectVehicle?.vehicleId} required>
                                     <option value="" disabled>VRN</option>
                                     {vehicle.map(vehicle => ( 
