@@ -1,5 +1,5 @@
 .Banner {
-    width: 55%;
+    width: 55%; /* sets the width of the banner */
     box-shadow: 2px 4px 5px 2px darkgray;
 }
 
@@ -41,15 +41,18 @@
     animation: blink-caret 0.75s step-end infinite; 
 }
 
+/* Keyframe animations */
 @keyframes typing {
     from { width: 0; }
     to { width: 100%; }
 }
   
+/* Blink effect by changing border color */
 @keyframes blink-caret {
     50% { border-color: transparent; }
 }
 
+/* Hide the banner on small screens */
 @media only screen and (max-width: 600px) {
     .Banner{
         display: none;
