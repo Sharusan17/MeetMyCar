@@ -1,3 +1,4 @@
+/* Style for post */
 .post {
     padding: 5px;
     padding-bottom: 0;
@@ -286,6 +287,7 @@
     margin: 0 5px;
 }
 
+/* Style for each button */
 .likebtn svg {
     fill: rgb(38,38,38)
 }
@@ -476,6 +478,7 @@
     color: red;
 }
 
+/* Media query for smaller screens (mobile) */
 @media only screen and (max-width: 600px) {
     .post{
         padding: 10px 0;

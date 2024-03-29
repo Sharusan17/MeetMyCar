@@ -31,6 +31,7 @@ const SeePost = () => {
 
     useEffect(() => {
         async function fetchPostData(){
+            // fetches all post data, and stores the data into useState
             try{
                 setError('')
                 setMessage('')
@@ -44,6 +45,7 @@ const SeePost = () => {
                 if (response.ok){
                     const data = await response.json()
 
+                    // fetches vehicle's data for each post, and stores the data into post
                     const vehiclePost = await Promise.all(data.postData.map(async (post) => {
                         if(post.vehicles?.vehicleId){
                             const VehicleReponse = await fetch(`http://localhost:3001/vehicles?vehicleId=${encodeURIComponent(post.vehicles.vehicleId)}`, {
@@ -71,6 +73,7 @@ const SeePost = () => {
                     setPosts(vehiclePost)
                     console.log("Fetched Post Details", vehiclePost)
 
+                    // shows message, if no post found
                     if(!vehiclePost || vehiclePost.length === 0){
                         setNoPost("No car posts? Looks like the traffic jam is over. Be the first on the road!")
                     } 
@@ -90,8 +93,10 @@ const SeePost = () => {
 
     useEffect(() => {
         async function fetchUserData(){
+            // fetches current user data, and stores the data (id and superfuel) into useState, to be used throughout the page.
             try{
                 setError('')
+                // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
                 const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
@@ -102,6 +107,7 @@ const SeePost = () => {
 
                 if (response.ok){
                     const data = await response.json()
+                    // updates user's data states
                     setUserId(data.userData._id)
                     setUserSF(data.userData.superfuel)
 
@@ -120,6 +126,7 @@ const SeePost = () => {
         fetchUserData();
     }, [currentUser.uid]);
 
+    // shows the created's time and date of the post
     const formatDate = (timestamps) => {
         const date = new Date(timestamps);
         return date.toLocaleDateString()
@@ -129,35 +136,41 @@ const SeePost = () => {
         return time.toLocaleTimeString()
     }
 
+    // handles select post to show comment box
     const handleSelectPost = (post) => {
         console.log("Selected Post:", post)
         setSelectedPost(post)
         showCommentBox(!commentBox)
     }
 
+    // handles select comment to show reply box
     const handleSelectComment = (selectedcomment) => {
         console.log("Selected Comment:", selectedcomment)
         setSelectedComment(selectedcomment)
         showReplyBox(!replyBox)
     }
 
+    // handles select post to show options
     const handleShowOptions = (postId) =>{
         setSelectedPost(postId)
         setMenuOptions(!menuoptions)
         setconfirmDeletePost(false)
     }
 
+    // handles select post to show delete button
     const handleShowDelete = (postId) => {
         setSelectedPost(postId)
         setconfirmDeletePost(!confirmDeletePost)
     }
 
+    // handle post delete
     async function handleDelete(postId) {
         try{
             setError('')
             setMessage('')
             setLoading(true)
 
+            // delete posts in Post database
             const response = await fetch(`http://localhost:3001/posts/delete?postId=${encodeURIComponent(postId)}`, {
                 method: 'DELETE',
             });
@@ -167,6 +180,7 @@ const SeePost = () => {
             }
             const firebaseUID = currentUser.uid;
 
+            // delete posts in User's account
             const userDelete_response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
@@ -179,6 +193,7 @@ const SeePost = () => {
                 console.error("Error Deleting Post:")
             }
 
+            // removes superfuel points for user
             const userSFResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
@@ -191,6 +206,7 @@ const SeePost = () => {
                 console.error("Error Updating User's SuperFuel:")
             }
             
+            // refresh page, to show updated post collection
             console.log("Deleted Post")
             setDeletePostMsg(true)
             setTimeout(() => {
@@ -204,11 +220,13 @@ const SeePost = () => {
         setLoading(false)
     }
 
+    // handle like post
     async function handleLike(postId) {
         try{
             setError('')
             setLoading(true)
 
+            // add like to post database
             const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
@@ -221,6 +239,7 @@ const SeePost = () => {
                 console.error("Error Updating Like Post:")
             }
 
+            // renders the like
             setRefreshData(!refreshData)
             console.log("Updated Like Post")
         }catch (error){
@@ -230,11 +249,13 @@ const SeePost = () => {
         setLoading(false)
     }
 
+    // handle unlike post
     async function handleUnLike(postId) {
         try{
             setError('')
             setLoading(true)
 
+            // remove like to post database
             const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
@@ -247,6 +268,7 @@ const SeePost = () => {
                 console.error("Error Updating Like Post:")
             }
 
+            //renders the unlike
             setRefreshData(!refreshData)
             console.log("Updated Like Post")
         }catch (error){
@@ -256,13 +278,16 @@ const SeePost = () => {
         setLoading(false)
     }
 
+    //handle add comment post
     async function handleaddComment(postId){
 
+        // validate the length of the comment
        if (commentRef.current.value.length >= 2){
             try{
                 setLoading(true)
                 setCommentError('')
 
+                // adds comment to post database
                 const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                     method: 'PUT',
                     headers: {
@@ -277,6 +302,7 @@ const SeePost = () => {
                     throw new Error(errorData.message)
                 }
 
+                // renders the new comment
                 setRefreshData(!refreshData)
                 console.log("Added Comment Data")
             }catch (error){
@@ -290,11 +316,13 @@ const SeePost = () => {
         }
     }
 
+    // handle delete comment post
     async function handleDeleteComment(postId, commentId){
         try{
             setLoading(true)
             setCommentError('')
 
+            // remove the comment from post database
             const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
@@ -309,6 +337,7 @@ const SeePost = () => {
                 throw new Error(errorData.message)
             }
 
+            // renders the removed comment
             setRefreshData(!refreshData)
             console.log("Deleted Comment Data")
         }catch (error){
@@ -318,13 +347,16 @@ const SeePost = () => {
         setLoading(false)
     }
 
+    //handle add reply post
     async function handleaddReply(postId, commentId){
 
+        // validate the length of the reply
         if (replyRef.current.value.length >= 2){
              try{
                  setLoading(true)
                  setCommentError('')
  
+                 // adds reply to post database
                  const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                      method: 'PUT',
                      headers: {
@@ -339,6 +371,7 @@ const SeePost = () => {
                     throw new Error(errorData.message)
                  }
 
+                // renders the new reply
                  setRefreshData(!refreshData)
                  console.log("Added Reply Data")
              }catch (error){
@@ -352,11 +385,13 @@ const SeePost = () => {
          }
      }
 
+     // handle delete reply post
      async function handleDeleteReply(postId, commentId, replyId){
         try{
             setLoading(true)
             setCommentError('')
 
+            // remove the reply from post database
             const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
@@ -371,6 +406,7 @@ const SeePost = () => {
                 throw new Error(errorData.message)
             }
 
+            // renders the removed reply
             setRefreshData(!refreshData)
             console.log("Deleted Reply Data")
         }catch (error){
@@ -380,12 +416,15 @@ const SeePost = () => {
         setLoading(false)
     }
 
+    // handle add superfuel
     async function handleSuperFuel(postId, postUserId) {
         try{
             setError('')
             setLoading(true)
 
+            // check if current user has valid number of superfuel
             if(usersf > 0){
+                // add superfuel to post's user
                 const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                     method: 'PUT',
                     headers: {
@@ -400,6 +439,7 @@ const SeePost = () => {
 
                 const firebaseUID = currentUser.uid;
 
+                // remove superfuel to current user
                 const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'PUT',
                     headers: {
@@ -412,6 +452,7 @@ const SeePost = () => {
                     console.error("Error Updating User's SuperFuel:")
                 }
 
+                // add superfuel to post database
                 const profileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(postUserId)}`, {
                     method: 'PUT',
                     headers: {
@@ -424,6 +465,7 @@ const SeePost = () => {
                     console.error("Error Updating Profile's SuperFuel:")
                 }
                 
+                // renders the superfuel
                 setRefreshData(!refreshData)
                 console.log("Updated SuperFuel Post")
 
@@ -440,11 +482,13 @@ const SeePost = () => {
         setLoading(false)
     }
 
+    // handle remove superfuel
     async function handleUnSuperFuel(postId, postUserId) {
         try{
             setError('')
             setLoading(true)
 
+            // remove superfuel from post's user
             const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
@@ -459,6 +503,7 @@ const SeePost = () => {
 
             const firebaseUID = currentUser.uid;
 
+            // add superfuel from current user
             const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
@@ -471,6 +516,7 @@ const SeePost = () => {
                 console.error("Error Updating User's SuperFuel:")
             }
 
+            // remove superfuel from post
             const profileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(postUserId)}`, {
                 method: 'PUT',
                 headers: {
@@ -483,6 +529,7 @@ const SeePost = () => {
                 console.error("Error Updating Profile's SuperFuel:")
             }
 
+            // renders the superfuel
             setRefreshData(!refreshData)
             console.log("Updated SuperFuel Post")
         }catch (error){
@@ -495,12 +542,15 @@ const SeePost = () => {
     return (
         <>
             <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{nopost}</p>
-
+            
+            {/* displays all post in the [post] */}
             <div className="postList">
                 {posts.map((post) => (
                     <div key={post._id}  className='post'>
                         <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{error}</p>
                         <p className="w-100 text-center mt-2 mb-0" id="success_Msg">{message}</p>
+
+                        {/* check if post belongs to current user and selected */}
                         {deletePostMsg && post._id === selectedPost ? (
                             <>
                                 <p className="w-100 text-center mt-2 mb-0" id="success_Msg">Post Deleted!</p>
@@ -526,6 +576,7 @@ const SeePost = () => {
                                 <p>{formatDate(post.createdAt)}</p>
                                 <p>{formatTime(post.createdAt)}</p>
 
+                                {/* check if post belongs to current user */}
                                 {(post.user._id === userId)? (
                                     <>
                                         <div className='postMenuContainer'>
@@ -560,6 +611,7 @@ const SeePost = () => {
                             </div>
                         </div>
 
+                        {/* check if post belongs to current user and selected */}
                         {confirmDeletePost && post._id === selectedPost && (
                             <div>
                                 <button className="btn btn-dark" id='deletepostbtn' disabled={loading} onClick={() => handleDelete(post._id)}>Confirm Delete</button>
@@ -570,7 +622,9 @@ const SeePost = () => {
                             <h2 className='postTitle'>{post.title}</h2> 
                             <img src={post.image} alt={post.title} className='postImage'/>
 
+                            {/* showcases the vehicle spec */}
                             <div className='postSpecs'>
+                                {/* display spec as a speedometer, works a percentage to fill out of 350 */}
                                 <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,red 0% ${((post.vehicle_Data?.vehicleData.vehicleInfo.Performance.MaxSpeed.Mph/350)*100)}%,white ${0}% 100%)`}}>
                                     <h3>{post.vehicle_Data?.vehicleData.vehicleInfo.Performance.MaxSpeed.Mph} 
                                         <span>mph</span>
@@ -578,6 +632,7 @@ const SeePost = () => {
                                     <p className='TopSpecsName'>Top Speed</p>
                                 </div>
 
+                                {/* display spec as a speedometer, works a percentage to fill out of 800 */}
                                 <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,orange 0% ${((post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Power.Bhp/800)*100)}%,white ${0}% 100%)`}}>
                                     <h3>{post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Power.Bhp}
                                         <span>bhp</span>
@@ -585,6 +640,7 @@ const SeePost = () => {
                                     <p className='TopSpecsName'>BHP</p>
                                 </div>
 
+                                {/* display spec as a speedometer, works a percentage to fill out of 1000 */}
                                 <div className='TopSpecs' style={{background: `conic-gradient(from 0.5turn,green 0% ${((post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Torque.Nm)/1000)*100}%,white ${0}% 100%)`}}>
                                     <h3>{post.vehicle_Data?.vehicleData.vehicleInfo.Performance.Torque.Nm}
                                         <span>Nm</span>
@@ -593,6 +649,7 @@ const SeePost = () => {
                                 </div>
                             </div>
 
+                            {/* shows the vrn as a button, to be raced when clicked */}
                             <div className='postFooter'>
                                 <p className='raceText'>Race Me</p>
                                 <Link className='postVRN' to={`/race/${post.user._id}`}>{post.vehicles?.vrn}</Link>
@@ -616,9 +673,11 @@ const SeePost = () => {
                                             <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{commentError}</p>
 
                                             <div className='modalCommentBody'>
+                                                {/* displays all comments for each post */}
                                                 {selectedPost.comments?.map((postComment) => (
                                                     <div key={postComment._id} className='comments'>
                                                         <div className='commentTop'>
+                                                            {/* displays user details for each comment and reply */}
                                                             <div className='commentUser'>
                                                                 {postComment.userID?.profilePicture && (
                                                                     <img className='commentUserImage'
@@ -637,6 +696,7 @@ const SeePost = () => {
                                                             </div>
                                                         </div>
 
+                                                        {/* display replies for each comment */}
                                                         {postComment.replies?.map((postReply) => (
                                                             <div key={postReply._id} className='replies'>
                                                                 <div className='commentTop'>
@@ -670,6 +730,7 @@ const SeePost = () => {
                                                             </div>
                                                         ))}
 
+                                                        {/* check if comment belongs to user, and shows delete button */}
                                                         <div className='commentBottom'>
                                                             <button className='replybtn' disabled={loading} onClick={() => handleSelectComment(postComment._id)}>Reply</button>
                                                             {postComment.userID._id === userId? (
@@ -681,7 +742,8 @@ const SeePost = () => {
                                                                 </>
                                                             )}
                                                         </div>
-
+                                                        
+                                                        {/* check selected comment and shows reply button */}
                                                         {replyBox && selectedComment === postComment._id ?(
                                                             <>
                                                                 <div className='modalCommentButton'>
@@ -698,6 +760,7 @@ const SeePost = () => {
                                                 ))}
                                             </div>
 
+                                            {/* check selected post and shows add comment button */}
                                             <div className='modalCommentButton'>
                                                 <input type='text' ref={commentRef} placeholder="Comment..." className='commentText' required></input>
                                                 <button className='btn btn-dark' id='commentBtn' disabled={loading} onClick={() => handleaddComment(selectedPost._id)}>Add Comment</button>
@@ -711,7 +774,9 @@ const SeePost = () => {
                             </>
                         )}
 
+                        {/* display engagment button (like, comment, superfuel) */}
                         <div className='postEngagement'>
+                            {/* check if post has been liked by current user, and shows like/unlike button */}
                             <div className='engagementColumn'>
                                 {post.likes.some((likedUser) => likedUser.userId === userId) ? (
                                         <>
@@ -726,11 +791,13 @@ const SeePost = () => {
 
                             </div>
 
+                            {/* shows comment button */}
                             <div className='engagementColumn'>
                                 <button className='commentbtn' onClick={() => handleSelectPost(post)}><svg xmlns="http://www.w3.org/2000/svg" width="1.7em" height="1.7em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3 10.4c0-2.24 0-3.36.436-4.216a4 4 0 0 1 1.748-1.748C6.04 4 7.16 4 9.4 4h5.2c2.24 0 3.36 0 4.216.436a4 4 0 0 1 1.748 1.748C21 7.04 21 8.16 21 10.4v1.2c0 2.24 0 3.36-.436 4.216a4 4 0 0 1-1.748 1.748C17.96 18 16.84 18 14.6 18H7.414a1 1 0 0 0-.707.293l-2 2c-.63.63-1.707.184-1.707-.707V13zM9 8a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z" clip-rule="evenodd"/></svg></button>
                                 <h3>{post.comments.length} Comment</h3>
                             </div>
 
+                            {/* check if post has been superfuelled by current user, and shows superfuel/unsuperfuel button */}
                             <div className='engagementColumn'>
                                 {post.superfuel.some((superFuelUser) => superFuelUser.userId === userId) ? (
                                         <>
@@ -748,6 +815,7 @@ const SeePost = () => {
                 ))}
             </div> 
 
+            {/* display message, when user reaches end of post's collection */}
             {posts.length > 0 ? (
                 <>
                     <p className="w-100 text-center mt-2 mb-2" id="error_Msg">⛔️ You Reached End Of The Road ⛔️</p>
