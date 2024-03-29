@@ -1,3 +1,4 @@
+/* Style for toolbar on left side of page */
 .toolbar {
     position: fixed;
     transition: width 100ms ease;
@@ -16,6 +17,7 @@
     transition: transform 200ms ease;
 }
 
+/* Increases toolbar width when hovered */
 .toolbar:hover .logo svg{
     margin-left: 0;
     margin-right: 0;
@@ -96,7 +98,9 @@
     margin: 0 15px;
 }
 
+/* Media query for screens with a maximum width of 600px (mobile)*/
 @media only screen and (max-width: 600px) {
+    /* toolbar on bottom of screen for mobile */
     .toolbar{
         bottom: 0;
         width: 100vw;
@@ -117,6 +121,7 @@
     }
 }
 
+/* Media query for screens with a minimum width of 600px (tablet/desktop)*/
 @media only screen and (min-width: 600px) {
     .toolbar{
         width: 100px;
@@ -140,7 +145,5 @@
 
     .item-link, .user-item-link{
         justify-content: center;
-    }
-    
-    
+    }     
 }
