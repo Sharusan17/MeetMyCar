@@ -24,6 +24,7 @@ const CompareSpecs = () => {
     const [selectedProfileVehicle, setSelectedProfileVehicle] = useState('')
 
     const [startRace, setStartRace] = useState(false)
+    // sets types of specData to show, including ready, set and go name
     const [specData, setSpecData] = useState([
         {specName: 'Ready', time:2000},
         {specName: 'Set', time:1500},
@@ -33,7 +34,6 @@ const CompareSpecs = () => {
         {specName: 'RPM', vehicle1: '', vehicle2: '', time:1500},
         {specName: 'BHP', vehicle1: '', vehicle2: '', time:1500},
         {specName: 'MPG', vehicle1: '', vehicle2: '', time:1750},
-
     ])
 
     const [specIndex, setSpecIndex] = useState(0)
@@ -54,8 +54,10 @@ const CompareSpecs = () => {
 
     useEffect(() => {
         async function fetchCurrentUserData(){
+            // fetches current user data, and stores the data into useState, to be used throughout the page.
             try{
                 setError('')
+                // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
     
                 const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
@@ -68,10 +70,12 @@ const CompareSpecs = () => {
                 if (response.ok){
                     const data = await response.json()
 
+                    // updates cuurent user's data states
                     setCurrentUserId(data.userData._id)
                     setCurrentUserName(data.userData.username)
                     setCurrentUserProfile(data.userData.profilePicture)
 
+                    // fetches garage's data for the current user, and stores the data into vehicles
                     const vehicleData = await Promise.all(data.userData.vehicles.map(async (vehicle) => {
                         if(vehicle?.vehicleId){
                             const VehicleReponse = await fetch(`http://localhost:3001/vehicles?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
@@ -92,6 +96,7 @@ const CompareSpecs = () => {
                         }
                     }))
 
+                    // removes any empty vehicles
                     const vehicleWithData = vehicleData.filter(vehicle => vehicle !== null)
                     setCurrentUserVehicle(vehicleWithData)
 
@@ -112,6 +117,7 @@ const CompareSpecs = () => {
 
     useEffect(() => {
         async function fetchProfileUserData(){
+            // fetches profile's user data, and stores the data into useState, to be used throughout the page.
             try{
                 setError('')
     
@@ -125,10 +131,12 @@ const CompareSpecs = () => {
                 if (response.ok){
                     const data = await response.json()
 
+                    // updates profile user's data states
                     setProfileUserId(data.userData._id)
                     setProfileUserName(data.userData.username)
                     setProfileUserProfile(data.userData.profilePicture)
 
+                    // fetches garage's data for the profile user, and stores the data into vehicles
                     const vehicleData = await Promise.all(data.userData.vehicles.map(async (vehicle) => {
                         if(vehicle?.vehicleId){
                             const VehicleReponse = await fetch(`http://localhost:3001/vehicles?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
@@ -168,17 +176,21 @@ const CompareSpecs = () => {
     }, []);
 
     useEffect(() => {
+        // iterates through each specData until it reaches end of [specData]
         if (specIndex < specData.length){
 
+            // if there are data for each vehicle to compare with, then it will check the spec
             if (specData[specIndex] && specData[specIndex].vehicle1 && specData[specIndex].vehicle2){
                 checkSpec(specData[specIndex])
             }
             
+            // go through each index from 0 till end of specData
             const nextSpecId = setInterval( () => {
                 setSpecIndex((prevIndex) => {
                     if (prevIndex + 1 < specData.length){
                         return prevIndex + 1
                     } else{
+                        // when it reaches end of spec, it will open compare modal and update points
                         clearInterval(nextSpecId)
                         setOpenModal(true)
                         if (!pointsUpdate){
@@ -188,12 +200,14 @@ const CompareSpecs = () => {
                         return prevIndex
                     }
                 })
+                // goes through each spec with their allocated time
             } ,specData[specIndex].time)
             return () => clearInterval(nextSpecId)
         }
     }, [specData, specIndex])
 
     useEffect(() => {
+        // move the image position with a speedfactor, to model racing
         const raceIntervalId = setInterval( () => {
             if(specIndex >= 2){
                 setVehicle1Position(prevPosition => prevPosition + (100 + currentV1SpeedFactor))
@@ -203,20 +217,24 @@ const CompareSpecs = () => {
         return () => clearInterval(raceIntervalId)
     }, [currentV1SpeedFactor, currentV2SpeedFactor, specIndex])
 
+    // check both vehicle specs and compares
     const checkSpec = (currentSpec) => {
         setVehicle1Large(null)
+        // if vehicle 1 spec is larger than vehicle 2, it will increase the speed factor and add a point to vehicle 1
         if (parseFloat(currentSpec.vehicle1) > parseFloat(currentSpec.vehicle2)){
             console.log("Vehicle 1 Spec is larger")
             setVehicle1Large(true)
             setVehicle1Point(vehicle1Points+1)
             setV1RaceSpeedFactor((vehicle1Points+1)*75)
         } 
+        // if vehicle 2 spec is larger than vehicle 1, it will increase the speed factor and add a point to vehicle 2
         if (parseFloat(currentSpec.vehicle2) > parseFloat(currentSpec.vehicle1)){
             console.log("Vehicle 2 Spec is larger")
             setVehicle1Large(false)
             setVehicle2Point(vehicle2Points+1)
             setV2RaceSpeedFactor((vehicle2Points+1)*75)
         }
+        // if vehicle 1 spec is same to vehicle 2, it will add a point to both vehicles
         if (parseFloat(currentSpec.vehicle1) === parseFloat(currentSpec.vehicle2)){
             console.log("Vehicle 2 Spec is larger")
             setVehicle1Large(null)
@@ -225,21 +243,25 @@ const CompareSpecs = () => {
         }        
     }
 
+    // handle selection of vehicle for current user to compare
     function handleSelectMyVehicle(e){
         const vehicle_Id= e.target.value;
         const selectVehicle = currentUservehicle.find(v => v.vehicleData._id === vehicle_Id)
         setSelectedMyVehicle(selectVehicle);
     };
 
+    // handle selection of vehicle for competing user to compare
     function handleSelectProfileVehicle(e){
         const vehicle_Id= e.target.value;
         const selectVehicle = profileUservehicle.find(v => v.vehicleData._id === vehicle_Id)
         setSelectedProfileVehicle(selectVehicle);
     };
 
+    // fetch the correct spec for each vehicle
     function updateSpec(){
         if (selectedMyVehicle && selectedProfileVehicle){
             const updateSpecData = specData.map((spec) => {
+                // fetch maxSpeed data for both vehicle
                 if(spec.specName === 'Speed') {
                     return {
                         ...spec,
@@ -247,6 +269,7 @@ const CompareSpecs = () => {
                         vehicle2: selectedProfileVehicle?.vehicleData.vehicleInfo.Performance.MaxSpeed.Mph
                     }
                 }
+                // fetch Torque(Nm) data for both vehicle
                 else if(spec.specName === 'Torque') {
                     return {
                         ...spec,
@@ -254,6 +277,7 @@ const CompareSpecs = () => {
                         vehicle2: selectedProfileVehicle?.vehicleData.vehicleInfo.Performance.Torque.Nm
                     }
                 }
+                // fetch Torque(RPM) data for both vehicle
                 else if(spec.specName === 'RPM') {
                     return {
                         ...spec,
@@ -261,6 +285,7 @@ const CompareSpecs = () => {
                         vehicle2: selectedProfileVehicle?.vehicleData.vehicleInfo.Performance.Torque.Rpm
                     }
                 }
+                // fetch bhp data for both vehicle
                 else if(spec.specName === 'BHP') {
                     return {
                         ...spec,
@@ -268,6 +293,7 @@ const CompareSpecs = () => {
                         vehicle2: selectedProfileVehicle?.vehicleData.vehicleInfo.Performance.Power.Bhp
                     }
                 }
+                // fetch mpg data for both vehicle
                 else if(spec.specName === 'MPG') {
                     return {
                         ...spec,
@@ -277,6 +303,7 @@ const CompareSpecs = () => {
                 }
                 return spec
             })
+            // clears all state and sets all to start of comparisons
             setSpecData(updateSpecData)
             setSpecIndex(0)
             setVehicle1Position(0)
@@ -291,15 +318,15 @@ const CompareSpecs = () => {
         }
     }
 
+    // update user's points
     async function updatePoints(){
-
         setError('')
-
         try{
             const firebaseUID = currentUser.uid;
             let response
             let pointsProfileResponse
 
+            // if vehicle 1 won, it will add a win point to current user
             if (vehicle1Points > vehicle2Points){
                 response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'PUT',
@@ -319,6 +346,7 @@ const CompareSpecs = () => {
                     throw new Error(errorData.message)  
                 }
 
+                // if vehicle 1 won, it will add a lost point to competing user
                 pointsProfileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userid)}`, {
                     method: 'PUT',
                     headers: {
@@ -337,6 +365,7 @@ const CompareSpecs = () => {
                 }
             } 
 
+            // if vehicle 2 won, it will add a lost point to current user
             else if (vehicle2Points > vehicle1Points){
                 response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'PUT',
@@ -355,6 +384,7 @@ const CompareSpecs = () => {
                     throw new Error(errorData.message)  
                 }
 
+                // if vehicle 2 won, it will add a win point to competing user
                 pointsProfileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userid)}`, {
                     method: 'PUT',
                     headers: {
@@ -396,6 +426,7 @@ const CompareSpecs = () => {
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
 
                 <div className='compareUser'>
+                    {/* display current user's detail */}
                     <div className='vehicle1User'>
                         <div className='vehicleUserRow'>
                             {currentUserProfile && (
@@ -407,6 +438,7 @@ const CompareSpecs = () => {
                             <Link to={`/profile/${currentUserId}`} className='vehicleUserName'>{currentUserName}</Link>
                         </div>
                             
+                        {/* displays list of current user's vehicle to compare */}
                         <p className='vehicleName'>{selectedMyVehicle?.vehicleData?.vehicleHistory?.make} {selectedMyVehicle?.vehicleData?.vehicleHistory?.model}</p>
                         <select className='vehicleVRN' onChange={handleSelectMyVehicle} value={selectedMyVehicle?.vehicleData?._id} required>
                             <option value="" disabled>VRN</option>
@@ -416,6 +448,7 @@ const CompareSpecs = () => {
                         </select>
                     </div>
 
+                    {/* display competing user's detail */}
                     <div className='vehicle2User'>
                         <div className='vehicleUserRow'>
                             {currentUserProfile && (
@@ -427,6 +460,7 @@ const CompareSpecs = () => {
                             <Link to={`/profile/${profileUserId}`} className='vehicleUserName'>{profileUserName}</Link>
                         </div>                        
                         
+                        {/* displays list of competing user's vehicle to compare */}
                          <p className='vehicleName'>{selectedProfileVehicle?.vehicleData?.vehicleHistory?.make} {selectedProfileVehicle?.vehicleData?.vehicleHistory?.model}</p>
                         <select className='vehicleVRN' onChange={handleSelectProfileVehicle} value={selectedProfileVehicle?.vehicleData?._id} required>
                             <option value="" disabled>VRN</option>
@@ -437,17 +471,21 @@ const CompareSpecs = () => {
                     </div>
                 </div>
 
+                {/* display race track with vehicle image and spec data */}
                 <div className='RaceTrack'>
                     {startRace ? (
                         <>
+                            {/* display vehicle spec data for both vehicle with spec name */}
                             <div className='compareSpecData'>
                                 <div className='compareSpecDataRow'>
+                                    {/* changes green/red depending on which vehicle spec is larger */}
                                     <p className={vehicle1Large === true ? 'green' : vehicle1Large === false ? 'red' : 'green'}>{specData[specIndex].vehicle1}</p>
                                     <h4 className={specData[specIndex].specName === 'Ready' ? 'red' : specData[specIndex].specName === 'Set' ? 'orange' : specData[specIndex].specName === 'Go' ? 'green' : ''}>{specData[specIndex].specName}</h4>
                                     <p className={vehicle1Large === false ? 'green' : vehicle1Large === true ? 'red' : 'green'}>{specData[specIndex].vehicle2}</p>
                                 </div>
                             </div>
 
+                            {/* display vehicle image and traslate X to model racing */}
                             <div className='compareRace'>
                                 <div className="vehicle1Race" style={{ transform: `translateX(${currentV1Position}px)` }}>
                                     <img src={selectedMyVehicle?.vehicleData?.image}></img>
@@ -458,6 +496,7 @@ const CompareSpecs = () => {
                                 </div>
                             </div>
 
+                            {/* show compare modal */}
                             <Popup open={openModal} 
                                     closeOnDocumentClick onClose={() => setOpenModal(false)} className='Popsup'
                                     overlayStyle={{
@@ -466,6 +505,7 @@ const CompareSpecs = () => {
                                     }}
                             >
                                 <div className='Modal'>
+                                    {/* display win/lost/draw banner */}
                                     <div className='compareBanner'>
                                         {vehicle1Points > vehicle2Points ? (
                                             <>
@@ -490,6 +530,7 @@ const CompareSpecs = () => {
                                                 </>
                                         )}
                                     </div>
+                                    {/* display both vehicle images */}
                                     <div className='compareHead'>
                                         <div className='vehicle1Header'>
                                             <h3>{selectedMyVehicle?.vehicleData?.vrn}</h3>
@@ -506,6 +547,7 @@ const CompareSpecs = () => {
                                         </div>
                                     </div>
 
+                                    {/* show vehicle spec with green/red depending on win/lost */}
                                     <div className='compareData'>
                                         {/* Slice to remove the ready, set, go in the specData*/}
                                         {specData.slice(3).map((specs, index) => (
@@ -517,6 +559,7 @@ const CompareSpecs = () => {
                                         ))}
                                     </div>
 
+                                    {/* show race again button */}
                                     {vehicle1Points > vehicle2Points ? (
                                         <>
                                             <button className="btn btn-outline-success w-100 mt-1" onClick={() => window.location.reload()}>Race Again</button>
@@ -535,6 +578,7 @@ const CompareSpecs = () => {
                         </>
                     ) : (
                         <>
+                            {/* show race button */}
                             <div className='compareSpecData'>
                                 {selectedMyVehicle&&selectedProfileVehicle ? (
                                     <button className='btn btn-dark' id='racebtn' onClick={updateSpec}> Ready To Race</button>

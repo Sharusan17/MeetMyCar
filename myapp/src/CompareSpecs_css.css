@@ -1,3 +1,4 @@
+/* Style for CompareSpec Page */
 .compareVehicle{
     height: 100%;
     margin: 0;    
@@ -128,12 +129,14 @@
     gap: 50px;
 }
 
+/* provide smooth transition */
 .vehicle1Race, .vehicle2Race{
     transition: transform 2s ease;
     position: relative;
     mix-blend-mode: multiply;
 }
 
+/* display both vehicle facing right */
 .compareRace img{
     max-width: 400px;
     width: 100%;
@@ -217,6 +220,7 @@
     mix-blend-mode: multiply;
 }
 
+/* shows both vehicle facing each other */
 .vehicle1Header img{
     transform: scaleX(-1);
 }
@@ -250,6 +254,7 @@
     font-weight: 600;
 }
 
+/* Media query for screens with a maximum width of 600px (mobile) */
 @media only screen and (max-width: 600px) {
     #addvehiclebtn{
         font-size: 14px;
