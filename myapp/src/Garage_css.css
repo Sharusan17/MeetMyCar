@@ -1,3 +1,5 @@
+/* Style for garage page */
+/* Grid Layout for each vehicle and sets a gap in between */
 .Cards{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -52,7 +54,6 @@
     border-radius: 5px;
 }
 
-
 .cardImage{
     margin-top: 15px;
     margin-bottom: 10px;
@@ -75,6 +76,7 @@
     gap: 15px;
 }
 
+/* Styles for modal */
 .Modal{
     width: fit-content;
     max-width: 30vw;
@@ -92,6 +94,7 @@
     scrollbar-track-color: white;
 }
 
+/* Styles for scrollbar */
 ::-webkit-scrollbar{
     width: 10px;
     margin: 5px 0;
@@ -303,6 +306,7 @@
     margin-bottom: 0;
 }
 
+/* Media query for screens with a maximum width of 600px (mobile) */
 @media only screen and (max-width: 600px) {
     .Cards{
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

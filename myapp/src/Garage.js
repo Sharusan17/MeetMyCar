@@ -30,6 +30,7 @@ const Garage = () => {
 
     useEffect(() => {
         async function fetchGarageUserData(){
+            // fetches garage's user data, and stores the data into useState, to be used throughout the page.
             try{
                 setError('')
     
@@ -43,8 +44,10 @@ const Garage = () => {
                 if (response.ok){
                     const data = await response.json()
 
+                    // updates profile user's data states
                     setProfileUserId(data.userData._id)
 
+                    // fetches garage's data for the profile's user, and stores the data into vehicles
                     const vehicleData = await Promise.all(data.userData.vehicles.map(async (vehicle) => {
                         if(vehicle?.vehicleId){
                             const VehicleReponse = await fetch(`http://localhost:3001/vehicles?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
@@ -87,8 +90,10 @@ const Garage = () => {
 
     useEffect(() => {
         async function fetchCurrentUserData(){
+            // fetches current user data, and stores the data into useState, to be used throughout the page.
             try{
                 setError('')
+                // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
 
                 const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
@@ -101,6 +106,7 @@ const Garage = () => {
                 if (response.ok){
                     const data = await response.json()
 
+                    // updates user's data states
                     setCurrentUserId(data.userData._id)
 
                     console.log("Fetched Current User Details")
@@ -118,6 +124,7 @@ const Garage = () => {
         fetchCurrentUserData();
     }, [currentUser.uid]); 
 
+    // handles select card to show vehicle
     const handleSelectCard = (vehicle) => {
         console.log("Selected:", vehicle)
         setSelectedVehicle(vehicle)
@@ -126,6 +133,7 @@ const Garage = () => {
         setData(true)
     }
 
+    // handle delete vehicle
     async function handleDelete(vehicleId){
 
         if (!confirmDeleteVehicle){
@@ -140,6 +148,7 @@ const Garage = () => {
         try{
             const firebaseUID = currentUser.uid;
 
+            // delete vehicle in user's account
             const response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
@@ -148,6 +157,7 @@ const Garage = () => {
                 body: JSON.stringify({vehicleIdRemove: vehicleId})
             });
 
+            // refresh page, to show updated vehicle collection
             if (response.ok){
                 console.log("Deleted Vehicle")
                 setMessage("Vehicle Deleted")
@@ -179,12 +189,14 @@ const Garage = () => {
                     </h1>
 
                     <div className='showUserData'>
+                        {/* display num of wins and losts */}
                         <div className='showUserDataNum'>
                             <p> <span>{vehicle.length}</span> Vehicles</p>
                             <p onClick={() => setOpenWinModal(true)}> <span>{profileWins.length}</span> Wins</p>
                             <p onClick={() => setOpenLostModal(true)}> <span>{profileLosts.length}</span> Losts</p>
                         </div>
 
+                        {/* check if garage belongs to current user's account */}
                         {currentUserId === profileUserId ? (
                             <Link to="/registervehicle" className="btn btn-dark" id='checkbtn'> Add Vehicle</Link>  
                         ) : (
@@ -198,6 +210,7 @@ const Garage = () => {
                 <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
 
+                {/* displays all vehicle as cards */}
                 <div className='Cards'>
                     {vehicle.map((vehicles, index) => (
                         <div key={index}  className='carCard' onClick={() => handleSelectCard(vehicles)}>
@@ -210,6 +223,7 @@ const Garage = () => {
                                     <img src={vehicles.vehicleData?.image} alt='Vehicle'></img>
                                 </div>
 
+                                {/* display vehicle key info */}
                                 <div className='cardFooter'>
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M13 19.92c1.8-.22 3.35-.97 4.65-2.27c1.3-1.3 2.05-2.85 2.27-4.65h-3c-.22 1-.68 1.84-1.38 2.54c-.7.7-1.54 1.16-2.54 1.38zM10 8h4l3 3h2.92c-.25-1.95-1.13-3.62-2.65-5C15.76 4.66 14 4 12 4c-2 0-3.76.66-5.27 2c-1.52 1.38-2.4 3.05-2.65 5H7zm1 11.92v-3c-1-.22-1.84-.68-2.54-1.38c-.7-.7-1.16-1.54-1.38-2.54h-3c.22 1.77.97 3.3 2.27 4.6c1.3 1.3 2.85 2.07 4.65 2.32M12 2c2.75 0 5.1 1 7.05 2.95C21 6.9 22 9.25 22 12s-1 5.1-2.95 7.05C17.1 21 14.75 22 12 22s-5.1-1-7.05-2.95C3 17.1 2 14.75 2 12s1-5.1 2.95-7.05C6.9 3 9.25 2 12 2"/></svg> 
@@ -230,6 +244,7 @@ const Garage = () => {
                     ))}
                 </div>   
 
+                {/* display modal for specific vehicle */}
                 <Popup open={openModal} 
                         closeOnDocumentClick onClose={() => setOpenModal(false)} className='Popup'
                         overlayStyle={{
@@ -241,11 +256,14 @@ const Garage = () => {
                         {selectedVehicle ? (
                             <>
                                 <div className='modalHeader'>
+                                    {/* display vehicle vrn and race button */}
                                     <div>
                                         <h3>{selectedVehicle.vehicleData?.vehicleInfo?.VehicleRegistration?.MakeModel}</h3>
                                         <p className='raceTextGarage'>Race Me</p>
                                         <Link className='link' to={`/race/${userid}`}>{selectedVehicle.vehicleData?.vrn}</Link>
                                     </div>
+
+                                    {/* display history/information button */}
                                     {showData ? (
                                         <>
                                             <button className="btn btn-dark" onClick={() => setData(false)}>History</button>
@@ -261,6 +279,7 @@ const Garage = () => {
                                     <img src={selectedVehicle.vehicleData?.image} alt='Vehicle'></img>
                                 </div>
 
+                                {/* display vehicle data */}
                                 <div className='modalData'>
                                     {showData ? (
                                         <>
@@ -329,17 +348,20 @@ const Garage = () => {
                                                 <div>
                                                     <h4 className='info_title'>Auction</h4>
                                                     <p className='info_data'>£{selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.Auction}</p>
+                                                    {/* calculates profit/loss percentage */}
                                                     <p className='info_change'> &#8595; {Math.round(((selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) - (selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.Auction)) / (selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) * 100) }%</p>
                                                 </div>
                                                 <div>
                                                     <h4 className='info_title'>Trade</h4>
                                                     <p className='info_data'>£{selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.TradeAverage}</p>
+                                                    {/* calculates profit/loss percentage */}
                                                     <p className='info_change'> &#8595; {Math.round(((selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.OTR) - (selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.TradeAverage)) / (selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) * 100) }%</p>
                                                 </div>
 
                                                 <div>
                                                     <h4 className='info_title'>Private</h4>
                                                     <p className='info_data'>£{selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.PrivateAverage}</p>
+                                                    {/* calculates profit/loss percentage */}
                                                     <p className='info_change'> &#8595; {Math.round(((selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.OTR) - (selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.PrivateAverage)) / (selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) * 100) }%</p>
                                                 </div>
                                             </div>
@@ -348,7 +370,8 @@ const Garage = () => {
                                             </div>
                                         </>
                                     ): 
-                                        <>
+                                        <>  
+                                            {/* display tick/cross for valid MOT and Tax */}
                                             <div className='dataCheckList'>
                                                 <div className='dataCheck'>
                                                     <label> MOT </label>
@@ -445,6 +468,7 @@ const Garage = () => {
                                     }
                                 </div>
 
+                                {/* check if vehicle belongs to current user and show delete button */}
                                 {currentUserId === profileUserId ?(
                                     <>
 
@@ -468,6 +492,7 @@ const Garage = () => {
                     </div>
                 </Popup> 
 
+                {/* display win modal */}
                 <Popup open={openWinModal} closeOnDocumentClick onClose={() => setOpenWinModal(false)} className='Popup'>
                     <div className='FollowModal'>
                         <div className='modalFollowHeader'>
@@ -478,6 +503,7 @@ const Garage = () => {
 
                         <div className='line'></div>
 
+                        {/* shows vehicle vrn the current user won against */}
                         <div className='modalFollowData'>
                             {profileWins.map((profileWin, index) => (
                                 <div key={index} >
@@ -488,6 +514,7 @@ const Garage = () => {
                     </div>
                 </Popup>
 
+                {/* display lost modal */}
                 <Popup open={openLostModal} closeOnDocumentClick onClose={() => setOpenLostModal(false)} className='Popup'>
                     <div className='FollowModal'>
                         <div className='modalFollowHeader'>
@@ -498,6 +525,7 @@ const Garage = () => {
 
                         <div className='line'></div>
 
+                        {/* shows vehicle vrn the current user lost against */}
                         <div className='modalFollowData'>
                             {profileLosts.map((profileLost, index) => (
                                 <div key={index} >
