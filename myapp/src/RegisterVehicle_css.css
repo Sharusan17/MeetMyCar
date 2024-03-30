@@ -1,3 +1,4 @@
+/* Style for Register Vehicle Card */
 .Card{
     border-radius: 10px;
     min-height: 650px;
@@ -23,7 +24,6 @@ header{
     margin-top: 20px;
     margin-left: 5px;
 }
-
 
 #red-corner{
     position: absolute;
@@ -91,11 +91,10 @@ select:hover{
     margin-bottom: 7px;
 }
 
-
 option{
     padding:8px;
-    background-color: white; /* White background for options */
-    color: #333; /* Dark text color for readability */
+    background-color: white;
+    color: #333;
 }
 
 #button{
@@ -113,13 +112,11 @@ option{
     box-shadow: 2px 2px 5px 1px rgb(122, 122, 122);
 }
 
-
 img{
     max-width: 100px;
     display: block;
     margin: 0 auto;
 }
-
 
 #findVehicle, #findlink{
     font-size: 12px;
@@ -146,7 +143,7 @@ img{
     font-size: 12px;
 }
 
-/* Media query for smaller screens */
+/* Media query for screens with a maximum width of 768px (mobile) */
 @media (max-width: 768px) {
     .Card {
         max-width: 90%;

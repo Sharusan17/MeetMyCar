@@ -14,6 +14,7 @@ const RegisterVehicle = ({updateImage}) => {
     const [makeOptions, setmakeOptions] = useState([])
     const [modelOptions, setmodelOptions] = useState([])
 
+    // add types of fuel and transmission option
     const fuelOptions = ["Petrol", "Diesel", "Hybrid", "Electric"]
     const transmissionOptions = ["Manual", "Automatic", "Semi-Auto"]
 
@@ -45,10 +46,12 @@ const RegisterVehicle = ({updateImage}) => {
     const [showOptions, setShowOptions] = useState(false)
 
     useEffect(() => {
+        // fetches vehicle's list, and stores the data into useState, to be used throughout the page.
         async function CarOp(){
             setError('');
             setMessage('')
 
+            // fetch from vehicleAPI
             fetch('http://localhost:3001/vehicleAPI/list')
                 .then(response => {
                     if (response.ok) {
@@ -60,6 +63,7 @@ const RegisterVehicle = ({updateImage}) => {
                 .then(data => {
                     // console.log("API Data: ", data);
 
+                    // updates the car list states
                     setCarData(data.results);
 
                     const makes = [...new Set(data.results.map(car => car.Make))];
@@ -79,7 +83,9 @@ const RegisterVehicle = ({updateImage}) => {
     
     useEffect(() => {
         async function fetchUserData(){
+            // fetches user data, and stores the data into useState, to be used throughout the page.
             try{
+                // fetches the user data with firebase ID 
                 const firebaseUID = currentUser.uid;
     
                 const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
@@ -92,6 +98,7 @@ const RegisterVehicle = ({updateImage}) => {
                 if (response.ok){
                     const data = await response.json()
 
+                    // updates user's data states
                     setuserId(data.userData._id)
     
                     console.log("Fetched User Details")
@@ -107,6 +114,7 @@ const RegisterVehicle = ({updateImage}) => {
         fetchUserData();
     }, [currentUser.uid]);
 
+    // handles selection of car from list of make/model
     const handleSelectCar= (e) => {
         const selectMake = e.target.value;
         setSelectedMake(selectMake);
@@ -115,6 +123,7 @@ const RegisterVehicle = ({updateImage}) => {
         setmodelOptions([...new Set(filteredModels)]); 
     };
 
+    // handle find car's data, if user cannot find with vrn
     const handleFindCar= () => {
         setMessage(false)
         setError(false)
@@ -124,6 +133,7 @@ const RegisterVehicle = ({updateImage}) => {
         setShowSelectedButton(true)
     };
 
+    // handle add car
     async function handleaddCar(e) {
         e.preventDefault()
         console.log("Add Button Pressed")
@@ -132,7 +142,7 @@ const RegisterVehicle = ({updateImage}) => {
 
         console.log('VehicleData:', vehicleData)
         
-                        
+        // adds vehicle info to formData
         const formData = new FormData();
         formData.append('user', userId);
         formData.append('vrn', vehicleReg.current.value);
@@ -142,12 +152,12 @@ const RegisterVehicle = ({updateImage}) => {
         formData.append('vehicleMOT', JSON.stringify(vehicleMOT));
         formData.append('vehicleHistory', JSON.stringify(vehicleHistory));
 
-    
         try{
             setError('')
             setMessage('')
             setLoading(true) 
 
+            // add formData to vehicle database
             const response = await fetch('http://localhost:3001/vehicles/add', {
                 method: 'POST',
                 body: formData,
@@ -165,6 +175,7 @@ const RegisterVehicle = ({updateImage}) => {
             Vehicle_formData.append('vehicleId', data.newVehicle._id);
             Vehicle_formData.append('vrn', data.newVehicle.vrn);
 
+            // add vehicle to current user's database
             const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 body: Vehicle_formData,
@@ -175,6 +186,7 @@ const RegisterVehicle = ({updateImage}) => {
                 throw new Error(errorData.message)
             } 
 
+            // successful of register vehicle, will navigate to garage page
             console.log("Add Vehicle Successful")
             setMessage(`${vehicleReg.current.value} Has Been Added`)
 
@@ -190,6 +202,7 @@ const RegisterVehicle = ({updateImage}) => {
         setLoading(false) 
     }
 
+    // handle add select car from list
     async function handleaddSelectedCar(e) {
         e.preventDefault()
         console.log("Selected Button Pressed")
@@ -197,6 +210,7 @@ const RegisterVehicle = ({updateImage}) => {
                         Fuel: ${selectedFuel} Transmission: ${selectedTransmission}`)
     }
 
+    // handle search vehicle with vrn
     async function handleSearchVehicle(e){
         e.preventDefault()
         setShowButton(false)
@@ -208,6 +222,7 @@ const RegisterVehicle = ({updateImage}) => {
 
         const vehicleRegValue = vehicleReg.current.value;
         
+        // fetches vehicle data with vrn from API
         fetch(`http://localhost:3001/vehicleAPI/search?vrn=${encodeURIComponent(vehicleRegValue)}`)
             .then(response => {
                 if (response.ok) {
@@ -224,6 +239,8 @@ const RegisterVehicle = ({updateImage}) => {
             .then(data => {
                 // console.log("API Data: ", data);
                 // console.log(data.VehicleRegistration.Make)
+
+                //updates vehicle state
                 setVehicleData(data.datainfo)
                 setVehicleValue(data.dataValue)
                 setVehicleMOT(data.dataMOT)
@@ -238,9 +255,11 @@ const RegisterVehicle = ({updateImage}) => {
                 const VRN_vehicleTransmission = data.datainfo.VehicleRegistration.TransmissionType;
                 setvehicleTransmission(VRN_vehicleTransmission)
 
+                // adds vehicle image for banner page
                 updateImage(data.dataImg.VehicleImages.ImageDetailsList[0].ImageUrl)
                 setVehicleImage(data.dataImg.VehicleImages.ImageDetailsList[0].ImageUrl)
 
+                // set vehicle info and image to state, to be shown on page
                 setVehicleInfo(
                     <div>
                         <span>Make: {VRN_vehicleMake || 'No Make available.'} </span><br />
@@ -273,6 +292,7 @@ const RegisterVehicle = ({updateImage}) => {
                     </h1>
                 </header>
 
+                {/* Register Vehicle Form */}
                 <form onSubmit={handleSearchVehicle} className='addVehicle_Form'>
                     <div className='vrn_row'>
                         <Form.Group id="vrn">
@@ -289,15 +309,18 @@ const RegisterVehicle = ({updateImage}) => {
 
                 <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
 
+                {/* show add vehicle button */}
                 {showButton && (
                     <form className='addVehicle_Form' onSubmit={handleaddCar}>
                         <button id="button" className="w-100 mt-2" type="submit" onSubmit={handleaddCar}>Add Vehicle</button>
                     </form>
                 )}
 
+                {/* Vehicle List Form */}
                 <form className='addVehicle_Form' onSubmit={handleaddSelectedCar}>
                     {showOptions && (<div>
 
+                            {/* displays all vehicle's make */}
                             <div className='select-space-between'>
                                 <select onChange={handleSelectCar} value={selectedMake} required>
                                     <option value="" disabled>Make</option>
@@ -307,6 +330,7 @@ const RegisterVehicle = ({updateImage}) => {
                                 </select>
                             </div>
 
+                            {/* displays all vehicle's model from selected */}
                             <div className='select-space-between'>
                                 <select onChange={(e) => setSelectedModel(e.target.value)} value={selectedModel} disabled={!selectedMake} required>
                                     <option value="" disabled >Model</option>
@@ -316,6 +340,7 @@ const RegisterVehicle = ({updateImage}) => {
                                 </select>
                             </div>
 
+                            {/* displays all vehicle's fuel options */}
                             <div className='select-space-between'>
                                 <select onChange={(e) => setSelectedFuel(e.target.value)} value={selectedFuel} disabled={!selectedModel.length} required>
                                     <option value="" disabled >Fuel</option>
@@ -325,6 +350,7 @@ const RegisterVehicle = ({updateImage}) => {
                                 </select>
                             </div>
 
+                            {/* displays all vehicle's transmission options */}
                             <div className='select-space-between'>
                                 <select onChange={(e) => setSelectedTransmission(e.target.value)} value={selectedTransmission} disabled={!selectedModel.length} required>
                                     <option value="" disabled>Transmission</option>
@@ -337,16 +363,18 @@ const RegisterVehicle = ({updateImage}) => {
                         </div>
                     )} 
 
+                    {/* shows add selected vehicle button */}
                     {showSelectedButton && (
                         <button id="button" disabled={loading} className="w-100 mt-2" type="submit" >Add Selected Vehicle</button>
                     )}
                 </form>
 
-                
+                {/* alternative flow to register vehicle */}
                 <div id="findVehicle" className="w-100 text-center mt-2">
                     Can't find your car? <Link id='findlink' onClick={handleFindCar}> Find Here</Link>
                 </div>
 
+                {/* navigate to profile page */}
                 <div id="homepage" className="w-100 text-center mt-2">
                      <Link to={`/profile/${userId}`} id='findlink' > Add Vehicle Later</Link>
                 </div>
