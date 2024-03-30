@@ -49,11 +49,13 @@ const Profile = () => {
 
     useEffect(() => {
         async function fetchProfileData(){
+            // fetches profile's user data, and stores the data into useState, to be used throughout the page.
             try{
                 setError('')
 
                 let query
 
+                // fetches the user data with userid/username
                 if (userid){
                     query = `userid=${encodeURIComponent(userid)}`
                 } else{
@@ -72,6 +74,7 @@ const Profile = () => {
                 if (response.ok){
                     const data = await response.json()
 
+                    // updates profile user's data states
                     setProfileUserId(data.userData._id)
                     setProfileuserName(data.userData.username)
                     setProfileprofilePicture(data.userData.profilePicture)
@@ -79,6 +82,7 @@ const Profile = () => {
                     setProfileFollowers(data.userData.followers)
                     setProfileFollowing(data.userData.following)
 
+                    // fetches post's data for the profile's user, and stores the data into post
                     const postData = await Promise.all(data.userData.posts.map(async (post) => {
                         if(post?.postId){
                             const PostReponse = await fetch(`http://localhost:3001/posts?postId=${encodeURIComponent(post.postId)}`, {
@@ -118,8 +122,10 @@ const Profile = () => {
 
     useEffect(() => {
         async function fetchCurrentUserData(){
+            // fetches current user data, and stores the data into useState, to be used throughout the page.
             try{
                 setError('')
+                // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
 
                 const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
@@ -131,7 +137,8 @@ const Profile = () => {
 
                 if (response.ok){
                     const data = await response.json()
-
+                    
+                    // updates user's data states
                     setCurrentUserId(data.userData._id)
                     setCurrentUserName(data.userData.username)
                     setCurrentUserFollowing(data.userData.following)
@@ -153,6 +160,7 @@ const Profile = () => {
     }, [currentUser.uid]); 
 
     useEffect(() => {
+        // fetches all user data, and stores the data into useState
         async function fetchAllUserData(){
             try{
                 setError('')
@@ -167,12 +175,17 @@ const Profile = () => {
                 if (response.ok){
                     const data = await response.json()
 
+                    // fetches mutual friends that current user is not following, to show as recommendation
                     if (currentUserFollowing){
+                        // using all users, it will filter users that are being followed by the current user, and get their followerings
                         const findMutualFriends = data.allUserData.filter((user) => user.following.some(userFollowings => currentUserFollowing.some(myFollowings => userFollowings.followeringId === myFollowings.followeringId)))
+                        // filter mutual friends and remove the friends that are being followed already by current user
                         const filteredMutualFriends = findMutualFriends.filter(user => !currentUserFollowing.some(myFollowings => user._id === myFollowings.followeringId));
+                        // remove itself from the list of mutual friends
                         const mutualFriends = filteredMutualFriends.filter(user => user._id !== userId);
                         console.log('Check Mutual Friends', mutualFriends)   
     
+                        // stores valid mutual friends into state
                         setAllUser(mutualFriends)
                         setOpenUserRecommend(true)
                     } else{
@@ -194,7 +207,7 @@ const Profile = () => {
         fetchAllUserData();
     }, [currentUserFollowing]); 
 
-
+    // shows the created's time and date of the post
     const formatDate = (timestamps) => {
         const date = new Date(timestamps);
         return date.toLocaleDateString()
@@ -204,6 +217,7 @@ const Profile = () => {
         return time.toLocaleTimeString()
     }
 
+    // handles select card to show post
     const handleSelectCard = (post) => {
         console.log("Selected:", post)
         setselectedPost(post)
@@ -212,21 +226,25 @@ const Profile = () => {
         showCommentBox(false)
     }
 
+    // handles select post's card to show comments 
     const handleSelectCardComment = (selectedPost) => {
         console.log("Selected CommentPost:", selectedPost)
         showCommentBox(!commentBox)
     }
 
+    // handles select post to show comment
     const handleSelectComment = (selectedcomment) => {
         console.log("Selected Comment:", selectedcomment)
         setSelectedComment(selectedcomment)
         setShowReplyBox(!showReplyBox)
     }
 
+    // handle edit for post
     const handleEdit = (postId) => {
         navigate(`/editpost/${postId}`)
     }
 
+    // handle delete  post
     async function handleDelete(postId){
 
         if (!confirmDeletePost){
@@ -241,6 +259,7 @@ const Profile = () => {
         try{
             const firebaseUID = currentUser.uid;
 
+            // delete posts in user's account
             const response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
@@ -255,6 +274,8 @@ const Profile = () => {
                 console.error("Error Deleting Post On User:", error)
                 throw new Error(errorData.message)
             }
+
+            // delete posts in Post database
             const deletePost_response = await fetch(`http://localhost:3001/posts/delete?postId=${encodeURIComponent(postId)}`, {
                 method: 'DELETE',
             });
@@ -266,6 +287,7 @@ const Profile = () => {
                 throw new Error(errorData.message)
             }
 
+            // removes superfuel points for user
             const userSFResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
@@ -278,6 +300,7 @@ const Profile = () => {
                 console.error("Error Updating User's SuperFuel:")
             }
 
+            // refresh page, to show updated post collection
             console.log("Deleted Post")
             setMessage("Post Deleted")
             setOpenModal(false)
@@ -293,12 +316,14 @@ const Profile = () => {
         }
     }
 
+    // fetches current user's followings
     useEffect(() => {
         function fetchCurrentUserFollowing(){
             try{
                 setError('')
                 const isFollowing = currentUserFollowing.some((followingUser) => followingUser.followeringId === userId)
                 console.log("Is Following:", isFollowing)
+                // check if following, and shows follow/unfollow button
                 if(isFollowing){
                     setFollowbtn(false)
                 }
@@ -310,6 +335,7 @@ const Profile = () => {
         fetchCurrentUserFollowing()
     }, [currentUserFollowing, userId, refreshData])
 
+    // handles follow
     async function handleFollow(userIDFollow, userNameFollow){
 
         setLoading(true)
@@ -319,6 +345,7 @@ const Profile = () => {
         try{
             const firebaseUID = currentUser.uid;
 
+            // adds profile's user as followering to current user
             const response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
@@ -334,6 +361,7 @@ const Profile = () => {
                 throw new Error(errorData.message)  
             }
 
+            // adds current's user as follower to profile user
             const Followersresponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userIDFollow)}`, {
                 method: 'PUT',
                 headers: {
@@ -349,6 +377,7 @@ const Profile = () => {
                 throw new Error(errorData.message)  
             }
 
+            // renders follow list and shows unfollow button
             setRefreshData(!refreshData)
             setFollowbtn(false)
 
@@ -360,6 +389,7 @@ const Profile = () => {
         }
     }
 
+    // handles unfollow
     async function handleUnfollow(userIDFollow){
 
         setLoading(true)
@@ -369,6 +399,7 @@ const Profile = () => {
         try{
             const firebaseUID = currentUser.uid;
 
+            // remove profile's user as followering to current user
             const response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
@@ -384,6 +415,7 @@ const Profile = () => {
                 throw new Error(errorData.message)  
             }
 
+            // remove current's user as follower to profile user
             const Followersresponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userIDFollow)}`, {
                 method: 'PUT',
                 headers: {
@@ -399,6 +431,7 @@ const Profile = () => {
                 throw new Error(errorData.message)  
             }
 
+            // renders follow list and shows follow button
             setRefreshData(!refreshData)
             setFollowbtn(true)
 
@@ -410,11 +443,13 @@ const Profile = () => {
         }
     }
 
+    // handle like post
     async function handleLike(postId) {
         try{
             setError('')
             setLoading(true)
 
+            // add like to post database
             const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
@@ -435,11 +470,13 @@ const Profile = () => {
         setLoading(false)
     }
 
+    // handle unlike post
     async function handleUnLike(postId) {
         try{
             setError('')
             setLoading(true)
 
+            // remove like from post database
             const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
@@ -459,12 +496,16 @@ const Profile = () => {
         setLoading(false)
     }
 
+    // handle add comment post
     async function handleaddComment(postId){
+
+        // validate the length of the comment
         if (commentRef.current.value.length >= 2){
             try{
                 setLoading(true)
                 setCommentError('')
 
+                // adds comment to post database
                 const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                     method: 'PUT',
                     headers: {
@@ -491,11 +532,13 @@ const Profile = () => {
         }
     }
 
+    // handle delete comment post
     async function handleDeleteComment(postId, commentId){
         try{
             setLoading(true)
             setCommentError('')
 
+            // remove the comment from post database
             const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
@@ -518,12 +561,16 @@ const Profile = () => {
         setLoading(false)
     }
  
+    // handle add reply post
     async function handleaddReply(postId, commentId){
+
+        // validate the length of the reply
         if (replyRef.current.value.length >= 2){
             try{
                 setLoading(true)
                 setCommentError('')
 
+                // adds reply to post database
                 const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                     method: 'PUT',
                     headers: {
@@ -550,11 +597,13 @@ const Profile = () => {
         }
     }
 
+    // handle delete reply post
     async function handleDeleteReply(postId, commentId, replyId){
         try{
             setLoading(true)
             setCommentError('')
 
+            // remove the reply from post database
             const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
@@ -577,12 +626,15 @@ const Profile = () => {
         setLoading(false)
     }
 
+    // handle add superfuel
     async function handleSuperFuel(postId, postUserId) {
         try{
             setError('')
             setLoading(true)
 
+            // check if current user has valid number of superfuel
             if(currentUserSF > 0){
+                // add superfuel to post database
                 const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                     method: 'PUT',
                     headers: {
@@ -597,6 +649,7 @@ const Profile = () => {
 
                 const firebaseUID = currentUser.uid;
 
+                // remove superfuel from current user
                 const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'PUT',
                     headers: {
@@ -609,6 +662,7 @@ const Profile = () => {
                     console.error("Error Updating User's SuperFuel:")
                 }
 
+                // add superfuel to post's user
                 const profileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(postUserId)}`, {
                     method: 'PUT',
                     headers: {
@@ -636,11 +690,13 @@ const Profile = () => {
         setLoading(false)
     }
 
+    // handle remove superfuel
     async function handleUnSuperFuel(postId, postUserId) {
         try{
             setError('')
             setLoading(true)
 
+            // remove superfuel from post database
             const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
@@ -655,6 +711,7 @@ const Profile = () => {
 
             const firebaseUID = currentUser.uid;
 
+            // add superfuel to current user
             const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
@@ -667,6 +724,7 @@ const Profile = () => {
                 console.error("Error Updating User's SuperFuel:")
             }
 
+            // remove superfuel from post's user
             const profileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(postUserId)}`, {
                 method: 'PUT',
                 headers: {
@@ -701,11 +759,13 @@ const Profile = () => {
                             <p className='showUserName'>{username}</p>
                         </div>
 
+                        {/* check if profile account is current user's account */}
                         {currentUserId === userId ? (
                             <>
                             </>
                         ) : (
                             <>
+                                {/* check if account is being followed by current user, and shows follow/unfollow button */}
                                 {showfollowbtn ? (
                                     <>
                                         <button className='btn btn-dark' id='followbtn' onClick={() => handleFollow(userId, username)}> Follow</button>
@@ -719,17 +779,20 @@ const Profile = () => {
                         )}
                     </div>
 
+                    {/* display num of superfuels, followers and followerings */}
                     <div className='showUserData'>
                         <p className='superFuelData'><span>{profileSF} Super Fuel</span> <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24"><path fill="currentColor" d="M18 10a1 1 0 0 1-1-1a1 1 0 0 1 1-1a1 1 0 0 1 1 1a1 1 0 0 1-1 1m-6 0H6V5h6m7.77 2.23l.01-.01l-3.72-3.72L15 4.56l2.11 2.11C16.17 7 15.5 7.93 15.5 9a2.5 2.5 0 0 0 2.5 2.5c.36 0 .69-.08 1-.21v7.21a1 1 0 0 1-1 1a1 1 0 0 1-1-1V14a2 2 0 0 0-2-2h-1V5a2 2 0 0 0-2-2H6c-1.11 0-2 .89-2 2v16h10v-7.5h1.5v5A2.5 2.5 0 0 0 18 21a2.5 2.5 0 0 0 2.5-2.5V9c0-.69-.28-1.32-.73-1.77"/></svg></p>
                         <div className='showUserDataNum'>
                             <p> <span>{posts.length}</span> Posts</p>
+                            {/* shows name of followers and followerings in modal */}
                             <p onClick={() => setOpenFollowerModal(true)}> <span>{followers.length}</span> Followers</p>
                             <p onClick={() => setOpenFollowingModal(true)}> <span>{following.length}</span> Following</p>
                         </div>
 
+                        {/* check if followed and shows check garage button */}
                         {currentUserId === userId ? (
                             <>
-                                <Link to={`/garage/${userid}`} className="btn btn-dark" id='checkbtn'> Check Vehicle</Link>
+                                <Link to={`/garage/${userId}`} className="btn btn-dark" id='checkbtn'> Check Garage</Link>
                             </>
                         ) : (
                             <>
@@ -737,7 +800,7 @@ const Profile = () => {
                                     <></>
                                 ) : (
                                     <>
-                                        <Link to={`/garage/${userid}`} className="btn btn-dark" id='checkbtn'> Check Vehicle</Link>
+                                        <Link to={`/garage/${userId}`} className="btn btn-dark" id='checkbtn'> Check Garage</Link>
                                     </>
                             )}
                             </>
@@ -747,6 +810,7 @@ const Profile = () => {
 
                 </header>
 
+                {/* if own account and there are user being recommended, it will show the users */}
                 {openUserRecommend && currentUserId === userId  && allUser.length > 0? (
                     <>
                     <div className='userRecommendation'>
@@ -757,6 +821,7 @@ const Profile = () => {
                                     <button className='drop-down-btn' onClick={() => setDropDown(!dropdown)}><svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24"><path fill="black" fill-rule="evenodd" d="M11.512 8.43a.75.75 0 0 1 .976 0l7 6a.75.75 0 1 1-.976 1.14L12 9.987l-6.512 5.581a.75.75 0 1 1-.976-1.138z" clip-rule="evenodd"/></svg></button>
                                 </div>
 
+                                {/* shows all recommended user in cards */}
                                 {allUser.map((users, index) => (
                                     <div key={index}  className='userRow'>
                                         <div className='userCard'>
@@ -791,6 +856,7 @@ const Profile = () => {
                             </>
                         )}
                     </div> 
+                    {/* add a line */}
                     <div className='line'></div>
                     </>
                 ) : (
@@ -801,9 +867,11 @@ const Profile = () => {
 
                 <p className="w-100 text-center mt-3 mb-1" id="success_Msg">{message}</p>
                 <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
-
+                
+                {/* checks if user is valid */}
                 {userId ?(
                     <>
+                        {/* displays no post message, depending on ownership of account */}
                         {posts.length === 0 ? (
                         <>
                             {currentUserId === userId ? (
@@ -828,7 +896,7 @@ const Profile = () => {
                     </>
                 )}
 
-                
+                {/* displays all post as cards */}
                 <div className='Card_Post'>
                     {posts.map((post, index) => (
                         <div key={index}  className='postCard' onClick={() => handleSelectCard(post)}>
@@ -851,6 +919,7 @@ const Profile = () => {
                     ))}
                 </div>
 
+                {/* open post in modal */}
                 <Popup open={openModal} 
                         verlayStyle={{
                             background: 'rgba(0, 0, 0, 0.05)', 
@@ -869,20 +938,25 @@ const Profile = () => {
                                 <div className='modalHeader'>
                                     <div>
                                         <h3>{selectedPost.postData?.title}</h3>
+                                        {/* displays the vrn and button to race/compare */}
                                         <Link className='postVRN' to={`/race/${userId}`}>{selectedPost?.postData?.vehicles?.vrn}</Link>
                                     </div>
                                 </div> 
 
+                                {/* displays the post's image */}
                                 <div className='modalPostImage'>
                                     <img className='modalPostImage' src={selectedPost?.postData?.image} alt={selectedPost?.postData?.title}/> 
                                 </div>
 
+                                {/* displays the post's description */}
                                 <div className='modalDesc'>
                                     <p>{selectedPost?.postData?.description}</p>
                                 </div>
 
+                                {/* displays the post's engagement buttons */}
                                 <div className='selectedpostEngagement'>
                                     <div className='engagementColumn'>
+                                        {/* check if post has been liked by current user, and shows like/unlike button */}
                                         {selectedPost?.postData.likes.some((likedUser) => likedUser.userId === userId) ? (
                                                 <>
                                                     <button className='unlikebtn' disabled={loading} onClick={() => handleUnLike(selectedPost?.postData._id)}><svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 26 26"><path d="M17.869 3.889c-2.096 0-3.887 1.494-4.871 2.524c-.984-1.03-2.771-2.524-4.866-2.524C4.521 3.889 2 6.406 2 10.009c0 3.97 3.131 6.536 6.16 9.018c1.43 1.173 2.91 2.385 4.045 3.729c.191.225.471.355.765.355h.058c.295 0 .574-.131.764-.355c1.137-1.344 2.616-2.557 4.047-3.729C20.867 16.546 24 13.98 24 10.009c0-3.603-2.521-6.12-6.131-6.12"/></svg></button>
@@ -896,11 +970,13 @@ const Profile = () => {
 
                                     </div>
 
+                                    {/* shows comment button */}
                                     <div className='engagementColumn'>
                                         <button className='commentbtn' onClick={() => handleSelectCardComment(selectedPost)}><svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3 10.4c0-2.24 0-3.36.436-4.216a4 4 0 0 1 1.748-1.748C6.04 4 7.16 4 9.4 4h5.2c2.24 0 3.36 0 4.216.436a4 4 0 0 1 1.748 1.748C21 7.04 21 8.16 21 10.4v1.2c0 2.24 0 3.36-.436 4.216a4 4 0 0 1-1.748 1.748C17.96 18 16.84 18 14.6 18H7.414a1 1 0 0 0-.707.293l-2 2c-.63.63-1.707.184-1.707-.707V13zM9 8a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z" clip-rule="evenodd"/></svg></button>
                                         <h3>{selectedPost?.postData.comments.length} Comment</h3>
                                     </div>
 
+                                    {/* check if post has been superfuelled by current user, and shows superfuel/unsuperfuel button */}
                                     <div className='engagementColumn'>
                                         {selectedPost?.postData.superfuel.some((superFuelUser) => superFuelUser.userId === userId) ? (
                                                 <>
@@ -914,7 +990,8 @@ const Profile = () => {
                                         <h3>{selectedPost?.postData.superfuel.length} Superfuel</h3>
                                     </div>
                                 </div>
-
+                                
+                                {/* display comment's box */}
                                 {commentBox ? (
                                     <>
                                         <div className='commentBox' id='commentProfileModal'>
@@ -930,6 +1007,7 @@ const Profile = () => {
 
                                                     <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{commentError}</p>
 
+                                                    {/* shows comments for each post */}
                                                     <div className='modalCommentBody'>
                                                         {selectedPost.postData.comments?.map((postComment) => (
                                                             <div key={postComment._id} className='comments'>
@@ -952,6 +1030,7 @@ const Profile = () => {
                                                                     </div>
                                                                 </div>
 
+                                                                {/* shows replies for each comment */}
                                                                 {postComment.replies?.map((postReply) => (
                                                                     <div key={postReply._id} className='replies'>
                                                                         <div className='commentTop'>
@@ -970,6 +1049,7 @@ const Profile = () => {
                                                                             <div className='replyDate'>
                                                                                 <div>{formatDate(postReply.createdAt)}</div>
                                                                                 <div>{formatTime(postReply.createdAt)}</div>
+                                                                                {/* check if reply belongs to user, and shows delete button */}
                                                                                 {postReply.userID._id === userId? (
                                                                                     <>
                                                                                         <button className='deletereplybtn' disabled={loading} onClick={() => handleDeleteReply(selectedPost.postData._id, postComment._id, postReply._id)}> Delete Reply</button>
@@ -997,6 +1077,7 @@ const Profile = () => {
                                                                     )}
                                                                 </div>
 
+                                                                {/* check selected comment and shows reply button */}
                                                                 {showReplyBox && selectedComment === postComment._id ?(
                                                                     <>
                                                                         <div className='modalCommentButton'>
@@ -1027,6 +1108,7 @@ const Profile = () => {
                                     </>
                                 )}
 
+                                {/* checks if post belongs to current user and displays edit/delete button */}
                                 {currentUserId === userId ? (
                                     <>
                                         {confirmDeletePost ? (
@@ -1055,6 +1137,7 @@ const Profile = () => {
                     </div>
                 </Popup>
 
+                {/* modal for followers list */}
                 <Popup open={openFollowerModal} closeOnDocumentClick onClose={() => setOpenFollowerModal(false)} className='Popup'>
                     <div className='FollowModal'>
                         <>
@@ -1067,6 +1150,7 @@ const Profile = () => {
                             <div className='line'></div>
 
                             <div className='modalFollowData'>
+                                {/* displays all followers name */}
                                 {followers.map((followers, index) => (
                                     <div key={index} >
                                         <p>{followers.followerName}</p>
@@ -1077,6 +1161,7 @@ const Profile = () => {
                     </div>
                 </Popup>
 
+                {/* modal for followering list */}
                 <Popup open={openFollowingModal} closeOnDocumentClick onClose={() => setOpenFollowingModal(false)} className='Popup'>
                     <div className='FollowModal'>
                         <>
@@ -1089,6 +1174,7 @@ const Profile = () => {
                             <div className='line'></div>
 
                             <div className='modalFollowData'>
+                                {/* displays all following name */}
                                 {following.map((following, index) => (
                                     <div key={index} >
                                         <p>{following.followeringName}</p>

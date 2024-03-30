@@ -1,3 +1,4 @@
+/* Style for profile page */
 .showProfile{
     padding: 20px;
 }
@@ -160,6 +161,7 @@
     font-size: 13px;
 }
 
+/* Grid Layout for each post and sets a gap in between */
 .Card_Post{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -190,6 +192,7 @@
     transition: 0.5s ease-in;
 }
 
+/* Filter for card's image (grayscale) when hovered */
 .postCard:hover img{
     filter: grayscale(1) brightness(0.5);
 }
@@ -216,7 +219,7 @@
 .postCard:hover .cardContent{
     opacity: 1;
 }
-
+ /* Styles for post modal */
 .modalPostImage{
     margin: 15px;
 }
@@ -288,6 +291,7 @@
     width: 50%;
 }
 
+ /* Styles for follow modal */
 .FollowModal{
     background-color: white;
     border: 1px solid black;
@@ -328,6 +332,7 @@
     padding: 2px 5px;
 }
 
+/* Media query for screens with a maximum width of 600px (mobile) */
 @media only screen and (max-width: 600px) {
     .showProfile{
         padding: 20px 0;

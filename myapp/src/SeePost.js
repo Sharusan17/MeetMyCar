@@ -255,7 +255,7 @@ const SeePost = () => {
             setError('')
             setLoading(true)
 
-            // remove like to post database
+            // remove like from post database
             const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
@@ -278,7 +278,7 @@ const SeePost = () => {
         setLoading(false)
     }
 
-    //handle add comment post
+    // handle add comment post
     async function handleaddComment(postId){
 
         // validate the length of the comment
@@ -347,7 +347,7 @@ const SeePost = () => {
         setLoading(false)
     }
 
-    //handle add reply post
+    // handle add reply post
     async function handleaddReply(postId, commentId){
 
         // validate the length of the reply
@@ -424,7 +424,7 @@ const SeePost = () => {
 
             // check if current user has valid number of superfuel
             if(usersf > 0){
-                // add superfuel to post's user
+                // add superfuel to post database
                 const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                     method: 'PUT',
                     headers: {
@@ -439,7 +439,7 @@ const SeePost = () => {
 
                 const firebaseUID = currentUser.uid;
 
-                // remove superfuel to current user
+                // remove superfuel from current user
                 const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'PUT',
                     headers: {
@@ -452,7 +452,7 @@ const SeePost = () => {
                     console.error("Error Updating User's SuperFuel:")
                 }
 
-                // add superfuel to post database
+                // add superfuel to post's user
                 const profileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(postUserId)}`, {
                     method: 'PUT',
                     headers: {
@@ -488,7 +488,7 @@ const SeePost = () => {
             setError('')
             setLoading(true)
 
-            // remove superfuel from post's user
+            // remove superfuel from post database
             const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
@@ -503,7 +503,7 @@ const SeePost = () => {
 
             const firebaseUID = currentUser.uid;
 
-            // add superfuel from current user
+            // add superfuel to current user
             const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
@@ -516,7 +516,7 @@ const SeePost = () => {
                 console.error("Error Updating User's SuperFuel:")
             }
 
-            // remove superfuel from post
+            // remove superfuel from post's user
             const profileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(postUserId)}`, {
                 method: 'PUT',
                 headers: {
