@@ -60,7 +60,7 @@ const CompareSpecs = () => {
                 // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
     
-                const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -78,7 +78,7 @@ const CompareSpecs = () => {
                     // fetches garage's data for the current user, and stores the data into vehicles
                     const vehicleData = await Promise.all(data.userData.vehicles.map(async (vehicle) => {
                         if(vehicle?.vehicleId){
-                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
+                            const VehicleReponse = await fetch(`https://meetmycar.onrender.com/vehicles?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
                                 method: 'GET',
                                 headers: {
                                     'accept': 'application/json',
@@ -121,7 +121,7 @@ const CompareSpecs = () => {
             try{
                 setError('')
     
-                const response = await fetch(`http://localhost:3001/users?userid=${encodeURIComponent(userid)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/users?userid=${encodeURIComponent(userid)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -139,7 +139,7 @@ const CompareSpecs = () => {
                     // fetches garage's data for the profile user, and stores the data into vehicles
                     const vehicleData = await Promise.all(data.userData.vehicles.map(async (vehicle) => {
                         if(vehicle?.vehicleId){
-                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
+                            const VehicleReponse = await fetch(`https://meetmycar.onrender.com/vehicles?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
                                 method: 'GET',
                                 headers: {
                                     'accept': 'application/json',
@@ -328,7 +328,7 @@ const CompareSpecs = () => {
 
             // if vehicle 1 won, it will add a win point to current user
             if (vehicle1Points > vehicle2Points){
-                response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                response = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -347,7 +347,7 @@ const CompareSpecs = () => {
                 }
 
                 // if vehicle 1 won, it will add a lost point to competing user
-                pointsProfileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userid)}`, {
+                pointsProfileResponse = await fetch(`https://meetmycar.onrender.com/users/update?userid=${encodeURIComponent(userid)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -367,7 +367,7 @@ const CompareSpecs = () => {
 
             // if vehicle 2 won, it will add a lost point to current user
             else if (vehicle2Points > vehicle1Points){
-                response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                response = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -385,7 +385,7 @@ const CompareSpecs = () => {
                 }
 
                 // if vehicle 2 won, it will add a win point to competing user
-                pointsProfileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(userid)}`, {
+                pointsProfileResponse = await fetch(`https://meetmycar.onrender.com/users/update?userid=${encodeURIComponent(userid)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

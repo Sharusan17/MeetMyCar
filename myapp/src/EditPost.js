@@ -44,7 +44,7 @@ const EditPost = () => {
                 // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
     
-                const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -77,7 +77,7 @@ const EditPost = () => {
         async function fetchPostData(){
             // fetches the post data, and stores the data (title, img, desc and vehicle) into useState, to be used throughout the page.
             try{
-                const response = await fetch(`http://localhost:3001/posts?postId=${encodeURIComponent(postId)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/posts?postId=${encodeURIComponent(postId)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -154,7 +154,7 @@ const EditPost = () => {
                 setLoading(true)
                 setError('')
 
-                const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/posts/edit?postId=${encodeURIComponent(postId)}`, {
                     method: 'PUT',
                     body: formData,
                 });

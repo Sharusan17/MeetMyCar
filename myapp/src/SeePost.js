@@ -35,7 +35,7 @@ const SeePost = () => {
             try{
                 setError('')
                 setMessage('')
-                const response = await fetch(`http://localhost:3001/posts`, {
+                const response = await fetch(`https://meetmycar.onrender.com/posts`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -48,7 +48,7 @@ const SeePost = () => {
                     // fetches vehicle's data for each post, and stores the data into post
                     const vehiclePost = await Promise.all(data.postData.map(async (post) => {
                         if(post.vehicles?.vehicleId){
-                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles?vehicleId=${encodeURIComponent(post.vehicles.vehicleId)}`, {
+                            const VehicleReponse = await fetch(`https://meetmycar.onrender.com/vehicles?vehicleId=${encodeURIComponent(post.vehicles.vehicleId)}`, {
                                 method: 'GET',
                                 headers: {
                                     'accept': 'application/json',
@@ -98,7 +98,7 @@ const SeePost = () => {
                 setError('')
                 // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
-                const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -171,7 +171,7 @@ const SeePost = () => {
             setLoading(true)
 
             // delete posts in Post database
-            const response = await fetch(`http://localhost:3001/posts/delete?postId=${encodeURIComponent(postId)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/posts/delete?postId=${encodeURIComponent(postId)}`, {
                 method: 'DELETE',
             });
 
@@ -181,7 +181,7 @@ const SeePost = () => {
             const firebaseUID = currentUser.uid;
 
             // delete posts in User's account
-            const userDelete_response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+            const userDelete_response = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -194,7 +194,7 @@ const SeePost = () => {
             }
 
             // removes superfuel points for user
-            const userSFResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+            const userSFResponse = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -227,7 +227,7 @@ const SeePost = () => {
             setLoading(true)
 
             // add like to post database
-            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -256,7 +256,7 @@ const SeePost = () => {
             setLoading(true)
 
             // remove like from post database
-            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -288,7 +288,7 @@ const SeePost = () => {
                 setCommentError('')
 
                 // adds comment to post database
-                const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/posts/edit?postId=${encodeURIComponent(postId)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -323,7 +323,7 @@ const SeePost = () => {
             setCommentError('')
 
             // remove the comment from post database
-            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -357,7 +357,7 @@ const SeePost = () => {
                  setCommentError('')
  
                  // adds reply to post database
-                 const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                 const response = await fetch(`https://meetmycar.onrender.com/posts/edit?postId=${encodeURIComponent(postId)}`, {
                      method: 'PUT',
                      headers: {
                          'Content-Type': 'application/json'
@@ -392,7 +392,7 @@ const SeePost = () => {
             setCommentError('')
 
             // remove the reply from post database
-            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -425,7 +425,7 @@ const SeePost = () => {
             // check if current user has valid number of superfuel
             if(usersf > 0){
                 // add superfuel to post database
-                const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/posts/edit?postId=${encodeURIComponent(postId)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -440,7 +440,7 @@ const SeePost = () => {
                 const firebaseUID = currentUser.uid;
 
                 // remove superfuel from current user
-                const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const userResponse = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -453,7 +453,7 @@ const SeePost = () => {
                 }
 
                 // add superfuel to post's user
-                const profileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(postUserId)}`, {
+                const profileResponse = await fetch(`https://meetmycar.onrender.com/users/update?userid=${encodeURIComponent(postUserId)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -489,7 +489,7 @@ const SeePost = () => {
             setLoading(true)
 
             // remove superfuel from post database
-            const response = await fetch(`http://localhost:3001/posts/edit?postId=${encodeURIComponent(postId)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/posts/edit?postId=${encodeURIComponent(postId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -504,7 +504,7 @@ const SeePost = () => {
             const firebaseUID = currentUser.uid;
 
             // add superfuel to current user
-            const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+            const userResponse = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -517,7 +517,7 @@ const SeePost = () => {
             }
 
             // remove superfuel from post's user
-            const profileResponse = await fetch(`http://localhost:3001/users/update?userid=${encodeURIComponent(postUserId)}`, {
+            const profileResponse = await fetch(`https://meetmycar.onrender.com/users/update?userid=${encodeURIComponent(postUserId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

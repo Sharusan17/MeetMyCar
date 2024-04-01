@@ -52,7 +52,7 @@ const RegisterVehicle = ({updateImage}) => {
             setMessage('')
 
             // fetch from vehicleAPI
-            fetch('http://localhost:3001/vehicleAPI/list')
+            fetch('https://meetmycar.onrender.com/vehicleAPI/list')
                 .then(response => {
                     if (response.ok) {
                         return response.json();
@@ -88,7 +88,7 @@ const RegisterVehicle = ({updateImage}) => {
                 // fetches the user data with firebase ID 
                 const firebaseUID = currentUser.uid;
     
-                const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -158,7 +158,7 @@ const RegisterVehicle = ({updateImage}) => {
             setLoading(true) 
 
             // add formData to vehicle database
-            const response = await fetch('http://localhost:3001/vehicles/add', {
+            const response = await fetch('https://meetmycar.onrender.com/vehicles/add', {
                 method: 'POST',
                 body: formData,
             });
@@ -176,7 +176,7 @@ const RegisterVehicle = ({updateImage}) => {
             Vehicle_formData.append('vrn', data.newVehicle.vrn);
 
             // add vehicle to current user's database
-            const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+            const userResponse = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 body: Vehicle_formData,
             });
@@ -223,7 +223,7 @@ const RegisterVehicle = ({updateImage}) => {
         const vehicleRegValue = vehicleReg.current.value;
         
         // fetches vehicle data with vrn from API
-        fetch(`http://localhost:3001/vehicleAPI/search?vrn=${encodeURIComponent(vehicleRegValue)}`)
+        fetch(`https://meetmycar.onrender.com/vehicleAPI/search?vrn=${encodeURIComponent(vehicleRegValue)}`)
             .then(response => {
                 if (response.ok) {
                     return response.json();

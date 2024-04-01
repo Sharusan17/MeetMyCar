@@ -41,7 +41,7 @@ const UpdateProfile = () => {
                 const firebaseUID = currentUser.uid;
                 // console.log(firebaseUID)
 
-                const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -93,7 +93,7 @@ const UpdateProfile = () => {
             // console.log(firebaseUID)
 
             // amends user's data into database
-            const response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 body: formData,
             });
@@ -191,7 +191,7 @@ const UpdateProfile = () => {
 
         try{
             // sends delete request to database to remove account
-            const response = await fetch(`http://localhost:3001/users/delete?userfb=${encodeURIComponent(userId)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/users/delete?userfb=${encodeURIComponent(userId)}`, {
                 method: 'DELETE',
             });
 

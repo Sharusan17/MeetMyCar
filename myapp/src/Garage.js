@@ -34,7 +34,7 @@ const Garage = () => {
             try{
                 setError('')
     
-                const response = await fetch(`http://localhost:3001/users?userid=${encodeURIComponent(userid)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/users?userid=${encodeURIComponent(userid)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -50,7 +50,7 @@ const Garage = () => {
                     // fetches garage's data for the profile's user, and stores the data into vehicles
                     const vehicleData = await Promise.all(data.userData.vehicles.map(async (vehicle) => {
                         if(vehicle?.vehicleId){
-                            const VehicleReponse = await fetch(`http://localhost:3001/vehicles?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
+                            const VehicleReponse = await fetch(`https://meetmycar.onrender.com/vehicles?vehicleId=${encodeURIComponent(vehicle.vehicleId)}`, {
                                 method: 'GET',
                                 headers: {
                                     'accept': 'application/json',
@@ -96,7 +96,7 @@ const Garage = () => {
                 // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
 
-                const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -149,7 +149,7 @@ const Garage = () => {
             const firebaseUID = currentUser.uid;
 
             // delete vehicle in user's account
-            const response = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

@@ -36,7 +36,7 @@ const AddPost = () => {
                 // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
     
-                const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -104,7 +104,7 @@ const AddPost = () => {
             setLoading(true) 
 
 
-            const response = await fetch('http://localhost:3001/posts/add', {
+            const response = await fetch('/posts/add', {
                 method: 'POST',
                 body: formData,
             });
@@ -125,7 +125,7 @@ const AddPost = () => {
             Post_formData.append('postId', data.newPost._id);
 
             // adds the post to the user's account and database
-            const userResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+            const userResponse = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 body: Post_formData,
             });
@@ -136,7 +136,7 @@ const AddPost = () => {
             } 
 
             // adds a superfuel point for every post added to the user's account
-            const userSFResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+            const userSFResponse = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

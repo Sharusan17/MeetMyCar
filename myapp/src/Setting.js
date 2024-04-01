@@ -25,7 +25,7 @@ const Setting = () => {
             // fetches the user data with firebase ID
             const firebaseUID = currentUser.uid;
 
-            const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'GET',
                 headers: {
                     'accept': 'application/json',

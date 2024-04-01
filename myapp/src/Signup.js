@@ -69,7 +69,7 @@ const Signup = () => {
             formData.append('user_fbId', firebaseUID)
 
             // adds the user's formData into the Users database
-            const response = await fetch('http://localhost:3001/users/register', {
+            const response = await fetch('https://meetmycar.onrender.com/users/register', {
                 method: 'POST',
                 body: formData,
             });
