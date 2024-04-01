@@ -89,7 +89,14 @@ const SeePost = () => {
             }
         }
         fetchPostData();
+
+        const intervalId = setInterval(() => {
+            setRefreshData(!refreshData)
+        }, 5000)
+        return () => clearInterval(intervalId)
+
     }, [refreshData]);
+
 
     useEffect(() => {
         async function fetchUserData(){
