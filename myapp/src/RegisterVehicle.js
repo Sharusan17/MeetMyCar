@@ -317,62 +317,59 @@ const RegisterVehicle = ({updateImage}) => {
                 )}
 
                 {/* Vehicle List Form */}
-                <form className='addVehicle_Form' onSubmit={handleaddSelectedCar}>
-                    {showOptions && (<div>
+                {/*
+                    <form className='addVehicle_Form' onSubmit={handleaddSelectedCar}>
+                        {showOptions && (<div>
 
-                            {/* displays all vehicle's make */}
-                            <div className='select-space-between'>
-                                <select onChange={handleSelectCar} value={selectedMake} required>
-                                    <option value="" disabled>Make</option>
-                                    {makeOptions.map(make => (
-                                        <option key={make} value={make}> {make} </option>
-                                    ))}
-                                </select>
+                                <div className='select-space-between'>
+                                    <select onChange={handleSelectCar} value={selectedMake} required>
+                                        <option value="" disabled>Make</option>
+                                        {makeOptions.map(make => (
+                                            <option key={make} value={make}> {make} </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className='select-space-between'>
+                                    <select onChange={(e) => setSelectedModel(e.target.value)} value={selectedModel} disabled={!selectedMake} required>
+                                        <option value="" disabled >Model</option>
+                                        {modelOptions.map(model => ( 
+                                            <option key={model} value={model}> {model} </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className='select-space-between'>
+                                    <select onChange={(e) => setSelectedFuel(e.target.value)} value={selectedFuel} disabled={!selectedModel.length} required>
+                                        <option value="" disabled >Fuel</option>
+                                        {fuelOptions.map(fuel => (
+                                            <option key={fuel} value={fuel}> {fuel} </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className='select-space-between'>
+                                    <select onChange={(e) => setSelectedTransmission(e.target.value)} value={selectedTransmission} disabled={!selectedModel.length} required>
+                                        <option value="" disabled>Transmission</option>
+                                        {transmissionOptions.map(transmission => (
+                                            <option key={transmission} value={transmission}> {transmission} </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                
                             </div>
+                        )} 
 
-                            {/* displays all vehicle's model from selected */}
-                            <div className='select-space-between'>
-                                <select onChange={(e) => setSelectedModel(e.target.value)} value={selectedModel} disabled={!selectedMake} required>
-                                    <option value="" disabled >Model</option>
-                                    {modelOptions.map(model => ( 
-                                        <option key={model} value={model}> {model} </option>
-                                    ))}
-                                </select>
-                            </div>
+                        {showSelectedButton && (
+                            <button id="button" disabled={loading} className="w-100 mt-2" type="submit" >Add Selected Vehicle</button>
+                        )}
+                    </form>
 
-                            {/* displays all vehicle's fuel options */}
-                            <div className='select-space-between'>
-                                <select onChange={(e) => setSelectedFuel(e.target.value)} value={selectedFuel} disabled={!selectedModel.length} required>
-                                    <option value="" disabled >Fuel</option>
-                                    {fuelOptions.map(fuel => (
-                                        <option key={fuel} value={fuel}> {fuel} </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* displays all vehicle's transmission options */}
-                            <div className='select-space-between'>
-                                <select onChange={(e) => setSelectedTransmission(e.target.value)} value={selectedTransmission} disabled={!selectedModel.length} required>
-                                    <option value="" disabled>Transmission</option>
-                                    {transmissionOptions.map(transmission => (
-                                        <option key={transmission} value={transmission}> {transmission} </option>
-                                    ))}
-                                </select>
-                            </div>
-                            
-                        </div>
-                    )} 
-
-                    {/* shows add selected vehicle button */}
-                    {showSelectedButton && (
-                        <button id="button" disabled={loading} className="w-100 mt-2" type="submit" >Add Selected Vehicle</button>
-                    )}
-                </form>
-
-                {/* alternative flow to register vehicle */}
-                <div id="findVehicle" className="w-100 text-center mt-2">
-                    Can't find your car? <Link id='findlink' onClick={handleFindCar}> Find Here</Link>
-                </div>
+                    <div id="findVehicle" className="w-100 text-center mt-2">
+                        Can't find your car? <Link id='findlink' onClick={handleFindCar}> Find Here</Link>
+                    </div>
+                
+                */}
 
                 {/* navigate to profile page */}
                 <div id="homepage" className="w-100 text-center mt-2">
