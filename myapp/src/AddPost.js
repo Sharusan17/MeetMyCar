@@ -104,7 +104,7 @@ const AddPost = () => {
             setLoading(true) 
 
 
-            const response = await fetch('/posts/add', {
+            const response = await fetch('https://meetmycar.onrender.com/posts/add', {
                 method: 'POST',
                 body: formData,
             });
