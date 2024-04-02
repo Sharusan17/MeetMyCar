@@ -16,11 +16,11 @@ const PostSchema = new mongoose.Schema({
         maxlength: 30,
         required: true,
     },
-    // Image of Post
-    image:{
+    // Image array of Post
+    image:[{
         type: String,
         required: true,
-    },
+    }],
     // Description of Post
     description:{
         type: String,

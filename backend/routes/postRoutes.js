@@ -42,7 +42,7 @@ router.get('/', async (req, res) => {
 });
 
 //POST Post Data
-router.post('/add', upload.single('image'), async (req, res) => {
+router.post('/add', upload.array('image', 5), async (req, res) => {
     console.log(req.body);
     try{       
         // Create a new post with body data
@@ -50,8 +50,12 @@ router.post('/add', upload.single('image'), async (req, res) => {
 
         // uploads post image to AWS, and stores url to post
         if (req.file){
-            const uploadResult = await req.uploadAWS(req.file);
-            newPost.image = uploadResult.Location;
+            const imageUrls = [];
+            for (const file of req.file){
+                const uploadResult = await req.uploadAWS(file);
+                imageUrls.push(uploadResult.Location);
+            }
+            newPost.image = imageUrls;
         }
 
         // stores vehicle details to post
