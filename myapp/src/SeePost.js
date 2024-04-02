@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react'
 import { Link } from 'react-router-dom'
+import ImageGallery from 'react-image-gallery'
 import { useAuth } from './AuthContext'
 
 import './SeePost_css.css'
@@ -627,7 +628,20 @@ const SeePost = () => {
                         
                         <div className='post-content'>
                             <h2 className='postTitle'>{post.title}</h2> 
-                            <img src={post.image} alt={post.title} className='postImage'/>
+                            <div className='postImage'>
+                                <ImageGallery
+                                    items={post.image.map (imageurl => ({
+                                        original: imageurl
+                                    }))}
+                                    showPlayButton={false}
+                                    showFullscreenButton={false}
+                                    showNav={false}
+                                    showBullets={true}
+                                    autoPlay={true}
+                                    infinite={true}
+                                    slideInterval={5000}
+                                />
+                            </div>
 
                             {/* showcases the vehicle spec */}
                             <div className='postSpecs'>
