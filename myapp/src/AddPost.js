@@ -1,7 +1,11 @@
 // import hooks
 import React, {useState, useEffect, useRef} from 'react'
 import { useNavigate } from 'react-router-dom'
+import ImageGallery from 'react-image-gallery'
 import { useAuth } from './AuthContext'
+
+// import react-image-gallery styles
+import "react-image-gallery/styles/css/image-gallery.css"
 
 import './AddPost_css.css'
 
@@ -16,7 +20,7 @@ const AddPost = () => {
     const [profilePicture, setprofilePicture] = useState('')
     const [vehicle, setVehicle] = useState([])
 
-    const [image, setImage] = useState('')
+    const [image, setImage] = useState([])
     const [selectVehicle, setselectedVehicle] = useState([])
 
     const {currentUser} = useAuth()
@@ -92,7 +96,9 @@ const AddPost = () => {
        formData.append('user', userId);
        formData.append('title', titleRef.current.value);
        formData.append('description', descRef.current.value);
-       formData.append('image', imageRef.current.files[0]);
+       for (let i = 0; i < imageRef.current.files.length; i++){
+            formData.append('image', imageRef.current.files[i]);
+       }
        formData.append('vehicleId', selectVehicle.vehicleId)
        formData.append('vrn', selectVehicle.vrn)
 
@@ -122,6 +128,7 @@ const AddPost = () => {
             const firebaseUID = currentUser.uid;
 
             const Post_formData = new FormData();
+            // fetch the postId, after added to post database
             Post_formData.append('postId', data.newPost._id);
 
             // adds the post to the user's account and database
@@ -160,9 +167,20 @@ const AddPost = () => {
         setLoading(false) 
     }
 
-    // fetches the image input, and sets to the setImage state which can be shown on the form for the user
+    // fetches the image array, and sets to the setImage state which can be shown on the form for the user
     function handleImageInput(e){
-        setImage(URL.createObjectURL(e.target.files[0]))
+        const imageUrls = []
+        // Go through each image
+        for (let i = 0; i < e.target.files.length; i++){
+            // create an object URL for each image
+            const imageUrl = {
+                original: URL.createObjectURL(e.target.files[i]),
+            }
+            imageUrls.push(imageUrl)
+        }
+        // set the array to setImage state
+        console.log("Post images:", imageUrls)
+        setImage(imageUrls)
     }
 
     // using the vehicle options, user will select the vehicle the post is related to
@@ -212,8 +230,19 @@ const AddPost = () => {
                     {/* Form Fields */}
                     <div className='add-post-content'>
                         <input type='text' ref={titleRef} placeholder='Title...' className='add_postTitle' required></input>
-                        <input type='file' ref={imageRef}  placeholder='Insert Image' className='add_postImageBtn' onChange={handleImageInput} required></input> 
-                        <img src={image} alt='Post' className='add_postImage'></img>
+                        <input type='file' multiple ref={imageRef} placeholder='Insert Images' className='add_postImageBtn' onChange={handleImageInput} required></input> 
+                        <div className='add_postImage'>
+                            <ImageGallery
+                                items={image}
+                                showPlayButton={false}
+                                showFullscreenButton={false}
+                                showNav={false}
+                                showBullets={true}
+                                autoPlay={true}
+                                infinite={true}
+                                slideInterval={5000}
+                            />
+                        </div>
 
                         <div className='add_postFooter'>
                             {/* Shows all user vehicles for selection */}
