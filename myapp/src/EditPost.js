@@ -1,6 +1,7 @@
 // import hooks
 import React, {useState, useEffect, useRef} from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import ImageGallery from 'react-image-gallery'
 import { useAuth } from './AuthContext'
 
 import './AddPost_css.css'
@@ -18,7 +19,7 @@ const EditPost = () => {
     const [profilePicture, setprofilePicture] = useState('')
 
     const [title, setTitle] = useState('')
-    const [image, setImage] = useState('')
+    const [image, setImage] = useState([])
     const [desc, setDesc] = useState('')
     const [vehicle, setVehicle] = useState([])
 
@@ -144,7 +145,10 @@ const EditPost = () => {
         // using useRef, it will capture the current value for each field and stores into FormData
             const formData = new FormData();
             formData.append('title', titleRef.current.value);
-            formData.append('image', imageRef.current.files[0])
+            // iterate through each image and adds them to FormData
+            for (let i = 0; i < imageRef.current.files.length; i++){
+                formData.append('image', imageRef.current.files[i]);
+            }            
             formData.append('description', descRef.current.value);
             formData.append('vehicleId', selectVehicle.vehicleId)
             formData.append('vrn', selectVehicle.vrn)
@@ -188,9 +192,20 @@ const EditPost = () => {
         setSelectedVehicle(selectVehicle);
     };
 
-    // fetches the image input, and sets to the setImage state which can be shown on the form for the user
+    // fetches the image array, and sets to the setImage state which can be shown on the form for the user
     function handleImageInput(e){
-        setImage(URL.createObjectURL(e.target.files[0]))
+        const imageUrls = []
+        // Go through each image
+        for (let i = 0; i < e.target.files.length; i++){
+            // create an object URL for each image
+            const imageUrl = {
+                original: URL.createObjectURL(e.target.files[i]),
+            }
+            imageUrls.push(imageUrl)
+        }
+        // set the array to setImage state
+        console.log("Post images:", imageUrls)
+        setImage(imageUrls)
         setImageChange(true)
     }
 
@@ -221,8 +236,23 @@ const EditPost = () => {
                     {/* Form Fields */}
                     <div className='add-post-content'>
                         <input type='text' ref={titleRef} defaultValue={title} className='add_postTitle' ></input>
-                        <input type='file' ref={imageRef} defaultValue={image} placeholder='Insert Image' className='add_postImageBtn' onChange={handleImageInput} ></input> 
-                        <img src={imageChange ? image : image} className='add_postImage'></img>
+                        <input type='file' multiple ref={imageRef} defaultValue={image} placeholder='Insert Images' className='add_postImageBtn' onChange={handleImageInput} ></input> 
+                        <div className='add_postImage'>
+                            <ImageGallery
+                                items={imageChange ? image : 
+                                        image.map ( imageurl => ({
+                                            original: imageurl
+                                        }))
+                                }
+                                showPlayButton={false}
+                                showFullscreenButton={false}
+                                showNav={false}
+                                showBullets={true}
+                                autoPlay={true}
+                                infinite={true}
+                                slideInterval={5000}
+                            />
+                        </div>
 
                         <div className='add_postFooter'>
                             {/* Shows all user vehicles for selection */}
