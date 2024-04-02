@@ -78,7 +78,7 @@ const AddPost = () => {
             return setError("Title Too Short")
        }
 
-       if (titleRef.current.value.length > 20 ){
+       if (titleRef.current.value.length > 30 ){
             return setError("Title Too Long")
        }
 
@@ -89,6 +89,10 @@ const AddPost = () => {
        if (imageRef.current.files.length === 0) {
             return setError("Please select an image to upload.")
        }
+
+       if (imageRef.current.files.length > 5) {
+            return setError("Maximum Image Exceeded (5)")
+        }
 
 
        // using useRef, it will capture the current value for each field and stores into FormData
