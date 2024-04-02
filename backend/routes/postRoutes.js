@@ -42,16 +42,17 @@ router.get('/', async (req, res) => {
 });
 
 //POST Post Data
-router.post('/add', upload.array('image', 5), async (req, res) => {
+router.post('/add', upload.array('image'), async (req, res) => {
     console.log(req.body);
     try{       
         // Create a new post with body data
         const newPost = new Post(req.body);
 
-        // uploads post image to AWS, and stores url to post
-        if (req.file){
+        // uploads post [images] to AWS, and store urls to post
+        if (req.files){
             const imageUrls = [];
-            for (const file of req.file){
+            // goes through each image file and creates an AWS url
+            for (const file of req.files){
                 const uploadResult = await req.uploadAWS(file);
                 imageUrls.push(uploadResult.Location);
             }
@@ -76,7 +77,7 @@ router.post('/add', upload.array('image', 5), async (req, res) => {
 });
 
 //UPDATE Post Data
-router.put('/edit', upload.single('image'), async (req, res) => {
+router.put('/edit', upload.array('image'), async (req, res) => {
     console.log(req.body)
     try{       
         // parameters from query string (postId)
@@ -98,10 +99,14 @@ router.put('/edit', upload.single('image'), async (req, res) => {
         if(req.body.title){
             postUpdate.title = req.body.title;
         }
-        // updates image, if image in body found
-        if (req.file){
-            const uploadResult = await req.uploadAWS(req.file);
-            postUpdate.image = uploadResult.Location;
+        // updates images, if [image] in body found
+        if (req.files){
+            const imageUrls = [];
+            for (const file of req.files){
+                const uploadResult = await req.uploadAWS(file);
+                imageUrls.push(uploadResult.Location);
+            }
+            postUpdate.image = imageUrls;
         }
         // updates description, if description in body found
         if(req.body.description){

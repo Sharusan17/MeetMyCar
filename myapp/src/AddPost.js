@@ -96,7 +96,10 @@ const AddPost = () => {
        formData.append('user', userId);
        formData.append('title', titleRef.current.value);
        formData.append('description', descRef.current.value);
-       formData.append('image', imageRef.current.files);
+       // iterate through each image and adds them to FormData
+       for (let i = 0; i < imageRef.current.files.length; i++){
+            formData.append('image', imageRef.current.files[i]);
+       }
        formData.append('vehicleId', selectVehicle.vehicleId)
        formData.append('vrn', selectVehicle.vrn)
 
