@@ -232,6 +232,7 @@ const AddPost = () => {
                     {/* Form Fields */}
                     <div className='add-post-content'>
                         <input type='text' ref={titleRef} placeholder='Title...' className='add_postTitle' required></input>
+                        <input type="file" id="picture" name="picture" accept="image/*" capture="environment"></input>
                         <input type='file' multiple ref={imageRef} placeholder='Insert Images' className='add_postImageBtn' onChange={handleImageInput} required></input> 
                         <div className='add_postImage'>
                             <ImageGallery
