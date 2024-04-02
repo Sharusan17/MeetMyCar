@@ -222,17 +222,18 @@
  /* Styles for post modal */
 .modalPostImage{
     margin: 15px;
-}
-
-.modalPostImage img{
-    max-width: 350px;
-    min-width: 350px;
-    width: 100%;
-    aspect-ratio: 1/1;
-    height: auto;
     border-radius: 20px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
     border: 1px solid gray;
+    overflow: hidden;
+}
+
+.modalPostImage .image-gallery-image{
+    width: 350px;
+    max-width: 350px;
+    min-height: 350px;
+    aspect-ratio: 1/1;
+    object-fit: fill;
 }
 
 .modalDesc{
@@ -454,10 +455,10 @@
         margin: 15px 20px;
     }
     
-    .modalPostImage img{
-        max-width: 250px;
-        min-width: 250px;
+    .modalPostImage .image-gallery-image{
+        width: 275px;
+        min-width: 275px;
+        max-width: 275px;
+        min-height: 275px;
     }
-
 }
-

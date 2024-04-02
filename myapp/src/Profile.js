@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
+import ImageGallery from 'react-image-gallery'
 import { useAuth } from './AuthContext'
 import {Popup} from 'reactjs-popup'
 
@@ -901,7 +902,8 @@ const Profile = () => {
                     {posts.map((post, index) => (
                         <div key={index}  className='postCard' onClick={() => handleSelectCard(post)}>
                                 <div className='cardPostImage'>
-                                    <img src={post?.postData?.image} alt={post?.postData?.title}/> 
+                                    {/* display first image */}
+                                    <img src={post?.postData?.image[0]} alt={post?.postData?.title}/> 
                                 </div>
 
                                 <div className='cardContent'>
@@ -945,7 +947,18 @@ const Profile = () => {
 
                                 {/* displays the post's image */}
                                 <div className='modalPostImage'>
-                                    <img className='modalPostImage' src={selectedPost?.postData?.image} alt={selectedPost?.postData?.title}/> 
+                                    <ImageGallery
+                                        items={selectedPost?.postData?.image.map (imageurl => ({
+                                            original: imageurl
+                                        }))}
+                                        showPlayButton={false}
+                                        showFullscreenButton={false}
+                                        showNav={false}
+                                        showBullets={true}
+                                        autoPlay={true}
+                                        infinite={true}
+                                        slideInterval={5000}
+                                    />
                                 </div>
 
                                 {/* displays the post's description */}
