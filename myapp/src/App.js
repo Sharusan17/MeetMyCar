@@ -21,7 +21,10 @@ import EditPost from "./EditPost";
 import Profile from "./Profile";
 import Garage from "./Garage";
 import CompareSpecs from "./CompareSpecs";
+
 import Event from "./Event";
+import AddEvent from "./AddEvent";
+import EditEvent from "./EditEvent";
 
 import {BrowserRouter, Routes, Route,} from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
@@ -158,6 +161,26 @@ function App() {
                     <PrivateRoute>
                       <Layout>
                         <Event/>
+                      </Layout>
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route path="/addevent"
+                  element={
+                    <PrivateRoute>
+                      <Layout>
+                        <AddEvent/>
+                      </Layout>
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route path="/editevent/:eventId"
+                  element={
+                    <PrivateRoute>
+                      <Layout>
+                        <EditEvent/>
                       </Layout>
                     </PrivateRoute>
                   }

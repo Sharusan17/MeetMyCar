@@ -26,6 +26,7 @@ const EventSchema = new mongoose.Schema({
     location:{
         type: String,
         minlength: 2,
+        maxlength: 30,
         required: true,
     },
     date:{
