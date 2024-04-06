@@ -21,6 +21,7 @@ import EditPost from "./EditPost";
 import Profile from "./Profile";
 import Garage from "./Garage";
 import CompareSpecs from "./CompareSpecs";
+import Event from "./Event";
 
 import {BrowserRouter, Routes, Route,} from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
@@ -147,6 +148,16 @@ function App() {
                     <PrivateRoute>
                       <Layout>
                         <CompareSpecs/>
+                      </Layout>
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route path="/event"
+                  element={
+                    <PrivateRoute>
+                      <Layout>
+                        <Event/>
                       </Layout>
                     </PrivateRoute>
                   }

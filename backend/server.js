@@ -15,6 +15,7 @@ const vehicleAPIRoutes = require('./routes/vehicleAPIRoutes');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
+const eventRoutes = require('./routes/eventRoutes');
 
 // Create an express application and enables CORS middleware
 const app = express();
@@ -43,6 +44,7 @@ const connection = async () => {
         app.use('/users', userRoutes);
         app.use('/posts', postRoutes);
         app.use('/vehicles', vehicleRoutes);
+        app.use('/events', eventRoutes);
         
         // Server Port
         const PORT = process.env.PORT;
