@@ -20,7 +20,8 @@ const EditEvent = () => {
     const [profilePicture, setprofilePicture] = useState('')
 
     const [title, setTitle] = useState('')
-    const [dateTime, setDateTime] = useState('')
+    const [eventDate, setEventDate] = useState('')
+    const [eventTime, setEventTime] = useState('')
     const [desc, setDesc] = useState('')
     const [loc, setLoc] = useState('')
 
@@ -85,7 +86,15 @@ const EditEvent = () => {
 
                     // updates event's data states
                     setTitle(data.eventData.title)
-                    setDateTime(data.eventData.date)
+
+                    const dateTime = new Date(data.eventData.date)
+                    // Format the Date
+                    const eventDate = dateTime.toISOString().split('T')[0];
+                    // Format the Time
+                    const eventTime = dateTime.toISOString().split('T')[1].substring(0, 5);
+                    setEventDate(eventDate)
+                    setEventTime(eventTime)
+
                     setDesc(data.eventData.description)
                     setLoc(data.eventData.location)
     
@@ -144,7 +153,7 @@ const EditEvent = () => {
         const dateTime = `${dateRef.current.value}T${timeRef.current.value}:00`
 
        // check if the field is not the same as previous
-       if ((titleRef.current.value !== title) || (descRef.current.value !== desc) || (locRef.current.value !== loc) || (dateRef.current.value !== dateTime)){
+       if ((titleRef.current.value !== title) || (descRef.current.value !== desc) || (locRef.current.value !== loc) || (dateRef.current.value !== eventDate) || (timeRef.current.value !== eventTime)){
             
         // using useRef, it will capture the current value for each field and stores into FormData
             const formData = new FormData();
@@ -214,8 +223,8 @@ const EditEvent = () => {
                         <input type='text' ref={titleRef} defaultValue={title} className='add_postTitle' required></input>
                         <div className='eventAdd'>
                             <input type='text' ref={locRef} defaultValue={loc} className='add_postTitle' id='event_loc' required></input> 
-                            <input type='date' ref={dateRef} defaultValue={dateTime} className='add_postDescription' id='event_date' required></input> 
-                            <input type='time' ref={timeRef} defaultValue={dateTime} className='add_postDescription' id='event_date' required></input> 
+                            <input type='date' ref={dateRef} defaultValue={eventDate} className='add_postDescription' id='event_date' required></input> 
+                            <input type='time' ref={timeRef} defaultValue={eventTime} className='add_postDescription' id='event_date' required></input> 
                         </div>
 
                         <div className='add_postFooter'>
