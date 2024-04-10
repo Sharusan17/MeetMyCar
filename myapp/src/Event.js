@@ -363,7 +363,7 @@ const Event = () => {
             <Popup open={eventOptions} closeOnDocumentClick className='Popup'>
                 <div className='UpdateModal'>
                     <>
-                        <p className='deleteheading'>Edit or Delete Event</p>
+                        <p className='deleteheading'>Choose Event Option</p>
                         <div className='deletelst'>
                             <div className='deletebtn'>
                                 <button disabled={loading} className="btn btn-dark w-100" variant="edit" onClick={() => handleEventEdit(selectedEvent)}>Edit</button>

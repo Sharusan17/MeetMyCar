@@ -10,6 +10,8 @@ const EditEvent = () => {
     const {eventId} = useParams()
 
     const titleRef = useRef()
+    const dateRef  = useRef()
+    const timeRef  = useRef()
     const descRef  = useRef()
     const locRef = useRef()
 
@@ -18,6 +20,7 @@ const EditEvent = () => {
     const [profilePicture, setprofilePicture] = useState('')
 
     const [title, setTitle] = useState('')
+    const [dateTime, setDateTime] = useState('')
     const [desc, setDesc] = useState('')
     const [loc, setLoc] = useState('')
 
@@ -70,7 +73,7 @@ const EditEvent = () => {
         async function fetchEventData(){
             // fetches the event data, and stores the data (title, desc and loc) into useState, to be used throughout the page.
             try{
-                const response = await fetch(`https://meetmycar.onrender.com/events?eventId=${encodeURIComponent(eventId)}`, {
+                const response = await fetch(`http://localhost:3001/events?eventId=${encodeURIComponent(eventId)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -80,12 +83,13 @@ const EditEvent = () => {
                 if (response.ok){
                     const data = await response.json()
 
-                    // updates post's data states
-                    setTitle(data.postData.title)
-                    setDesc(data.postData.description)
-                    setLoc(data.postData.location)
+                    // updates event's data states
+                    setTitle(data.eventData.title)
+                    setDateTime(data.eventData.date)
+                    setDesc(data.eventData.description)
+                    setLoc(data.eventData.location)
     
-                    console.log("Fetched Event Details")
+                    console.log("Fetched Event Details", data)
                     return data
                 } else{
                     const errorData = await response.json()
@@ -136,13 +140,16 @@ const EditEvent = () => {
             return setError("Location Too Long")
         }
 
+        // JS Date ISO 8601 format
+        const dateTime = `${dateRef.current.value}T${timeRef.current.value}:00`
 
        // check if the field is not the same as previous
-       if ((titleRef.current.value !== title) || (descRef.current.value !== desc) || (locRef.current.value !== loc)) {
+       if ((titleRef.current.value !== title) || (descRef.current.value !== desc) || (locRef.current.value !== loc) || (dateRef.current.value !== dateTime)){
             
         // using useRef, it will capture the current value for each field and stores into FormData
             const formData = new FormData();
-            formData.append('title', titleRef.current.value);     
+            formData.append('title', titleRef.current.value);
+            formData.append('date', dateTime);     
             formData.append('description', descRef.current.value);
             formData.append('location', locRef.current.value);
 
@@ -204,10 +211,15 @@ const EditEvent = () => {
 
                     {/* Form Fields */}
                     <div className='add-post-content'>
-                        <input type='text' ref={titleRef} defaultValue={title} className='add_postTitle' ></input>
+                        <input type='text' ref={titleRef} defaultValue={title} className='add_postTitle' required></input>
+                        <div className='eventAdd'>
+                            <input type='text' ref={locRef} defaultValue={loc} className='add_postTitle' id='event_loc' required></input> 
+                            <input type='date' ref={dateRef} defaultValue={dateTime} className='add_postDescription' id='event_date' required></input> 
+                            <input type='time' ref={timeRef} defaultValue={dateTime} className='add_postDescription' id='event_date' required></input> 
+                        </div>
 
                         <div className='add_postFooter'>
-                            <input type='text' ref={descRef} defaultValue={desc} className='add_postDescription' ></input> 
+                            <input type='text' ref={descRef} defaultValue={desc} className='add_postDescription' required></input> 
                         </div>
                     </div>
                     <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
