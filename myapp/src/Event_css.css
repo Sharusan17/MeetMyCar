@@ -142,3 +142,16 @@
     padding: 0 5px;
     margin: 0 5px;
 }
+
+.eventEdit{
+    margin-top: 0;
+    margin-bottom: auto;
+}
+
+.eventdot{
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: black;
+    margin-left: 2px;   
+}

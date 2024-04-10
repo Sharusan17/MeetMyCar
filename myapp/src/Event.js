@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthContext'
+import {Popup} from 'reactjs-popup'
 import {Link} from 'react-router-dom'
 
 import './Event_css.css'
@@ -10,6 +12,10 @@ const Event = () => {
 
     const [events, setEvents] = useState([])
     const [refreshData, setRefreshData] = useState(false)
+    const [selectedEvent, setSelectEvent] = useState('')
+    const [eventOptions, setEventOptions] = useState(false)
+
+    const navigate = useNavigate()
 
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
@@ -205,6 +211,60 @@ const Event = () => {
         setLoading(false)
     }
 
+    // handles select event to show options
+    const handleShowOptions = (eventId) =>{
+        setSelectEvent(eventId)
+        setEventOptions(!eventOptions)
+    }
+
+    // handles select event to show options
+    const handleEventEdit = (eventId) =>{
+        navigate(`/editevent/${eventId}`)
+        setEventOptions(false)
+    }
+
+     // handle event delete
+     async function handleEventDelete(eventId) {
+        try{
+            setError('')
+            setMessage('')
+            setLoading(true)
+
+            // delete event in Event database
+            const response = await fetch(`http://localhost:3001/events/delete?eventId=${encodeURIComponent(eventId)}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok){
+                console.error("Error Deleting Event:")
+            }
+            const firebaseUID = currentUser.uid;
+
+            // removes superfuel points for user
+            const userSFResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({removeSuperFuel: -1})
+            });
+
+            if (!userSFResponse.ok){
+                console.error("Error Updating User's SuperFuel:")
+            }
+            
+            // refresh page, to show updated event collection
+            console.log("Deleted Event")
+            setTimeout(() => {
+                window.location.reload(false);
+            }, 2000)
+
+        }catch (error){
+            console.error("Error Deleting Event:")
+            setError("Error Deleting Event. Try Again Later")
+        }
+        setLoading(false)
+    }
 
   return (
       <>
@@ -252,7 +312,7 @@ const Event = () => {
                             <h3 className='eventName'>{event.title}</h3>
                             <p className='eventDesc'>{event.description}</p>
                         </div>
-
+                        
                         <div className='eventEngage'>
                             <div className='eventLike'>
                                 {event.likes.some((likedUser) => likedUser.userId === userId) ? (
@@ -281,9 +341,39 @@ const Event = () => {
                             </div>
                         </div>
                         
+                        {event.user._id === userId ? (
+                            <>
+                                <div className='eventEdit'>
+                                    <button className='postMenu' onClick={() => handleShowOptions(event._id)}>
+                                        <div className='eventdot'></div>
+                                        <div className='eventdot'></div>
+                                        <div className='eventdot'></div>
+                                    </button>
+                                </div>
+                            </>
+                        ) : 
+                            <>
+                            </>
+                        }
+                        
                     </div>
                 </div>
             ))}
+
+            <Popup open={eventOptions} closeOnDocumentClick className='Popup'>
+                <div className='UpdateModal'>
+                    <>
+                        <p className='deleteheading'>Edit or Delete Event</p>
+                        <div className='deletelst'>
+                            <div className='deletebtn'>
+                                <button disabled={loading} className="btn btn-dark w-100" variant="edit" onClick={() => handleEventEdit(selectedEvent)}>Edit</button>
+                                <button disabled={loading} className="btn btn-danger w-100" variant="danger" onClick={() => handleEventDelete(selectedEvent)}>Delete</button>
+                            </div>
+                            <p id='deletemsg'>Delete action is irreversible.</p>      
+                        </div>
+                    </>
+                </div>
+            </Popup>
         </div>
       </>
   )
