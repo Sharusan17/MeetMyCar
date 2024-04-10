@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
 });
 
 //POST Event Data
-router.post('/create', async (req, res) => {
+router.post('/create', upload.array('image'), async (req, res) => {
     console.log(req.body);
     try{       
         // Create a new event with body data
@@ -58,7 +58,7 @@ router.post('/create', async (req, res) => {
 });
 
 //UPDATE Event Data
-router.put('/edit', async (req, res) => {
+router.put('/edit', upload.array('image'), async (req, res) => {
     console.log(req.body)
     try{       
         // parameters from query string (eventId)

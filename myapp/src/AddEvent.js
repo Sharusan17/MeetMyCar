@@ -8,6 +8,8 @@ import './AddPost_css.css'
 const AddEvent = () => {
 
     const titleRef = useRef()
+    const dateRef  = useRef()
+    const timeRef  = useRef()
     const descRef  = useRef()
     const locRef = useRef()
 
@@ -32,7 +34,7 @@ const AddEvent = () => {
                 // fetches the user data with firebase ID
                 const firebaseUID = currentUser.uid;
     
-                const response = await fetch(`https://meetmycar.onrender.com/users?userfb=${encodeURIComponent(firebaseUID)}`, {
+                const response = await fetch(`http://localhost:3001/users?userfb=${encodeURIComponent(firebaseUID)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -85,12 +87,18 @@ const AddEvent = () => {
             return setError("Location Too Long")
         }
 
+        // JS Date ISO 8601 format
+        const dateTime = `${dateRef.current.value}T${timeRef.current.value}:00`
+
        // using useRef, it will capture the current value for each field and stores into FormData
        const formData = new FormData();
        formData.append('user', userId);
        formData.append('title', titleRef.current.value);
+       formData.append('date', dateTime);
        formData.append('description', descRef.current.value);
        formData.append('location', locRef.current.value);
+
+       console.log(dateTime)
 
         try{
             // adds the formData into the Events database
@@ -98,7 +106,7 @@ const AddEvent = () => {
             setLoading(true) 
 
 
-            const response = await fetch('https://meetmycar.onrender.com/events/create', {
+            const response = await fetch('http://localhost:3001/events/create', {
                 method: 'POST',
                 body: formData,
             });
@@ -110,11 +118,13 @@ const AddEvent = () => {
 
             const data = await response.json()
 
+            console.log(data)
+
             // fetches the user data with firebase ID
             const firebaseUID = currentUser.uid;
 
             // adds a superfuel point for every event added to the user's account
-            const userSFResponse = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+            const userSFResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -180,7 +190,8 @@ const AddEvent = () => {
                         <input type='text' ref={titleRef} placeholder='Title...' className='add_postTitle' required></input>
                         <div className='eventAdd'>
                             <input type='text' ref={locRef} placeholder="Location" className='add_postTitle' id='event_loc' required></input> 
-                            <input type='date' ref={descRef} placeholder="Date" className='add_postDescription' id='event_date' required></input> 
+                            <input type='date' ref={dateRef} placeholder="Date" className='add_postDescription' id='event_date' required></input> 
+                            <input type='time' ref={timeRef} placeholder="Time" className='add_postDescription' id='event_date' required></input> 
                         </div>
 
                         <div className='add_postFooter'>
