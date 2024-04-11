@@ -26,9 +26,9 @@ router.get('/', async (req, res) => {
                 return res.status(400).json({message: "Event Not Found."})
             }
         }else{
-            // Find all event and sort the event by createdAt Date/Time (Newest First)
+            // Find all event and sort the event by date (Nearest Date First)
             eventData = await Event.find().populate('user', 'username profilePicture')
-                                        .sort({createdAt: -1});
+                                        .sort({date: 1});
         }
         
         res.status(200).json({message: "Event Found", eventData});

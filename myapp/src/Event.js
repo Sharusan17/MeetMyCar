@@ -279,6 +279,13 @@ const Event = () => {
         return days[dateFormat.getDay()]
     }
 
+    // format the date into month
+    const formatMonth = (date) => {
+        const dateFormat = new Date(date)
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        return months[dateFormat.getMonth()]
+    }
+
     // format the time into hh:mm
     const formatTime = (date) => {
         const dateFormat = new Date(date)
@@ -308,7 +315,7 @@ const Event = () => {
                 <div key={index}  className='eventList'>
                     <div className='events'>
                         <div className='eventDate'>
-                            <h3 className='eventDay'>{formatDay(event.date)} <span>{formatDNum(event.date)}</span></h3>
+                            <h3 className='eventDay'>{formatDay(event.date)} <span>{formatDNum(event.date)}</span>{formatMonth(event.date)}</h3>
                             <h4 className='eventTime'>{formatTime(event.date)}</h4>
                         </div>
 
@@ -380,7 +387,7 @@ const Event = () => {
             <Popup open={eventOptions} closeOnDocumentClick className='Popup'>
                 <div className='UpdateModal'>
                     <>
-                        <p className='deleteheading'>Choose Event Option</p>
+                        <p className='deleteheading'>Choose Option</p>
                         <div className='deletelst'>
                             <div className='deletebtn'>
                                 <button disabled={loading} className="btn btn-dark w-100" variant="edit" onClick={() => handleEventEdit(selectedEvent)}>Edit</button>
