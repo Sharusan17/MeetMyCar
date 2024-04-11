@@ -88,6 +88,10 @@ router.put('/edit', upload.array('image'), async (req, res) => {
         if(req.body.location){
             eventUpdate.location = req.body.location;
         }
+        // updates type, if type in body found
+        if(req.body.type){
+            eventUpdate.type = req.body.type;
+        }
         // updates date, if date in body found
         if(req.body.date){
             eventUpdate.date = req.body.date;

@@ -3,7 +3,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
-import './AddPost_css.css'
+import './AddEvent_css.css'
 
 const AddEvent = () => {
 
@@ -12,6 +12,7 @@ const AddEvent = () => {
     const timeRef  = useRef()
     const descRef  = useRef()
     const locRef = useRef()
+    const typeRef = useRef()
 
     const [userId, setuserId] = useState('')
     const [username, setuserName] = useState('')
@@ -97,6 +98,7 @@ const AddEvent = () => {
        formData.append('date', dateTime);
        formData.append('description', descRef.current.value);
        formData.append('location', locRef.current.value);
+       formData.append('type', typeRef.current.value);
 
        console.log(dateTime)
 
@@ -187,15 +189,22 @@ const AddEvent = () => {
 
                     {/* Form Fields */}
                     <div className='add-post-content'>
-                        <input type='text' ref={titleRef} placeholder='Title...' className='add_postTitle' required></input>
+                        <input type='text' ref={titleRef} placeholder='Title of Event...' className='add_postTitle' required></input>
                         <div className='eventAdd'>
-                            <input type='text' ref={locRef} placeholder="Location" className='add_postTitle' id='event_loc' required></input> 
+                            <input type='text' ref={locRef} placeholder="Location of Event" className='add_postTitle' id='event_loc' required></input> 
                             <input type='date' ref={dateRef} placeholder="Date" className='add_postDescription' id='event_date' required></input> 
                             <input type='time' ref={timeRef} placeholder="Time" className='add_postDescription' id='event_date' required></input> 
                         </div>
 
                         <div className='add_postFooter'>
-                            <input type='text' ref={descRef} placeholder="Description" className='add_postDescription' required></input> 
+                            <input type='text' ref={descRef} placeholder="Description of Event" className='add_postDescription' required></input> 
+                            {/* Options for Type of event */}
+                            <select className='add_postVRN' ref={typeRef}  required>
+                                <option value="" selected disabled>Type</option>
+                                <option value="Race">Race</option>
+                                <option value="MeetUp">Meet Up</option>
+                                <option value="Charity">Charity Run</option>
+                            </select>
                         </div>
                     </div>
                     <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>

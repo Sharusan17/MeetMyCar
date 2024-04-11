@@ -1,0 +1,256 @@
+/* Styles for the main container of the add post component */
+.addPost {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 10px;
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 20px;
+    width: 60%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.addPost_text{
+    margin-top: 5px;
+    text-align: center;
+    color: black;
+    font-size: 35px;
+    font-family:'Courier New', Courier, monospace;
+}
+
+.eventAdd {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+#event_loc{
+   margin-right: 5px;
+   width: 70%;
+   margin-bottom: 20px;
+}
+
+#event_date{
+   margin-left: 5px;
+   width: 30%;
+   margin-bottom: 20px;
+   border-radius: 5px;
+}
+
+/* Styles for the header section containing user details and date/time */
+.addHeading{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Styles for user details */
+.showUserDetails{
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    padding: 10px;
+    margin-left: 30px;
+}
+
+/* Styles for user image */
+.showUserImage{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.showUserName{
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* Styles for date/time */
+.showTimeStamp{
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    text-align: right;
+    line-height: 5px;
+    margin-top: 25px;
+    margin-right: 25px;
+}
+
+.add-post-content {
+    padding: 15px;
+    padding-bottom: 5px;
+}
+
+.add_postTitle{
+    padding-left: 10px;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    text-align: left;
+    color: #333333;
+    font-weight: 500;
+    font-size: 20px;
+    text-shadow: 4px 4px 2px  rgba(236, 236, 236, 0.8);
+    font-style: italic;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 20px;
+}
+
+.add_postImageBtn{
+    width: 100%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(27, 27, 27);
+    color: white;
+    border-radius: 15px;
+    font-weight: 500;
+    padding: 10px;
+    margin-bottom: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.add_postImage {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+    width: 870px;
+    height: 530px;
+    margin-bottom: 10px;
+    border-radius: 20px;
+    border: 4px solid #333333;
+    box-shadow: 4px 5px 5px 4px #CCCCCC;
+    overflow-y: hidden;
+}
+
+.add_postImage .image-gallery-slide img{
+    width: 870px;
+    max-width: 100%;
+    height: 530px;
+    object-fit: cover;
+}
+
+.add_postFooter{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 15px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+/* Styles for the vehicle selection */
+.add_postVRN{
+    align-self: flex-end;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: black;
+    background-color: rgb(255, 200, 70);
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 20%;
+    height: 30px;
+}
+
+.add_postDescription {
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    color: #333333;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 17px;
+}
+
+.addpostbtn{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    background-color: rgb(45,45,45);
+    color: white;
+    border-radius: 15px;
+    font-weight: 500;
+    padding: 6px 15px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.addpostbtn:hover {
+    border-color: rgb(122, 122, 122);
+    transition: border-color 0.5s ease-in;
+    box-shadow: 2px 2px 5px 1px rgb(122, 122, 122);
+}
+
+/* Media query for smaller screens (mobile) */
+@media only screen and (max-width: 600px) {
+    .addPost {
+        margin: 5px 2.5px;
+        width: 100%;
+    }
+    
+    .addPost_text{
+        font-size: 30px;
+    }
+
+    .eventAdd {
+        margin: 0;
+    }
+    
+    .showUserDetails{
+        padding: 5px;
+        margin-left: 20px;
+    }
+    
+    .showTimeStamp{
+        font-size: 15px;
+    }
+    
+    .add_postTitle{
+        font-size: 17px;
+        margin-bottom: 10px;
+    }
+    
+    .add_postImageBtn{
+        padding: 8px;
+        margin-bottom: 10px;
+    }
+    
+    .add_postImage {
+        width: 475px;
+        height: 375px;
+    }
+    
+    .add_postImage .image-gallery-slide img{
+        width: 475px;
+        height: 375px;
+    }
+    
+    .add_postVRN{
+        font-size: 15px;
+        width: 25%;
+    }
+    
+    .addpostbtn{
+        width: 90%;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+    }
+
+    .add_postFooter{
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
