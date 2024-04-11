@@ -266,6 +266,25 @@ const Event = () => {
         setLoading(false)
     }
 
+    // format the date to get num
+    const formatDNum = (date) => {
+        const dateFormat = new Date(date)
+        return dateFormat.getDate()
+    }
+
+    // format the date into day
+    const formatDay = (date) => {
+        const dateFormat = new Date(date)
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        return days[dateFormat.getDay()]
+    }
+
+    // format the time into hh:mm
+    const formatTime = (date) => {
+        const dateFormat = new Date(date)
+        return dateFormat.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }
+
   return (
       <>
         <div className='showEvent'>
@@ -281,8 +300,6 @@ const Event = () => {
                 </div>
             </header>
 
-            
-
             <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{noEvent}</p>
             <p className="w-100 text-center mt-2 mb-0" id="success_Msg">{message}</p>
             <p className="w-100 text-center mt-2 mb-0" id="error_Msg">{error}</p>
@@ -291,8 +308,8 @@ const Event = () => {
                 <div key={index}  className='eventList'>
                     <div className='events'>
                         <div className='eventDate'>
-                            <h3 className='eventDay'>FRIDAY <span>26</span></h3>
-                            <h4 className='eventTime'>12:00</h4>
+                            <h3 className='eventDay'>{formatDay(event.date)} <span>{formatDNum(event.date)}</span></h3>
+                            <h4 className='eventTime'>{formatTime(event.date)}</h4>
                         </div>
 
                         <div className='vline'/>
