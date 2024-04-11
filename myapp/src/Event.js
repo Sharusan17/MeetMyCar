@@ -298,7 +298,7 @@ const Event = () => {
     
             <header>
                 <h1 id="login_text">
-                    Event
+                    Events
                     <p id="slogan_text">Book And Explore</p>
                 </h1>
                 
@@ -332,7 +332,8 @@ const Event = () => {
                         </div>
 
                         <div className='eventInfo'>
-                            <h3 className='eventLoc'>{event.location}</h3>
+                            {event.type === "Race" ? '🏁': event.type === "MeetUp" ? '🤝' : event.type === "Charity" ? '🎗️' : ""}
+                            <h3 className='eventLoc'>📍 {event.location}</h3>
                             <h3 className='eventName'>{event.title}</h3>
                             <p className='eventDesc'>{event.description}</p>
                         </div>

@@ -3,7 +3,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
-import './AddPost_css.css'
+import './AddEvent_css.css'
 
 const EditEvent = () => {
 
@@ -14,6 +14,7 @@ const EditEvent = () => {
     const timeRef  = useRef()
     const descRef  = useRef()
     const locRef = useRef()
+    const typeRef = useRef()
 
     const [userId, setuserId] = useState('')
     const [username, setuserName] = useState('')
@@ -24,6 +25,8 @@ const EditEvent = () => {
     const [eventTime, setEventTime] = useState('')
     const [desc, setDesc] = useState('')
     const [loc, setLoc] = useState('')
+    const [eventType, setEventType] = useState('')
+    const [oldEventType, setOldEventType] = useState('')
 
     const {currentUser} = useAuth()
 
@@ -97,6 +100,8 @@ const EditEvent = () => {
 
                     setDesc(data.eventData.description)
                     setLoc(data.eventData.location)
+                    setEventType(data.eventData.type)
+                    setOldEventType(data.eventData.type)
     
                     console.log("Fetched Event Details", data)
                     return data
@@ -123,6 +128,11 @@ const EditEvent = () => {
         const intervalId = setInterval(currentDateTime, 1000)
         return () => clearInterval(intervalId)
     }, [])
+
+    // using the event's type options, user will select the event's type
+    const handleEventType = (e) => {
+        setEventType(e.target.value)
+    }
 
     // handles form submission
     async function handleUpdateEvent(e){
@@ -153,7 +163,7 @@ const EditEvent = () => {
         const dateTime = `${dateRef.current.value}T${timeRef.current.value}:00`
 
        // check if the field is not the same as previous
-       if ((titleRef.current.value !== title) || (descRef.current.value !== desc) || (locRef.current.value !== loc) || (dateRef.current.value !== eventDate) || (timeRef.current.value !== eventTime)){
+       if ((titleRef.current.value !== title) || (descRef.current.value !== desc) || (locRef.current.value !== loc) || (typeRef.current.value !== oldEventType) || (dateRef.current.value !== eventDate) || (timeRef.current.value !== eventTime)){
             
         // using useRef, it will capture the current value for each field and stores into FormData
             const formData = new FormData();
@@ -161,6 +171,7 @@ const EditEvent = () => {
             formData.append('date', dateTime);     
             formData.append('description', descRef.current.value);
             formData.append('location', locRef.current.value);
+            formData.append('type', typeRef.current.value);
 
             try{
                 // updates the event with it's eventId using the formData
@@ -229,6 +240,13 @@ const EditEvent = () => {
 
                         <div className='add_postFooter'>
                             <input type='text' ref={descRef} defaultValue={desc} className='add_postDescription' required></input> 
+                            {/* Options for Type of event */}
+                            <select className='add_postVRN' ref={typeRef} value={eventType} onChange={handleEventType} required>
+                                <option value="" selected disabled>Type</option>
+                                <option value="Race">Race</option>
+                                <option value="MeetUp">Meet Up</option>
+                                <option value="Charity">Charity Run</option>
+                            </select>
                         </div>
                     </div>
                     <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
