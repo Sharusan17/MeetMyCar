@@ -64,7 +64,7 @@ const Event = () => {
             try{
                 setError('')
                 setMessage('')
-                const response = await fetch(`http://localhost:3001/events`, {
+                const response = await fetch(`https://meetmycar.onrender.com/events`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -102,7 +102,7 @@ const Event = () => {
             setLoading(true)
 
             // add like to event database
-            const response = await fetch(`http://localhost:3001/events/edit?eventId=${encodeURIComponent(eventId)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/events/edit?eventId=${encodeURIComponent(eventId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -131,7 +131,7 @@ const Event = () => {
             setLoading(true)
 
             // remove like from event database
-            const response = await fetch(`http://localhost:3001/events/edit?eventId=${encodeURIComponent(eventId)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/events/edit?eventId=${encodeURIComponent(eventId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -160,7 +160,7 @@ const Event = () => {
             setLoading(true)
 
             // add attendee to event database
-            const response = await fetch(`http://localhost:3001/events/edit?eventId=${encodeURIComponent(eventId)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/events/edit?eventId=${encodeURIComponent(eventId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -189,7 +189,7 @@ const Event = () => {
             setLoading(true)
 
             // remove like from event database
-            const response = await fetch(`http://localhost:3001/events/edit?eventId=${encodeURIComponent(eventId)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/events/edit?eventId=${encodeURIComponent(eventId)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -231,7 +231,7 @@ const Event = () => {
             setLoading(true)
 
             // delete event in Event database
-            const response = await fetch(`http://localhost:3001/events/delete?eventId=${encodeURIComponent(eventId)}`, {
+            const response = await fetch(`https://meetmycar.onrender.com/events/delete?eventId=${encodeURIComponent(eventId)}`, {
                 method: 'DELETE',
             });
 
@@ -241,7 +241,7 @@ const Event = () => {
             const firebaseUID = currentUser.uid;
 
             // removes superfuel points for user
-            const userSFResponse = await fetch(`http://localhost:3001/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
+            const userSFResponse = await fetch(`https://meetmycar.onrender.com/users/update?userfb=${encodeURIComponent(firebaseUID)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

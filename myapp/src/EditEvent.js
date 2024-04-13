@@ -77,7 +77,7 @@ const EditEvent = () => {
         async function fetchEventData(){
             // fetches the event data, and stores the data (title, desc and loc) into useState, to be used throughout the page.
             try{
-                const response = await fetch(`http://localhost:3001/events?eventId=${encodeURIComponent(eventId)}`, {
+                const response = await fetch(`https://meetmycar.onrender.com/events?eventId=${encodeURIComponent(eventId)}`, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
