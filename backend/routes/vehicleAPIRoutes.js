@@ -70,7 +70,7 @@ router.get('/search', async (req, res) => {
         // console.log(VehicleReg);
 
         // fetch vehicle data from external API with vrn and API key
-        const apiResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/ukvehicledata?apikey=${TEST_APP_ID}&vrm=${VehicleReg}`
+        const apiResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/ukvehicledata?apikey=${LIVE_APP_ID}&vrm=${VehicleReg}`
             ,{
                 method:'GET',
                 headers:{
@@ -82,7 +82,7 @@ router.get('/search', async (req, res) => {
         const datainfo = await apiResponse.json();
 
         // fetch vehicle image from external API with vrn and API key
-        const apiImageResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/vehicleimage?apikey=${TEST_APP_ID}&vrm=${VehicleReg}`
+        const apiImageResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/vehicleimage?apikey=${LIVE_APP_ID}&vrm=${VehicleReg}`
             ,{
                 method:'GET',
                 headers:{
@@ -94,7 +94,7 @@ router.get('/search', async (req, res) => {
         const dataImg = await apiImageResponse.json();
 
         // fetch vehicle value from external API with vrn and API key
-        const apiValueResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/vehiclevaluation?apikey=${TEST_APP_ID}&vrm=${VehicleReg}`
+        const apiValueResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/vehiclevaluation?apikey=${LIVE_APP_ID}&vrm=${VehicleReg}`
             ,{
                 method:'GET',
                 headers:{
@@ -106,7 +106,7 @@ router.get('/search', async (req, res) => {
         const dataValue = await apiValueResponse.json();
 
         // fetch vehicle MOT from external API with vrn and API key
-        const apiMOTResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/mot?apikey=${TEST_APP_ID}&vrm=${VehicleReg}`
+        const apiMOTResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/mot?apikey=${LIVE_APP_ID}&vrm=${VehicleReg}`
             ,{
                 method:'GET',
                 headers:{
@@ -118,7 +118,7 @@ router.get('/search', async (req, res) => {
         const dataMOT = await apiMOTResponse.json();
 
         // fetch vehicle history from external API with vrn and API key
-        const apiHistoryResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/vehicleregistration?apikey=${TEST_APP_ID}&vrm=${VehicleReg}`
+        const apiHistoryResponse = await fetch(`https://api.checkcardetails.co.uk/vehicledata/vehicleregistration?apikey=${LIVE_APP_ID}&vrm=${VehicleReg}`
             ,{
                 method:'GET',
                 headers:{
