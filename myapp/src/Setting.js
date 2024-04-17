@@ -12,6 +12,10 @@ const Setting = () => {
   const [username, setuserName] = useState('')
   const [profilePicture, setprofilePicture] = useState('')
 
+  const [creatorId, setcreatorId] = useState('')
+  const [creatorName, setcreatorName] = useState('')
+  const [creatorPic, setcreatorprofilePicture] = useState('')
+
   const {currentUser, logout} = useAuth()
 
   const [error, setError] = useState("")
@@ -54,6 +58,43 @@ const Setting = () => {
     }
     fetchUserData();
 }, [currentUser.uid]);
+
+  useEffect(() => {
+    async function fetchCreatorData(){
+        // fetches creator's data, and stores the data (id and profilePic) into useState, to be used throughout the page.
+        try{
+            setError('')
+            // fetches the creator's data with userId
+
+            const response = await fetch(`https://meetmycar.onrender.com/users?userid=661d39d1cf14e9240b45ce67`, {
+                method: 'GET',
+                headers: {
+                    'accept': 'application/json',
+                },
+            });
+
+            if (response.ok){
+                const data = await response.json()
+
+                // updates creator's data states
+                setcreatorId(data.userData._id)
+                setcreatorName(data.userData.username)
+                setcreatorprofilePicture(data.userData.profilePicture)
+
+                console.log("Fetched Creator's Details")
+                return data
+            } else{
+                const errorData = await response.json()
+                setError("Failed To Fetch Creator's Data")
+                throw new Error(errorData.message)
+            }
+        }catch (error){
+            console.error("Error Fetching Creator's Data:", error)
+            setError("Failed To Fetch Creator's Data")
+        }
+    }
+    fetchCreatorData();
+  }, []);
 
   // handles logout
   async function handleLogOut(){
@@ -152,9 +193,9 @@ const Setting = () => {
 
           <div className='settingCard'>
             {/* Link To Creator's (me) Profile */}
-            <Link to={`https://meetmycar.onrender.com/profile/65ca0522f846d28f065b115d`}>
+            <Link to={`https://meetmycar.onrender.com/profile/661d39d1cf14e9240b45ce67`}>
               <div className='cardSettingImage'>
-                  <img src={profilePicture} alt={username}/> 
+                  <img src={creatorPic} alt={creatorName}/> 
               </div>
 
               <div className='cardSettingContent'>
