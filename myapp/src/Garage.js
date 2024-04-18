@@ -349,7 +349,7 @@ const Garage = () => {
                                                     <h4 className='info_title'>Auction</h4>
                                                     <p className='info_data'>£{selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.Auction}</p>
                                                     {/* calculates profit/loss percentage */}
-                                                    <p className='info_change'> &#8595; {Math.round(((selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) - (selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.Auction)) / (selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) * 100) }%</p>
+                                                    <p className='info_change'> &#8595; {Math.round(((selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.OTR) - (selectedVehicle.vehicleData?.vehicleValue?.ValuationList?.Auction)) / (selectedVehicle.vehicleData?.vehicleValue?.ValuationList.OTR) * 100) }%</p>
                                                 </div>
                                                 <div>
                                                     <h4 className='info_title'>Trade</h4>
@@ -396,7 +396,7 @@ const Garage = () => {
                                                     </div>
 
                                                     <div className='motContainer'>
-                                                        {selectedVehicle.vehicleData?.vehicleMOT?.motHistory.map((mot, index) => (
+                                                        {selectedVehicle.vehicleData?.vehicleMOT?.motHistory?.map((mot, index) => (
 
                                                             <div key={index} className='motList'>
                                                                 <div className='motRow'>
@@ -429,16 +429,16 @@ const Garage = () => {
                                                 <div className='dataValue'>
                                                     <div>
                                                         <h4 className='info_title'>Owners</h4>
-                                                        <p className='change_data'>{selectedVehicle.vehicleData?.vehicleInfo?.VehicleHistory.V5CCertificateCount}</p>
+                                                        <p className='change_data'>{selectedVehicle.vehicleData?.vehicleInfo?.VehicleHistory?.V5CCertificateCount}</p>
                                                     </div>
                                                     <div>
                                                         <h4 className='info_title'>Plate</h4>
-                                                        <p className='change_data'>{selectedVehicle.vehicleData?.vehicleInfo?.VehicleHistory.PlateChangeCount}</p>
+                                                        <p className='change_data'>{selectedVehicle.vehicleData?.vehicleInfo?.VehicleHistory?.PlateChangeCount}</p>
                                                     </div>
 
                                                     <div>
                                                         <h4 className='info_title'>Colour</h4>
-                                                        <p className='change_data'>{selectedVehicle.vehicleData?.vehicleInfo?.VehicleHistory.ColourChangeDetails.NumberOfPreviousColours}</p>
+                                                        <p className='change_data'>{selectedVehicle.vehicleData?.vehicleInfo?.VehicleHistory?.ColourChangeDetails.NumberOfPreviousColours}</p>
                                                     </div>
                                                 </div>
 
