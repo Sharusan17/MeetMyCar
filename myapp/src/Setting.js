@@ -193,7 +193,7 @@ const Setting = () => {
 
           <div className='settingCard'>
             {/* Link To Creator's (me) Profile */}
-            <Link to={`https://meetmycar.onrender.com/profile/661d39d1cf14e9240b45ce67`}>
+            <Link to={`https://meetmycar-1.onrender.com/profile/661d39d1cf14e9240b45ce67`}>
               <div className='cardSettingImage'>
                   <img src={creatorPic} alt={creatorName}/> 
               </div>
