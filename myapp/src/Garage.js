@@ -68,6 +68,7 @@ const Garage = () => {
                         }
                     }))
 
+                    // reverse the vehicle data, making the latest addition at the top of the page
                     const vehicleWithData = vehicleData.filter(vehicle => vehicle !== null).reverse()
                     setVehicle(vehicleWithData)
 
@@ -248,7 +249,7 @@ const Garage = () => {
                 <Popup open={openModal} 
                         closeOnDocumentClick onClose={() => setOpenModal(false)} className='Popup'
                         overlayStyle={{
-                            background: 'rgba(0, 0, 0, 0.2)', 
+                            background: 'rgba(0, 0, 0, 0.2)',
                             transition: 'background 0.5s ease-in-out',
                         }}
                 >
