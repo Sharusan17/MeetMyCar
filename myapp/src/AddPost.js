@@ -254,7 +254,7 @@ const AddPost = () => {
                             <input type='text' ref={descRef} placeholder="Description" className='add_postDescription' required></input> 
                             {/* Shows all user vehicles for selection */}
                             <select className='add_postVRN' onChange={handleSelectVehicle} value={selectVehicle.vehicleId} required>
-                                <option value="" disabled>VRN</option>
+                                <option value="" selected disabled>VRN</option>
                                 {vehicle.map(vehicle => ( 
                                     <option key={vehicle.vehicleId} value={vehicle.vehicleId}> {vehicle.vrn} </option>
                                 ))}
