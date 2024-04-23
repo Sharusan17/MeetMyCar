@@ -441,7 +441,7 @@ const CompareSpecs = () => {
                         {/* displays list of current user's vehicle to compare */}
                         <p className='vehicleName'>{selectedMyVehicle?.vehicleData?.vehicleHistory?.make} {selectedMyVehicle?.vehicleData?.vehicleHistory?.model}</p>
                         <select className='vehicleVRN' onChange={handleSelectMyVehicle} value={selectedMyVehicle?.vehicleData?._id} required>
-                            <option value="" disabled>VRN</option>
+                            <option value="" selected disabled>VRN</option>
                             {currentUservehicle.map(vehicle => ( 
                                 <option key={vehicle?.vehicleData?._id} value={vehicle?.vehicleData?._id}> {vehicle?.vehicleData?.vrn} </option>
                             ))}
@@ -463,7 +463,7 @@ const CompareSpecs = () => {
                         {/* displays list of competing user's vehicle to compare */}
                          <p className='vehicleName'>{selectedProfileVehicle?.vehicleData?.vehicleHistory?.make} {selectedProfileVehicle?.vehicleData?.vehicleHistory?.model}</p>
                         <select className='vehicleVRN' onChange={handleSelectProfileVehicle} value={selectedProfileVehicle?.vehicleData?._id} required>
-                            <option value="" disabled>VRN</option>
+                            <option value="" selected disabled>VRN</option>
                             {profileUservehicle.map(vehicle => ( 
                                 <option key={vehicle?.vehicleData?._id} value={vehicle?.vehicleData?._id}> {vehicle?.vehicleData?.vrn} </option>
                             ))}
