@@ -255,6 +255,7 @@ const EditPost = () => {
                         </div>
 
                         <div className='add_postFooter'>
+                            <input type='text' ref={descRef} defaultValue={desc} className='add_postDescription' ></input> 
                             {/* Shows all user vehicles for selection */}
                             <select className='add_postVRN' onChange={handleSelectVehicle} value={selectVehicle?.vehicleId} required>
                                     <option value="" disabled>VRN</option>
@@ -262,7 +263,6 @@ const EditPost = () => {
                                         <option key={vehicle.vehicleId} value={vehicle.vehicleId}> {vehicle.vrn} </option>
                                     ))}
                             </select>
-                            <input type='text' ref={descRef} defaultValue={desc} className='add_postDescription' ></input> 
                         </div>
                     </div>
                     <p className="w-100 text-center mt-3 mb-1" id="error_Msg">{error}</p>
