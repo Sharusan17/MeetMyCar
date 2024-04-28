@@ -13,7 +13,7 @@ Install all dependencies and node modules
 ### `npm start`
 Start the development server and run the application
 
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser. Suitable browser (Safari or Chrome).
 
 The page will reload when you make changes.
 
