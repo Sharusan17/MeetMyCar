@@ -31,31 +31,31 @@ URL will be redirected to [https://meetmycar-1.onrender.com](https://meetmycar-1
 
 ### Test Account 1
 
-Username: mmctest1
+**Username** mmctest1
 
-Email: testmeetmycar1@gmail.com
+**Email** testmeetmycar1@gmail.com
 
-Password: MeetMyCarTest1
+**Password** MeetMyCarTest1
 
 (contain vehicles, posts and events )
 
 ### Test Account 2
 
-Username: mmctest2
+**Username** mmctest2
 
-Email: testmeetmycar2@gmail.com
+**Email** testmeetmycar2@gmail.com
 
-Password: MeetMyCarTest2
+**Password** MeetMyCarTest2
 
 (contain a vehicle, a post and no events)
 
 ### Test Account 3
 
-Username: mmctest3
+**Username** mmctest3
 
-Email: testmeetmycar3@gmail.com
+**Email** testmeetmycar3@gmail.com
 
-Password: MeetMyCarTest3
+**Password** MeetMyCarTest3
 
 (contain no vehicle, no post and no events)
 
