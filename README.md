@@ -24,7 +24,9 @@ Backend server of the application is running on Render Server, therefore no need
 ### Deployment
 
 The application has been deployed on Render Hosting, therefore able to view it without using the development server above, and with the url link below.
+
 Open [http://meetmycar.co.uk](http://meetmycar.co.uk) to view it in your browser.
+
 URL will be redirected to [https://meetmycar-1.onrender.com](https://meetmycar-1.onrender.com).
 
 ## TEST Accounts
